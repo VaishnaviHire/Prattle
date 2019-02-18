@@ -6,9 +6,13 @@ package edu.northeastern.ccs.im.client;
  */
 public class App 
 {
-    public static void main( String[] args )
-    {
-// Client code for Prattle
-        System.out.print("Hello world");
+    public App(String hello) {
+        this.hello = hello;
     }
+
+    public String getHello(){
+        return hello;
+    }
+    private String hello;
+
 }

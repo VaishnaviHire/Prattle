@@ -7,10 +7,13 @@ package edu.northeastern.ccs.im.server;
  */
 public class App 
 {
-    public static void main( String[] args )
-    {
-
-        System.out.print("Hello world");
-        // Server side code for Prattle
+    public App(String hello) {
+        this.hello = hello;
     }
+
+    public String getHello(){
+        return hello;
+    }
+    private String hello;
+
 }
