@@ -1,38 +1,24 @@
 package edu.northeastern.ccs.im.server;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import java.io.PrintStream;
+import java.io.ByteArrayOutputStream;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Unit test for simple App.
  */
 public class AppTest 
-    extends TestCase
+
 {
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
-    }
+    @Test
+    public void mainTest(){
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
+        ByteArrayOutputStream hello = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(hello));
+        App.main(null);
+        Assert.assertEquals("Hello world", hello.toString());
     }
-
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
-    }
+// tests for server
 }

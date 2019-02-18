@@ -8,6 +8,7 @@ public class App
 {
     public static void main( String[] args )
     {
-        System.out.println( "Hello World!" );
+// Client code for Prattle
+        System.out.print("Hello world");
     }
 }
