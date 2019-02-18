@@ -1,8 +1,5 @@
 package edu.northeastern.ccs.im.server;
 
-import java.io.PrintStream;
-import java.io.ByteArrayOutputStream;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,12 +10,10 @@ public class AppTest
 
 {
     @Test
-    public void mainTest(){
+    public void getHelloTest(){
 
-        ByteArrayOutputStream hello = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(hello));
-        App.main(null);
-        Assert.assertEquals("Hello world", hello.toString());
+        App hi = new App("Hello World");
+        Assert.assertEquals("Hello world",hi.getHello());
     }
 // tests for server
 }
