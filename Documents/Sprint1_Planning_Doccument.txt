@@ -1,20 +1,25 @@
 Sprint-1 2/22
 
 
-1. Use cases
+We will have created the backlog items describing each of the following items. We will have started the sprint in jira, where some of the items will be carried out by all team members together and others are assigned as individual tasks.
+
+
+1. Understand Product Backlog Requirements:
+   1. The team will have gone through the requirements together and prioritized the items of development.
+2. Use cases
    1. Identify functional requirements, actors and relationships in the system
    2. Design the use case diagrams for each high-level requirements.
-2. User sessions
+3. User sessions
    1. Describes the sessions of different users.
    2. Explain the differences between user behaviors 
-3. Databases - schema
+4. Databases - schema
    1. Documenting the type of database to be used in the system.
    2. Design the database schema
-4. Architecture design
+5. Architecture design
    1. Diagrammatic representation of the system architecture
    2. Includes basic flow of information
-5. UML
+6. UML
    1. Identify the different system components
    2. Design UML diagrams for all the system components
-6. Test cases
+7. Test cases
    1. Test the current classes and methods enough to pass the quality gate.
