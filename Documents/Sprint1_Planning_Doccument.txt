@@ -1,0 +1,20 @@
+Sprint-1 2/22
+
+
+1. Use cases
+   1. Identify functional requirements, actors and relationships in the system
+   2. Design the use case diagrams for each high-level requirements.
+2. User sessions
+   1. Describes the sessions of different users.
+   2. Explain the differences between user behaviors 
+3. Databases - schema
+   1. Documenting the type of database to be used in the system.
+   2. Design the database schema
+4. Architecture design
+   1. Diagrammatic representation of the system architecture
+   2. Includes basic flow of information
+5. UML
+   1. Identify the different system components
+   2. Design UML diagrams for all the system components
+6. Test cases
+   1. Test the current classes and methods enough to pass the quality gate.
