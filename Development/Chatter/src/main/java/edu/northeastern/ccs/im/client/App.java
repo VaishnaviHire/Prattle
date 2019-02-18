@@ -6,13 +6,6 @@ package edu.northeastern.ccs.im.client;
  */
 public class App 
 {
-    public App(String hello) {
-        this.hello = hello;
-    }
 
-    public String getHello(){
-        return hello;
-    }
-    private String hello;
 
 }
