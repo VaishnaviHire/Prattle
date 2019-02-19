@@ -11,10 +11,10 @@ We will have created the backlog items describing each of the following items. W
    2. Design the use case diagrams for each high-level requirements.
 3. User sessions
    1. Describes the sessions of different users.
-   2. Explain the differences between user behaviors 
+   2. Explain the differences between user behaviors(Stretch goal) 
 4. Databases - schema
    1. Documenting the type of database to be used in the system.
-   2. Design the database schema
+   2. Design the database schema(Stretch Goal)
 5. Architecture design
    1. Diagrammatic representation of the system architecture
    2. Includes basic flow of information
