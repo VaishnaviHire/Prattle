@@ -20,8 +20,4 @@ public class ClientTimerTest {
   public void testisBehind() {
     assertFalse(clientTimer.isBehind());
   }
-
-  @Test
-  public void test2() {
-  }
 }
