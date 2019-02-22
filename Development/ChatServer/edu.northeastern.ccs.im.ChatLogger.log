@@ -1,17 +1,17 @@
-Feb 22, 2019 4:09:13 PM edu.northeastern.ccs.im.ChatLogger write
+Feb 22, 2019 4:45:45 PM edu.northeastern.ccs.im.ChatLogger write
 INFO: Could not find a thread that I tried to remove!
 
-Feb 22, 2019 4:09:13 PM edu.northeastern.ccs.im.ChatLogger write
+Feb 22, 2019 4:45:45 PM edu.northeastern.ccs.im.ChatLogger write
 SEVERE: Timing out or forcing off a user null
-Feb 22, 2019 4:09:13 PM edu.northeastern.ccs.im.ChatLogger write
+Feb 22, 2019 4:45:45 PM edu.northeastern.ccs.im.ChatLogger write
 INFO: Could not find a thread that I tried to remove!
 
-Feb 22, 2019 4:09:13 PM edu.northeastern.ccs.im.ChatLogger write
+Feb 22, 2019 4:45:45 PM edu.northeastern.ccs.im.ChatLogger write
 INFO: 	BCT 7 Bouncer 70 Last message was rejected because it specified an incorrect user name.
-Feb 22, 2019 4:09:13 PM edu.northeastern.ccs.im.ChatLogger write
+Feb 22, 2019 4:45:45 PM edu.northeastern.ccs.im.ChatLogger write
 INFO: 	BCT 4 yash 2 hi
-Feb 22, 2019 4:09:13 PM edu.northeastern.ccs.im.ChatLogger write
+Feb 22, 2019 4:45:45 PM edu.northeastern.ccs.im.ChatLogger write
 INFO: 	BYE 4 yash 2 --
-Feb 22, 2019 4:09:13 PM edu.northeastern.ccs.im.ChatLogger write
+Feb 22, 2019 4:45:45 PM edu.northeastern.ccs.im.ChatLogger write
 INFO: Could not find a thread that I tried to remove!
 

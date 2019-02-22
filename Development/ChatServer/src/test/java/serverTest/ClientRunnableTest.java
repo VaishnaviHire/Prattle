@@ -223,6 +223,17 @@ public class ClientRunnableTest {
   }
 
   @Test
+  void testIterator() {
+    Message[] messages = {Message.makeSimpleLoginMessage("yash"), Message.makeBroadcastMessage("yash", "hi")};
+    when(mockConnection.iterator()).thenReturn(new MockMessageIterator(Arrays.asList(messages)));
+    Iterator<Message> iterator = mockConnection.iterator();
+    while(iterator.hasNext()) {
+      Message msg = iterator.next();
+      assertTrue(mockConnection.sendMessage(msg));
+    }
+  }
+
+  @Test
   void testTerminateClient() {
     clientRunnable.setFuture(mock(ScheduledFuture.class));
     clientRunnable.terminateClient();
