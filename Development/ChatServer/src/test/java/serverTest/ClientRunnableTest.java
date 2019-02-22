@@ -13,6 +13,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import edu.northeastern.ccs.im.Message;
 import edu.northeastern.ccs.im.NetworkConnection;
 import edu.northeastern.ccs.im.server.ClientRunnable;
 import edu.northeastern.ccs.im.server.Prattle;
@@ -27,6 +28,12 @@ public class ClientRunnableTest {
   private SocketChannel socketChannel;
   @Mock
   private NetworkConnection connection;
+
+//  @BeforeAll
+//  public static void setupNetwork() {
+//    Thread thread = new Thread(() -> Prattle.main(null));
+//    thread.start();
+//  }
 
   @BeforeEach
   public void setup() {
@@ -70,4 +77,10 @@ public class ClientRunnableTest {
     clientRunnable.terminateClient();
     assertFalse(clientRunnable.isInitialized());
   }
+
+//  @Test
+//  public void testHandle() {
+//    Message message = Message.makeBroadcastMessage("Yash", "hi");
+//    assertFalse(connection.sendMessage(message));
+//  }
 }
