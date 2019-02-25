@@ -34,7 +34,7 @@ public class ClientRunnableTest {
 
   private NetworkConnection mockConnection;
   private ClientRunnable clientRunnable;
-  private String clientRunnableLoc;
+  private String Rnloc;
 
   private class MockMessageIterator implements Iterator<Message> {
     private List<Message> messages;
@@ -68,7 +68,7 @@ public class ClientRunnableTest {
     when(mockConnection.iterator()).thenReturn(new MockMessageIterator());
     when(mockConnection.sendMessage(any())).thenReturn(true);
     clientRunnable = new ClientRunnable(mockConnection);
-    clientRunnableLoc = "edu.northeastern.ccs.im.server.ClientRunnable";
+    Rnloc = "edu.northeastern.ccs.im.server.ClientRunnable";
   }
 
   @Test
@@ -247,17 +247,17 @@ public class ClientRunnableTest {
     when(mockConnection.sendMessage(any())).thenReturn(true);
     ClientRunnable newRunnable = new NewRunnable(mockConnection);
 
-    Field tF = Class.forName(clientRunnableLoc).getDeclaredField("timer");
+    Field tF = Class.forName(Rnloc).getDeclaredField("timer");
     tF.setAccessible(true);
     ClientTimer newClient = new MockTimer();
 
     tF.set(newRunnable, newClient);
-    Field newTerminateVar = Class.forName(clientRunnableLoc).getDeclaredField("terminate");
+    Field newTerminateVar = Class.forName(Rnloc).getDeclaredField("terminate");
     newTerminateVar.setAccessible(true);
 
     assertEquals("false", newTerminateVar.get(newRunnable).toString());
     newRunnable.run();
-    newTerminateVar = Class.forName(clientRunnableLoc).getDeclaredField("terminate");
+    newTerminateVar = Class.forName(Rnloc).getDeclaredField("terminate");
     newTerminateVar.setAccessible(true);
     assertEquals("true", newTerminateVar.get(newRunnable).toString());
   }
