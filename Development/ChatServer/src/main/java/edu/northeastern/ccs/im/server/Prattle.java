@@ -78,6 +78,11 @@ public abstract class Prattle {
 				public int hashCode() {
 					return super.hashCode();
 				}
+
+				@Override
+				public boolean equals(Object obj){
+					return super.equals(obj);
+				}
 			};
 
 		return singleTon;
@@ -126,6 +131,7 @@ public abstract class Prattle {
 			ChatLogger.LOGGER.error("Fatal error: " + ex.getMessage());
 			throw new IllegalStateException(ex.getMessage());
 		}
+
 	}
 
 	public static void startServer(ServerSocketChannel serverSocket) throws IOException {
