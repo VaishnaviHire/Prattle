@@ -1,6 +1,5 @@
 package edu.northeastern.ccs.im.server;
 
-import java.net.PortUnreachableException;
 import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;

@@ -8,12 +8,10 @@ import org.junit.jupiter.api.*;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+
 import java.lang.reflect.Modifier;
 import java.net.InetSocketAddress;
 
-import java.nio.CharBuffer;
-import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
@@ -24,7 +22,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import edu.northeastern.ccs.im.Message;
 import edu.northeastern.ccs.im.NetworkConnection;
 import edu.northeastern.ccs.im.server.*;
-import java.nio.ByteBuffer;
+
 
 
 /**
@@ -140,12 +138,6 @@ public class PrattleTest {
       assertEquals(nc.iterator().next().getText(),"Hello\n How are you?");
       assertFalse(nc.iterator().hasNext());
       assertThrows(NoSuchElementException.class, () -> { nc.iterator().next() ;});
-//
-//      Field sel1 = NetworkConnection.class.getDeclaredField("selector");
-//      sel1.setAccessible(true);
-//      sel1.set(nc, Selector.open());
-//      assertFalse(nc.iterator().hasNext());
-
 
 
       testPrattle.stopServer();
