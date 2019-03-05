@@ -4,11 +4,15 @@ import org.junit.jupiter.api.Test;
 
 import edu.northeastern.ccs.im.Message;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-class Test1 {
+class MessageTest {
   private static final String Msg = "this is a message";
   private static final String name = "Shivam";
+
   @Test
   void testToStringBCT() {
     Message m = Message.makeBroadcastMessage(name, Msg);
@@ -78,8 +82,30 @@ class Test1 {
     assertNull(m.getText());
   }
   @org.junit.jupiter.api.Test
-  void messageHello() {
-    Message m = Message.makeBroadcastMessage(name, Msg);
-    assertEquals("this is a message",m.getText());
+  void messageHelloTest()  throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    Method m = Message.class.getDeclaredMethod("makeHelloMessage", String.class);
+    m.setAccessible(true);
+
+    assertEquals("this is a message",((Message)m.invoke("Message",Msg)).getText());
+  }
+
+  @Test
+  void makeMessageTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    Method makeMessage = Message.class.getDeclaredMethod("makeMessage", String.class, String.class, String.class);
+    makeMessage.setAccessible(true);
+    Message bye = (Message) makeMessage.invoke("Message","BYE", name, Msg);
+    Message hello = (Message) makeMessage.invoke("Message","HLO", name, Msg);
+    Message broadcast = (Message) makeMessage.invoke("Message","BCT", name, Msg);
+
+    // Initializating different types of messages
+    assertFalse(bye.isInitialization());
+    assertTrue(broadcast.isBroadcastMessage());
+    assertTrue(hello.isInitialization());
+
+    // Terminating the messages
+    assertTrue(bye.terminate());
+    assertFalse(hello.terminate());
+
+
   }
 }

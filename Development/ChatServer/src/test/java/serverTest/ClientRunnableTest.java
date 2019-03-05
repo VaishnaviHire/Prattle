@@ -101,12 +101,15 @@ public class ClientRunnableTest {
   @Test
   void testEnqueueMessage() {
     Message[] messages = {Message.makeSimpleLoginMessage("yash")};
-    when(mockConnection.iterator()).thenReturn(new MockMessageIterator(Arrays.asList(messages)));
+    MockMessageIterator messageItr = new MockMessageIterator(Arrays.asList(messages));
+    when(mockConnection.iterator()).thenReturn(messageItr);
     clientRunnable.run();
     Message msg = Message.makeBroadcastMessage("yash", "hi");
     clientRunnable.enqueueMessage(msg);
     clientRunnable.run();
     assertFalse(verify(mockConnection).sendMessage(msg));
+//    assertEquals(mockConnection.iterator().hasNext(),messageItr.hasNext());
+
   }
 
   @Test

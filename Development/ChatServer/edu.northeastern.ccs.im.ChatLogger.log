@@ -1,17 +1,34 @@
-Feb 24, 2019 9:41:47 PM edu.northeastern.ccs.im.ChatLogger write
+Mar 04, 2019 4:45:44 PM edu.northeastern.ccs.im.ChatLogger write
+SEVERE: Fatal error: Address already in use
+Mar 04, 2019 4:45:44 PM edu.northeastern.ccs.im.ChatLogger write
+SEVERE: Fatal error: Address already in use
+Mar 04, 2019 4:45:45 PM edu.northeastern.ccs.im.ChatLogger write
 INFO: Could not find a thread that I tried to remove!
 
-Feb 24, 2019 9:41:47 PM edu.northeastern.ccs.im.ChatLogger write
+Mar 04, 2019 4:45:45 PM edu.northeastern.ccs.im.ChatLogger write
 SEVERE: Timing out or forcing off a user null
-Feb 24, 2019 9:41:47 PM edu.northeastern.ccs.im.ChatLogger write
+Mar 04, 2019 4:45:45 PM edu.northeastern.ccs.im.ChatLogger write
 INFO: Could not find a thread that I tried to remove!
 
-Feb 24, 2019 9:41:47 PM edu.northeastern.ccs.im.ChatLogger write
+Mar 04, 2019 4:45:45 PM edu.northeastern.ccs.im.ChatLogger write
 INFO: 	BCT 7 Bouncer 70 Last message was rejected because it specified an incorrect user name.
-Feb 24, 2019 9:41:47 PM edu.northeastern.ccs.im.ChatLogger write
+Mar 04, 2019 4:45:45 PM edu.northeastern.ccs.im.ChatLogger write
 INFO: 	BCT 4 yash 2 hi
-Feb 24, 2019 9:41:47 PM edu.northeastern.ccs.im.ChatLogger write
+Mar 04, 2019 4:45:45 PM edu.northeastern.ccs.im.ChatLogger write
 INFO: 	BYE 4 yash 2 --
-Feb 24, 2019 9:41:47 PM edu.northeastern.ccs.im.ChatLogger write
+Mar 04, 2019 4:45:45 PM edu.northeastern.ccs.im.ChatLogger write
 INFO: Could not find a thread that I tried to remove!
 
+Mar 04, 2019 4:45:45 PM edu.northeastern.ccs.im.ChatLogger write
+SEVERE: Fatal error: Address already in use
+Mar 04, 2019 4:45:45 PM edu.northeastern.ccs.im.ChatLogger write
+INFO: BCT 7 Chatter 12 Hello World!
+Mar 04, 2019 4:45:45 PM edu.northeastern.ccs.im.ChatLogger write
+INFO: BCT 7 Chatter 12 Hello World!
+Mar 04, 2019 4:45:45 PM edu.northeastern.ccs.im.ChatLogger write
+INFO: Could not find a thread that I tried to remove!
+
+Mar 04, 2019 4:45:45 PM edu.northeastern.ccs.im.ChatLogger write
+SEVERE: Fatal error: Address already in use
+Mar 04, 2019 4:45:45 PM edu.northeastern.ccs.im.ChatLogger write
+SEVERE: Fatal error: Address already in use
