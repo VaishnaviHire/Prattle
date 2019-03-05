@@ -121,14 +121,14 @@ public abstract class Prattle {
 			serverSocket.configureBlocking(false);
 			serverSocket.socket().bind(new InetSocketAddress(ServerConstants.PORT));
 			// Create the Selector with which our channel is registered.
-			getInstance().startServer(serverSocket);
+			Prattle.startServer(serverSocket);
 		} catch (IOException ex) {
 			ChatLogger.LOGGER.error("Fatal error: " + ex.getMessage());
 			throw new IllegalStateException(ex.getMessage());
 		}
 	}
 
-	public void startServer(ServerSocketChannel serverSocket) throws IOException {
+	public static void startServer(ServerSocketChannel serverSocket) throws IOException {
 		Selector selector = SelectorProvider.provider().openSelector();
 		// Register to receive any incoming connection messages.
 		serverSocket.register(selector, SelectionKey.OP_ACCEPT);
