@@ -17,7 +17,7 @@ public class ChatLogger {
   /**
    * Private constructor. This class cannot be instantiated.
    */
-  public ChatLogger() {
-    throw new IllegalStateException("ChatLogger not instantiable");
+   ChatLogger() {
+      throw new IllegalStateException("ChatLogger not instantiable");
   }
 }

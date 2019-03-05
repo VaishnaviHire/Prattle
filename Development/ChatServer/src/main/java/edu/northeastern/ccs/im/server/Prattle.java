@@ -130,7 +130,6 @@ public abstract class Prattle {
 
 	public void startServer(ServerSocketChannel serverSocket) throws IOException {
 		Selector selector = SelectorProvider.provider().openSelector();
-		System.out.print(selector);
 		// Register to receive any incoming connection messages.
 		serverSocket.register(selector, SelectionKey.OP_ACCEPT);
 		// Create our pool of threads on which we will execute.
@@ -151,7 +150,10 @@ public abstract class Prattle {
 					it.remove();
 					// Assert certain things I really hope is true
 					assert key.isAcceptable();
-					assert key.channel() == serverSocket;
+					if( key.channel() != serverSocket){
+						ChatLogger.LOGGER.error("Should be : key.channel() == serverSocket");
+					}
+
 					// Create new thread to handle client for which we just received request.
 					createClientThread(serverSocket, threadPool);
 				}
