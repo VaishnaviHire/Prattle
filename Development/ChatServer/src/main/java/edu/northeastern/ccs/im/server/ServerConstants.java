@@ -17,7 +17,7 @@ package edu.northeastern.ccs.im.server;
 public class ServerConstants {
 
 	/** The port number to listen on. */
-	protected static final int PORT = 4546;
+	protected static final int PORT = 4545;
 
 	/** Amount of time we should wait for a signal to arrive. */
 	protected static final int DELAY_IN_MS = 50;

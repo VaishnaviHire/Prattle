@@ -90,7 +90,7 @@ public class NetworkConnection implements Iterable<Message> {
 			key = channel.register(selector, SelectionKey.OP_READ);
 		} catch (IOException e) {
 			// For the moment we are going to simply cover up that there was a problem.
-			ChatLogger.error(e.toString());
+			ChatLogger.LOGGER.error(e.toString());
 			assert false;
 		}
 	}
@@ -121,7 +121,8 @@ public class NetworkConnection implements Iterable<Message> {
 		}
 		// Check to see if we were successful in our attempt to write the message
 		if (result && wrapper.hasRemaining()) {
-			ChatLogger.warning("WARNING: Sent only " + bytesWritten + " out of " + wrapper.limit()
+			ChatLogger.LOGGER.warn("WARNING: Sent only " + bytesWritten + " out of " + wrapper.limit()
+
 					+ " bytes -- dropping this user.");
 			result = false;
 		}
@@ -136,7 +137,7 @@ public class NetworkConnection implements Iterable<Message> {
 			selector.close();
 			channel.close();
 		} catch (IOException e) {
-			ChatLogger.error("Caught exception: " + e.toString());
+			ChatLogger.LOGGER.error("Caught exception: " + e.toString());
 			assert false;
 		}
 	}
@@ -169,47 +170,48 @@ public class NetworkConnection implements Iterable<Message> {
 	            }
 	            // Otherwise, check if we can read in at least one new message
 	            else if (selector.selectNow() != 0) {
-	                assert key.isReadable();
-	                // Read in the next set of commands from the channel.
-	                channel.read(buff);
-	                selector.selectedKeys().remove(key);
-	                buff.flip();
-	                // Create a decoder which will convert our traffic to something useful
-	                Charset charset = Charset.forName(CHARSET_NAME);
-	                CharsetDecoder decoder = charset.newDecoder();
-	                // Convert the buffer to a format that we can actually use.
-	                CharBuffer charBuffer = decoder.decode(buff);
-	                // get rid of any extra whitespace at the beginning
-	                // Start scanning the buffer for any and all messages.
-	                int start = 0;
-	                // Scan through the entire buffer; check that we have the minimum message size
-	                while ((start + MIN_MESSAGE_LENGTH) <= charBuffer.limit()) {
-	                    // If this is not the first message, skip extra space.
-	                    if (start != 0) {
-	                        charBuffer.position(start);
-	                    }
-	                    // First read in the handle
-	                    String handle = charBuffer.subSequence(0, HANDLE_LENGTH).toString();
-	                    // Skip past the handle
-	                    charBuffer.position(start + HANDLE_LENGTH + 1);
-	                    // Read the first argument containing the sender's name
-	                    String sender = readArgument(charBuffer);
-	                    // Skip past the leading space
-	                    charBuffer.position(charBuffer.position() + 2);
-	                    // Read in the second argument containing the message
-	                    String message = readArgument(charBuffer);
-	                    // Add this message into our queue
-	                    Message newMsg = Message.makeMessage(handle, sender, message);
-	                    messages.add(newMsg);
-	                    // And move the position to the start of the next character
-	                    start = charBuffer.position() + 1;
-	                }
-	                // Move any read messages out of the buffer so that we can add to the end.
-	                buff.position(start);
-	                // Move all of the remaining data to the start of the buffer.
-	                buff.compact();
-	                result = true;
-	            }
+						assert key.isReadable();
+						// Read in the next set of commands from the channel.
+						channel.read(buff);
+						selector.selectedKeys().remove(key);
+						buff.flip();
+						// Create a decoder which will convert our traffic to something useful
+						Charset charset = Charset.forName(CHARSET_NAME);
+						CharsetDecoder decoder = charset.newDecoder();
+						// Convert the buffer to a format that we can actually use.
+						CharBuffer charBuffer = decoder.decode(buff);
+						// get rid of any extra whitespace at the beginning
+						// Start scanning the buffer for any and all messages.
+						int start = 0;
+						// Scan through the entire buffer; check that we have the minimum message size
+						while ((start + MIN_MESSAGE_LENGTH) <= charBuffer.limit()) {
+							// If this is not the first message, skip extra space.
+							if (start != 0) {
+								charBuffer.position(start);
+							}
+							// First read in the handle
+							String handle = charBuffer.subSequence(0, HANDLE_LENGTH).toString();
+							// Skip past the handle
+							charBuffer.position(start + HANDLE_LENGTH + 1);
+							// Read the first argument containing the sender's name
+							String sender = readArgument(charBuffer);
+							// Skip past the leading space
+							charBuffer.position(charBuffer.position() + 2);
+							// Read in the second argument containing the message
+							String message = readArgument(charBuffer);
+							// Add this message into our queue
+							Message newMsg = Message.makeMessage(handle, sender, message);
+							messages.add(newMsg);
+							// And move the position to the start of the next character
+							start = charBuffer.position() + 1;
+						}
+						// Move any read messages out of the buffer so that we can add to the end.
+						buff.position(start);
+						// Move all of the remaining data to the start of the buffer.
+						buff.compact();
+						result = true;
+					}
+
 	        } catch (IOException ioe) {
 	            // For the moment, we will cover up this exception and hope it never occurs.
 	            assert false;
@@ -224,7 +226,7 @@ public class NetworkConnection implements Iterable<Message> {
 	        throw new NoSuchElementException("No next line has been typed in at the keyboard");
 	      }
 	      Message msg = messages.remove();
-	      ChatLogger.info(msg.toString());
+	      ChatLogger.LOGGER.info(msg.toString());
 	      return msg;
 	    }
 	    
@@ -234,6 +236,7 @@ public class NetworkConnection implements Iterable<Message> {
 	     * @param charBuffer Buffer holding text from over the network.
 	     * @return String holding the next argument sent over the network.
 	     */
+
 	    private String readArgument(CharBuffer charBuffer) {
 	        String result = null;
 	        // Compute the current position in the buffer

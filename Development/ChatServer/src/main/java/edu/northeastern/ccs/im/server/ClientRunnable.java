@@ -1,5 +1,6 @@
 package edu.northeastern.ccs.im.server;
 
+import java.net.PortUnreachableException;
 import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -120,7 +121,7 @@ public class ClientRunnable implements Runnable {
 	 * @return True if we sent the message successfully; false otherwise.
 	 */
 	private boolean sendMessage(Message message) {
-		ChatLogger.info("\t" + message);
+		ChatLogger.LOGGER.info("\t" + message);
 		return connection.sendMessage(message);
 	}
 
@@ -153,6 +154,10 @@ public class ClientRunnable implements Runnable {
 	 */
 	public void enqueueMessage(Message message) {
 		waitingList.add(message);
+	}
+
+	public Queue<Message> getMessageList(){
+		return waitingList;
 	}
 
 	/**
@@ -208,7 +213,7 @@ public class ClientRunnable implements Runnable {
 		// Finally, check if this client have been inactive for too long and,
 		// when they have, terminate the client.
 		if (timer.isBehind()) {
-			ChatLogger.error("Timing out or forcing off a user " + name);
+			ChatLogger.LOGGER.error("Timing out or forcing off a user " + name);
 			terminate = true;
 		}
 		if (terminate) {
