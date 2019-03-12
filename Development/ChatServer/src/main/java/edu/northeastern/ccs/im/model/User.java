@@ -8,7 +8,7 @@ public class User implements Unifier {
     private String username;
     private String userRole;
 
-    User(String username){
+   public User(String username){
         // Modify the constructor to create user with clientRunnable
         this.username = username;
         this.userRole = "plain_user";
@@ -29,6 +29,7 @@ public class User implements Unifier {
     public void  setUserRole(String role){
          this.userRole = role;
     }
+
 
     /**
      *
@@ -57,4 +58,5 @@ public class User implements Unifier {
     public String getType() {
         return "user";
     }
+
 }
