@@ -8,18 +8,22 @@ import java.util.List;
 public class Group implements Unifier {
 
     private String groupName;
-    private List<Unifier> userlist;
-    private Admin admin;
+    protected List<Unifier> userlist;
+    private UserToAdminAdapter admin;
 
     /**
      *
      * @param groupName name of the group
      * @param admin User responsible for creation of the group
      */
-    Group(String groupName, User admin){
+    public Group(String groupName, User admin){
+
         this.groupName = groupName;
-        this.admin = new UserToAdminAdapter(admin);
+        this.admin =  UserToAdminAdapter.getInstance(admin,groupName);
+        userlist = new ArrayList<>();
+        this.userlist.add(admin);
     }
+
 
 
     /**
@@ -37,7 +41,7 @@ public class Group implements Unifier {
      */
     public List<Unifier> getActiveUsers(){
         // Modify method with active users only
-        return new ArrayList<Unifier>();
+        return new ArrayList<>();
     }
 
     /**
@@ -72,8 +76,9 @@ public class Group implements Unifier {
      *
      * @return  the admin object in the group
      */
-    public Admin getAdmin(){
+    public UserToAdminAdapter getAdmin(){
         return admin;
     }
+
 
 }

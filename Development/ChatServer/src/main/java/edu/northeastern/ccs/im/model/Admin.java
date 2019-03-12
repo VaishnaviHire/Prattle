@@ -1,12 +1,15 @@
 package edu.northeastern.ccs.im.model;
 
+import java.util.List;
+
 /**
  *  Interface which defines Admin role for the user
  */
 public interface Admin {
 
-    public void createGroup(String groupname);
-    public void addUserToGroup(User user);
-    public void deleteUserFromGroup(User user);
+    public void addUserToGroup(User user, List<Unifier> userlist);
+    public void deleteUserFromGroup(User user, List<Unifier> userlist);
+    public String getAdminName();
+    public String getGroupName();
 
 }
