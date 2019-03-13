@@ -85,6 +85,11 @@ public class PrattleTest {
     testPrattle.broadcastMessage(Message.makeBroadcastMessage("Tom", "hi"));
   }
 
+  @Test
+  void prattlePrivateMessageTest() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException,InvocationTargetException {
+// adding private message tests here
+  }
+
   /**
    * Testing that the stopServer() method correctly works.
    *

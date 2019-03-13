@@ -17,7 +17,9 @@ public enum MessageType {
 	 */
 	QUIT("BYE"),
 	/** Message whose contents is broadcast to all connected users. */
-	BROADCAST("BCT");
+	BROADCAST("BCT"),
+
+	PRIVATE("PVT");
 
 	/** Store the short name of this message type. */
 	private String abbreviation;
