@@ -80,6 +80,9 @@ public class Message {
 		return new Message(MessageType.BROADCAST, myName, text);
 	}
 
+	public static Message makePrivateMessage(String myName, String text) {
+		return new Message(MessageType.PRIVATE, myName, text);
+	}
 	/**
 	 * Create a new message stating the name with which the user would like to
 	 * login.
@@ -107,7 +110,11 @@ public class Message {
 			result = makeQuitMessage(srcName);
 		} else if (handle.compareTo(MessageType.HELLO.toString()) == 0) {
 			result = makeSimpleLoginMessage(srcName);
-		} else if (handle.compareTo(MessageType.BROADCAST.toString()) == 0) {
+		} else if((handle.compareTo(MessageType.PRIVATE.toString()) == 0) &&
+		text.contains("%")){
+			result = makePrivateMessage(srcName,text);
+		}
+		else if (handle.compareTo(MessageType.BROADCAST.toString()) == 0) {
 			result = makeBroadcastMessage(srcName, text);
 		}
 		return result;
@@ -149,6 +156,10 @@ public class Message {
 	 */
 	public boolean isBroadcastMessage() {
 		return (msgType == MessageType.BROADCAST);
+	}
+
+	public boolean isPrivateMessage() {
+		return (msgType == MessageType.PRIVATE);
 	}
 
 	/**

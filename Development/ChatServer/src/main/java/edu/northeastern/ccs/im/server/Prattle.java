@@ -7,6 +7,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.channels.spi.SelectorProvider;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -66,6 +67,34 @@ public abstract class Prattle {
 				tt.enqueueMessage(message);
 			}
 		}
+	}
+
+	/**
+	 * Sends private message to the given user. Username is embedded in the message text.
+	 * Eg. username%MessageText
+	 * @param message Message that the client sent
+	 */
+	public static void privateMessage(Message message) {
+
+		//get receivers from the text
+
+		String[] text = message.getText().split("%");
+		String[] receivers = Arrays.copyOf(text,text.length-1);
+		String messageText = text[text.length-1];
+
+		Message msg = Message.makeBroadcastMessage(message.getName(),messageText);
+
+		// Loop through all of our active threads
+		for (ClientRunnable tt : active) {
+			// Loop through all the receivers
+			for (String receiver : receivers) {
+				// Do not send the message to any clients that are not ready to receive it.
+				if (receiver.equals(tt.getName()) && tt.isInitialized()) {
+					tt.enqueueMessage(msg);
+				}
+			}
+		}
+
 	}
 
 	private Prattle() {

@@ -242,7 +242,10 @@ public class ClientRunnable implements Runnable {
 				// Check if the message is legal formatted
 				if (messageChecks(msg)) {
 					// Check for our "special messages"
-					if (msg.isBroadcastMessage()) {
+					if(msg.isPrivateMessage()){
+						Prattle.privateMessage(msg);
+					}
+					else if (msg.isBroadcastMessage()) {
 						// Check for our "special messages"
 						Prattle.broadcastMessage(msg);
 					}
