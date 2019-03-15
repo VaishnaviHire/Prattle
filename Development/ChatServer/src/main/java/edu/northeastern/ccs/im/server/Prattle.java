@@ -80,7 +80,6 @@ public abstract class Prattle {
 
     //get receivers from the text
 
-    String messageText = message.getText();
     List<String> receivers = message.getMsgReceivers();
 
     // Loop through all of our active threads
@@ -96,9 +95,7 @@ public abstract class Prattle {
   }
 
   public static void groupMessage(Message message) {
-    String messageText = message.getText();
-    String grpName = message.getReceivingGrpName();
-    String srcName = message.getName();
+
 
     List<String> receivers = message.getMsgReceivers();
 
