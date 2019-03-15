@@ -22,7 +22,11 @@ public enum MessageType {
   /**
    * Message whose contents is sent to a specific user.
    */
-  PRIVATE("PVT");
+  PRIVATE("PVT"),
+  /**
+   * Message whose contents is sent to a specific group.
+   */
+  GROUP("GRP");
 
   /**
    * Store the short name of this message type.

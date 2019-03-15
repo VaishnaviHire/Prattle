@@ -225,9 +225,9 @@ public class PrattleTest {
       // test for sendMessage in NetworkConnection
       assertTrue(nc.sendMessage(Message.makeBroadcastMessage("Vaish", "Hello!!")));
 
-      testPrattle.stopServer();
+      Prattle.stopServer();
 
-    } catch (IOException io) {
+    } catch (IOException ignored) {
 
     }
   }
@@ -252,7 +252,7 @@ public class PrattleTest {
         e.printStackTrace();
       }
       try {
-        testPrattle.startServer(socketChannel);
+        Prattle.startServer(socketChannel);
 
       } catch (IOException e) {
         e.printStackTrace();
