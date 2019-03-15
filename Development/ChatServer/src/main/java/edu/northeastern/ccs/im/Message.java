@@ -110,9 +110,6 @@ public class Message {
    * Create a new private message.
    *
    * @param myName Name of the sender.
-   * @param receiversName
-   * @param text
-   * @return
    */
   public static Message makePrivateMessage(String myName, List<String> receiversName, String text) {
     return new Message(MessageType.PRIVATE, myName, receiversName, null, text);
@@ -136,23 +133,30 @@ public class Message {
    * @return Instance of Message (or its subclasses) representing the handle, name, & text.
    */
   protected static Message makeMessage(JSONObject serverRequest) {
-    String handle = null;
-    String srcName = null;
-    String grpName = null;
-    if(serverRequest.has("handle")) {
+    String handle = "";
+    String srcName;
+    String grpName;
+    if (serverRequest.has("handle")) {
       handle = serverRequest.getString("handle");
     }
-    if(serverRequest.has("sender")) {
+
+    if (serverRequest.has("sender")) {
       srcName = serverRequest.getString("sender");
+    } else {
+      srcName = null;
     }
-
-    JSONArray arr = serverRequest.getJSONArray("receivers");
     List<String> receiversName = new ArrayList<>();
-    for(int i = 0; i < arr.length(); i++) {
-      receiversName.add(arr.getJSONObject(i).getString("name"));
+    if (serverRequest.has("receivers")) {
+      JSONArray arr = serverRequest.getJSONArray("receivers");
+      for (int i = 0; i < arr.length(); i++) {
+        receiversName.add(arr.getJSONObject(i).getString("name"));
+      }
+    } else {
+      receiversName = null;
     }
 
-    if (serverRequest.has("grpName")){
+
+    if (serverRequest.has("grpName")) {
       grpName = serverRequest.getString("grpName");
     }
     String text = serverRequest.getString("message");

@@ -223,4 +223,5 @@ public abstract class Prattle {
       ChatLogger.LOGGER.error("Caught Exception: " + e.toString());
     }
   }
+
 }

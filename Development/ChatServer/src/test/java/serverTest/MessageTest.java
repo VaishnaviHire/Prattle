@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import edu.northeastern.ccs.im.ChatLogger;
 import edu.northeastern.ccs.im.Message;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -181,7 +182,6 @@ class MessageTest {
 
     JSONObject helloMsg = new JSONObject();
     helloMsg.put("handle", "HLO");
-    helloMsg.put("sender", name);
     helloMsg.put("message", Msg);
     helloMsg.put("receivers", new ArrayList<>());
     helloMsg.put("grpName", "");
@@ -207,14 +207,19 @@ class MessageTest {
     // Initializating different types of messages
     assertEquals("PVT 2 -- 4 yash 5 yash1 5 yash2 2 -- 17 this is a message",
             pvt.toString());
-    assertEquals("HLO 6 Shivam 2 -- 2 -- 2 --", hello.toString());
+    assertEquals("HLO 2 -- 2 -- 2 -- 2 --", hello.toString());
     assertEquals("BCT 6 Shivam 2 -- 2 -- 17 this is a message", broadcast.toString());
     assertEquals("BYE 6 Shivam 2 -- 2 -- 2 --", bye.toString());
     assertTrue(pvt.isPrivateMessage());
     assertNull(pvt.getReceivingGrpName());
   }
-//  @Test
-//  void testChatLogger() {
-//    ChatLogger cl = new ChatLogger();
-//  }
+
+  @Test
+  void testChatLogger() {
+    assertThrows(Exception.class, () -> {
+      Constructor<ChatLogger> chatLoggerConstructor = ChatLogger.class.getDeclaredConstructor();
+      chatLoggerConstructor.setAccessible(true);
+      chatLoggerConstructor.newInstance();
+    });
+  }
 }

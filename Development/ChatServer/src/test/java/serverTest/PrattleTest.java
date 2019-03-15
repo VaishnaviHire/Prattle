@@ -271,7 +271,7 @@ public class PrattleTest {
     SocketChannel sc = SocketChannel.open();
     Thread thread = new Thread(() -> {
       try {
-        socketChannel.socket().bind(new InetSocketAddress("localhost", 4555));
+        socketChannel.socket().bind(new InetSocketAddress("localhost", 4545));
 
       } catch (IOException e) {
         e.printStackTrace();
