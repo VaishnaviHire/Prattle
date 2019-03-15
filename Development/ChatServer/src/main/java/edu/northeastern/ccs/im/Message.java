@@ -275,11 +275,6 @@ public class Message {
     } else {
       result.append(" ").append(NULL_OUTPUT.length()).append(" ").append(NULL_OUTPUT);
     }
-    if (receivingGrpName != null) {
-      result.append(" ").append(receivingGrpName.length()).append(" ").append(receivingGrpName);
-    } else {
-      result.append(" ").append(NULL_OUTPUT.length()).append(" ").append(NULL_OUTPUT);
-    }
     if (msgText != null) {
       result.append(" ").append(msgText.length()).append(" ").append(msgText);
     } else {

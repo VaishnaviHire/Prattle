@@ -85,11 +85,14 @@ public abstract class Prattle {
     Message msg = Message.makeBroadcastMessage(message.getName(), messageText);
 
     // Loop through all of our active threads
+    System.out.println(active.size());
     for (ClientRunnable tt : active) {
       // Loop through all the receivers
       for (String receiver : receivers) {
         // Do not send the message to any clients that are not ready to receive it.
-        if (receiver.equals(tt.getName())) {
+        System.out.println(tt.getName());
+        System.out.println(tt.isInitialized());
+        if (receiver.equals(tt.getName()) && tt.isInitialized()) {
           tt.enqueueMessage(msg);
         }
       }

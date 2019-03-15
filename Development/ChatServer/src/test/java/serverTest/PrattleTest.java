@@ -16,10 +16,12 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -44,6 +46,7 @@ public class PrattleTest {
 
   private Prattle testPrattle;
   private String prattleLoc;
+  private String clientRunnable;
   private static Thread mainThread;
 
   /**
@@ -53,7 +56,7 @@ public class PrattleTest {
   void setUp() {
     testPrattle = Prattle.getInstance();
     prattleLoc = "edu.northeastern.ccs.im.server.Prattle";
-
+    clientRunnable = "edu.northeastern.ccs.im.server.ClientRunnable";
   }
 
   /**
@@ -90,19 +93,21 @@ public class PrattleTest {
 
   @Test
   void prattlePvtMessageTest() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    List<String> s = new ArrayList<>();
+    s.add("yash");
     ConcurrentLinkedQueue<ClientRunnable> newActive = new ConcurrentLinkedQueue<>();
+    Message[] messages = {Message.makePrivateMessage("shivam", s, "this is my message")};
     NetworkConnection mockConnection1 = mock(NetworkConnection.class);
-    NetworkConnection mockConnection2 = mock(NetworkConnection.class);
-    ClientRunnable RunnableOne = new ClientRunnable(mockConnection1);
-    ClientRunnable RunnableTwo = new ClientRunnable(mockConnection2);
     when(mockConnection1.sendMessage(any())).thenReturn(true);
-    when(mockConnection1.iterator()).thenReturn(new MockMessageIterator());
-    when(mockConnection2.sendMessage(any())).thenReturn(true);
-    when(mockConnection2.iterator()).thenReturn(new MockMessageIterator());
+    when(mockConnection1.iterator()).thenReturn(new MockMessageIterator(Arrays.asList(messages)));
+    ClientRunnable RunnableOne = new ClientRunnable(mockConnection1);
+    when(mockConnection1.sendMessage(any())).thenReturn(true);
+    when(mockConnection1.iterator()).thenReturn(new MockMessageIterator(Arrays.asList(messages)));
+    ClientRunnable RunnableTwo = new ClientRunnable(mockConnection1);
     testPrattle.hashCode();
     RunnableOne.setName("shivam");
-    RunnableTwo.setName("yash");
     RunnableOne.run();
+    RunnableTwo.setName("yash");
     RunnableTwo.run();
 
     newActive.add(RunnableOne);
@@ -112,11 +117,15 @@ public class PrattleTest {
     prField.setAccessible(true);
     prField.set(testPrattle, newActive);
 
+    Field ini = RunnableTwo.getClass().getDeclaredField("initialized");
+    ini.setAccessible(true);
+    ini.set(RunnableTwo, true);
+
     int activeSize = newActive.size();
     // tests for remove client
-    List<String> s = new ArrayList<>();
-    s.add("yash");
-    Prattle.privateMessage(Message.makePrivateMessage("shivam", s, "this is my message"));
+    testPrattle.privateMessage(Message.makePrivateMessage("shivam", s, "this is my message"));
+    Queue<Message> res = RunnableTwo.getMessageList();
+    System.out.println(res.remove());
   }
 
   @Test
