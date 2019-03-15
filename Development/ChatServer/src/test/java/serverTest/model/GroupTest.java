@@ -20,17 +20,17 @@ public class GroupTest {
         UserToAdminAdapter adminUser = firstgroup.getAdmin();
 
         assertEquals("firstGroup",firstgroup.getName());
-        assertEquals("group",firstgroup.getType());
+        assertTrue(firstgroup.isGroup());
         assertEquals(adminUser,firstgroup.getAdmin());
-        assertNotNull(firstgroup.getAllUsers());
+        assertNotNull(firstgroup);
 
         // Add users;
         User newUser = new User("newUser");
-        adminUser.addUserToGroup(newUser, firstgroup.getAllUsers());
+        adminUser.addUserToGroup(newUser, firstgroup);
 
-        assertEquals(2, firstgroup.getAllUsers().size());
-        adminUser.deleteUserFromGroup(newUser, firstgroup.getAllUsers());
-        assertEquals(1, firstgroup.getAllUsers().size());
+        assertEquals(2, firstgroup.getMembers().size());
+        adminUser.deleteUserFromGroup(newUser, firstgroup);
+        assertEquals(1, firstgroup.getMembers().size());
 
         // Change this: A group object should not set groupname . A user object or Admin should set the group name
 
