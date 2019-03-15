@@ -1,11 +1,14 @@
 package serverTest;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import edu.northeastern.ccs.im.Message;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -91,11 +94,32 @@ class MessageTest {
 
   @Test
   void makeMessageTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-    Method makeMessage = Message.class.getDeclaredMethod("makeMessage", String.class, String.class, String.class);
+    Method makeMessage = Message.class.getDeclaredMethod("makeMessage", JSONObject.class);
+    JSONObject helloMsg = new JSONObject();
+    helloMsg.put("handle", "HLO");
+    helloMsg.put("sender", name);
+    helloMsg.put("message", Msg);
+    helloMsg.put("receivers", new ArrayList<>());
+    helloMsg.put("grpName", "");
+
+    JSONObject bctMsg = new JSONObject();
+    bctMsg.put("handle", "BCT");
+    bctMsg.put("sender", name);
+    bctMsg.put("message", Msg);
+    bctMsg.put("receivers", new ArrayList<>());
+    bctMsg.put("grpName", "");
+
+    JSONObject byeMsg = new JSONObject();
+    byeMsg.put("handle", "BYE");
+    byeMsg.put("sender", name);
+    byeMsg.put("message", Msg);
+    byeMsg.put("receivers", new ArrayList<>());
+    byeMsg.put("grpName", "");
+
     makeMessage.setAccessible(true);
-    Message bye = (Message) makeMessage.invoke("Message","BYE", name, Msg);
-    Message hello = (Message) makeMessage.invoke("Message","HLO", name, Msg);
-    Message broadcast = (Message) makeMessage.invoke("Message","BCT", name, Msg);
+    Message bye = (Message) makeMessage.invoke("Message",byeMsg);
+    Message hello = (Message) makeMessage.invoke("Message",helloMsg);
+    Message broadcast = (Message) makeMessage.invoke("Message",bctMsg);
 
     // Initializating different types of messages
     assertFalse(bye.isInitialization());
