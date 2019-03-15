@@ -5,9 +5,6 @@ import static org.mockito.Mockito.*;
 
 import edu.northeastern.ccs.im.Message;
 import edu.northeastern.ccs.im.NetworkConnection;
-import edu.northeastern.ccs.im.server.ClientRunnable;
-import edu.northeastern.ccs.im.server.Prattle;
-import edu.northeastern.ccs.im.server.ServerConstants;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
@@ -21,9 +18,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
+
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Queue;
@@ -102,6 +97,7 @@ public class PrattleTest {
     try {
 
           List<String> s = new ArrayList<>();
+
           s.add("yash");
 
       sc.configureBlocking(true);
@@ -118,9 +114,9 @@ public class PrattleTest {
 
       testPrattle.hashCode();
       RunnableOne.setName("shivam");
-    RunnableOne.run();
+      RunnableOne.run();
       RunnableTwo.setName("yash");
-    RunnableTwo.run();
+      RunnableTwo.run();
 
       newActive.add(RunnableOne);
       newActive.add(RunnableTwo);
@@ -136,15 +132,11 @@ public class PrattleTest {
 
       int activeSize = newActive.size();
       // tests for remove client
-      testPrattle.privateMessage(Message.makePrivateMessage("shivam", s, "this is my message"));
-//      assertTrue(nc.iterator().hasNext());
+      Message msg = Message.makePrivateMessage("shivam", s, "this is my message");
+      testPrattle.privateMessage(msg);
       Queue<Message> res = RunnableTwo.getMessageList();
-      System.out.println(res.remove());
+      assertEquals(msg.getText(),res.remove().getText());
 
-      // Tests for Message Iterator
-//      assertTrue(nc.iterator().hasNext());
-//      assertEquals(nc.iterator().next().getText(), "Hello\n How are you?");
-//      assertFalse(nc.iterator().hasNext());
       assertThrows(NoSuchElementException.class, () -> {
         nc.iterator().next();
       });
@@ -161,44 +153,7 @@ public class PrattleTest {
     }
   }
 
-//
-//
-//
-//    List<String> s = new ArrayList<>();
-//    s.add("yash");
-//    ConcurrentLinkedQueue<ClientRunnable> newActive = new ConcurrentLinkedQueue<>();
-//    Message[] messages = {Message.makePrivateMessage("shivam", s, "this is my message")};
-//    NetworkConnection mockConnection1 = mock(NetworkConnection.class);
-//    when(mockConnection1.sendMessage(any())).thenReturn(true);
-////    when(mockConnection1.iterator()).thenReturn(new MockMessageIterator(Arrays.asList(messages)));
-//    ClientRunnable RunnableOne = new ClientRunnable(mockConnection1);
-//    when(mockConnection1.sendMessage(any())).thenReturn(true);
-////    when(mockConnection1.iterator()).thenReturn(new MockMessageIterator(Arrays.asList(messages)));
-//    ClientRunnable RunnableTwo = new ClientRunnable(mockConnection1);
-//    testPrattle.hashCode();
-//    RunnableOne.setName("shivam");
-//    assertTrue(mockConnection1.iterator().hasNext());
-////    RunnableOne.run();
-//    RunnableTwo.setName("yash");
-////    RunnableTwo.run();
-//
-//    newActive.add(RunnableOne);
-//    newActive.add(RunnableTwo);
-//
-//    Field prField = Class.forName(prattleLoc).getDeclaredField("active");
-//    prField.setAccessible(true);
-//    prField.set(testPrattle, newActive);
-//
-//    Field ini = RunnableTwo.getClass().getDeclaredField("initialized");
-//    ini.setAccessible(true);
-//    ini.set(RunnableTwo, true);
-//
-//    int activeSize = newActive.size();
-//    // tests for remove client
-//    testPrattle.privateMessage(Message.makePrivateMessage("shivam", s, "this is my message"));
-//    Queue<Message> res = RunnableTwo.getMessageList();
-//    System.out.println(res.remove());
-//  }
+
 
   @Test
   void prattlePrivateMessageTest() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
@@ -337,6 +292,7 @@ public class PrattleTest {
       NetworkConnection nc = new NetworkConnection(sc);
       ClientRunnable clientRunnable = new ClientRunnable(nc);
 
+
       // test for sendMessage in NetworkConnection
       assertTrue(nc.sendMessage(Message.makeBroadcastMessage("Vaish", "Hello!!")));
 
@@ -380,38 +336,5 @@ public class PrattleTest {
   }
 }
 
-//  private class MockMessageIterator implements Iterator<Message> {
-//    private List<Message> messages;
-//
-//    MockMessageIterator() {
-//      messages = new ArrayList<>();
-//    }
-//
-//    MockMessageIterator(Collection<? extends Message> messages) {
-//      this.messages = new ArrayList<>(messages.size());
-//      this.messages.addAll(messages);
-//    }
-//
-//    @Override
-//    public boolean hasNext() {
-//      return !messages.isEmpty();
-//    }
-//
-//    @Override
-//    public Message next() {
-//      if (messages.isEmpty()) {
-//        throw new NoSuchElementException();
-//      }
-//      return messages.remove(0);
-//    }
-//  }
-//
-//
-//  @AfterAll
-//  public static void afterAll() {
-//    mainThread.interrupt();
-//  }
-//
-//}
 
 
