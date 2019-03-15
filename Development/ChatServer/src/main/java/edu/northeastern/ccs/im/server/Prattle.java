@@ -9,6 +9,7 @@ import java.nio.channels.SocketChannel;
 import java.nio.channels.spi.SelectorProvider;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
@@ -78,9 +79,8 @@ public abstract class Prattle {
 
 		//get receivers from the text
 
-		String[] text = message.getText().split("%");
-		String[] receivers = Arrays.copyOf(text,text.length-1);
-		String messageText = text[text.length-1];
+		String messageText = message.getText();
+		List<String> receivers = message.getMsgReceivers();
 
 		Message msg = Message.makeBroadcastMessage(message.getName(),messageText);
 
