@@ -132,4 +132,24 @@ class MessageTest {
 
 
   }
+
+  @Test
+  void privateMessageTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    Method makeMessage = Message.class.getDeclaredMethod("makeMessage", JSONObject.class);
+
+    JSONObject pvtMsg = new JSONObject();
+    pvtMsg.put("handle", "PVT");
+    pvtMsg.put("sender", name);
+    pvtMsg.put("message", Msg);
+    pvtMsg.put("receivers", new ArrayList<>());
+    pvtMsg.put("grpName", "");
+
+    makeMessage.setAccessible(true);
+    Message pvt = (Message) makeMessage.invoke("Message",pvtMsg);
+
+    // Initializating different types of messages
+    assertTrue(pvt.isPrivateMessage());
+
+
+  }
 }
