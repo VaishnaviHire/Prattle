@@ -139,11 +139,11 @@ public class Message {
     String handle = serverRequest.getString("handle");
     String srcName = serverRequest.getString("sender");
     JSONArray arr = serverRequest.getJSONArray("receivers");
-    List<String> receiversName = new ArrayList<String>();
+    List<String> receiversName = new ArrayList<>();
     for(int i = 0; i < arr.length(); i++){
       receiversName.add(arr.getJSONObject(i).getString("name"));
     }
-    String grpName = serverRequest.getString("grpName");
+
     String text = serverRequest.getString("message");
     Message result = null;
     if (handle.compareTo(MessageType.QUIT.toString()) == 0) {
