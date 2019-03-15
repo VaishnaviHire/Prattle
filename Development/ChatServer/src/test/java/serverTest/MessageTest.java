@@ -19,19 +19,19 @@ class MessageTest {
   @Test
   void testToStringBCT() {
     Message m = Message.makeBroadcastMessage(name, Msg);
-    assertEquals("BCT 6 Shivam 17 this is a message", m.toString());
+    assertEquals("BCT 6 Shivam 2 -- 2 -- 17 this is a message", m.toString());
   }
 
   @org.junit.jupiter.api.Test
   void testToStringQuit() {
     Message m = Message.makeQuitMessage(name);
-    assertEquals("BYE 6 Shivam 2 --", m.toString());
+    assertEquals("BYE 6 Shivam 2 -- 2 -- 2 --", m.toString());
   }
 
   @org.junit.jupiter.api.Test
   void testToStringHLO() {
     Message m = Message.makeSimpleLoginMessage(name);
-    assertEquals("HLO 6 Shivam 2 --", m.toString());
+    assertEquals("HLO 6 Shivam 2 -- 2 -- 2 --", m.toString());
   }
 
   @org.junit.jupiter.api.Test
