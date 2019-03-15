@@ -3,8 +3,6 @@ package edu.northeastern.ccs.im.server;
 import edu.northeastern.ccs.im.ChatLogger;
 import edu.northeastern.ccs.im.Message;
 import edu.northeastern.ccs.im.NetworkConnection;
-import edu.northeastern.ccs.im.model.Unifier;
-import edu.northeastern.ccs.im.model.User;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -13,10 +11,8 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.channels.spi.SelectorProvider;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
@@ -51,12 +47,10 @@ public abstract class Prattle {
    */
   private static ConcurrentLinkedQueue<ClientRunnable> active;
 
-  private static Map<String, User> userList;
 
   /** All of the static initialization occurs in this "method" */
   static {
     // Create the new queue of active threads.
-    userList = new HashMap<>();
     active = new ConcurrentLinkedQueue<>();
   }
 
@@ -89,8 +83,6 @@ public abstract class Prattle {
     String messageText = message.getText();
     List<String> receivers = message.getMsgReceivers();
 
-//    Message msg = Message.makeBroadcastMessage(message.getName(), messageText);
-
     // Loop through all of our active threads
     for (ClientRunnable tt : active) {
       // Loop through all the receivers
@@ -109,8 +101,6 @@ public abstract class Prattle {
     String srcName = message.getName();
 
     List<String> receivers = message.getMsgReceivers();
-
-//    Message msg = Message.makeBroadcastMessage(message.getName(), messageText);
 
     // Loop through all of our active threads
     for (ClientRunnable tt : active) {
