@@ -14,7 +14,7 @@ public class UserTest {
         User firstuser = new User("firstUser");
 
         assertEquals("firstUser",firstuser.getName());
-        assertEquals("user",firstuser.getType());
+        assertFalse(firstuser.isGroup());
         assertEquals("plain_user", firstuser.getUserRole());
         firstuser.setName("modifiedName");
 

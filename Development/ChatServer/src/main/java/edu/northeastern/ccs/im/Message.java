@@ -129,8 +129,8 @@ public class Message {
    * @param text Message text.
    * @return return Message of type group.
    */
-  public static Message makeGroupMessage(String myName, String grpName, String text) {
-    return new Message(MessageType.GROUP, myName, null, grpName, text);
+  public static Message makeGroupMessage(String myName, List<String> msgReceivers, String grpName, String text) {
+    return new Message(MessageType.GROUP, myName, msgReceivers, grpName, text);
   }
 
   /**
@@ -189,7 +189,7 @@ public class Message {
     } else if (handle.compareTo(MessageType.BROADCAST.toString()) == 0) {
       result = makeBroadcastMessage(srcName, text);
     } else if (handle.compareTo(MessageType.GROUP.toString()) == 0) {
-      result = makeGroupMessage(srcName, grpName, text);
+      result = makeGroupMessage(srcName, receiversName, grpName, text);
     }
     return result;
   }

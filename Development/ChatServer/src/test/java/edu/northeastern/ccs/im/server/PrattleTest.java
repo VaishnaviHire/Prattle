@@ -138,7 +138,7 @@ public class PrattleTest {
       Message msg = Message.makePrivateMessage("shivam", s, "this is my message");
       testPrattle.privateMessage(msg);
       Queue<Message> res = RunnableTwo.getMessageList();
-      assertEquals(msg.getText(), res.remove().getText());
+      assertEquals("PVT 6 shivam 4 yash 18 this is my message", res.remove().toString());
 
       assertThrows(NoSuchElementException.class, () -> {
         nc.iterator().next();
@@ -332,19 +332,86 @@ public class PrattleTest {
     thread.start();
     Prattle.stopServer();
   }
-  @Test
-  public void testGroupMessage() throws ClassNotFoundException, IOException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-    Method makeMessage = Message.class.getDeclaredMethod("makeMessage", JSONObject.class);
-    JSONObject grpMsg = new JSONObject();
-    grpMsg.put("handle", "GRP");
-    grpMsg.put("sender", "Shivam");
-    grpMsg.put("message", "this is the message");
-    grpMsg.put("receivers", new ArrayList<>());
-    grpMsg.put("grpName", "");
-    makeMessage.setAccessible(true);
-    Message pvt = (Message) makeMessage.invoke("Message", grpMsg);
 
-    Prattle.groupMessage(pvt);
+
+  @Test
+  void prattleGrpMessageTest() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
+
+    Field isReadyField = Class.forName(prattleLoc).getDeclaredField("isReady");
+    isReadyField.setAccessible(true);
+    isReadyField.set(testPrattle, true);
+    SocketChannel sc = SocketChannel.open();
+
+    try {
+
+      List<String> s = new ArrayList<>();
+
+      s.add("yash");
+
+      sc.configureBlocking(true);
+      sc.connect(new InetSocketAddress(ServerConstants.HOST, ServerConstants.PORT));
+      NetworkConnection nc = new NetworkConnection(sc);
+
+      Field msgField = NetworkConnection.class.getDeclaredField("messages");
+      msgField.setAccessible(true);
+      ConcurrentLinkedQueue<ClientRunnable> newActive = new ConcurrentLinkedQueue<>();
+      Message[] messages = {Message.makePrivateMessage("shivam", s, "this is my message")};
+
+
+      ClientRunnable RunnableOne = new ClientRunnable(nc);
+      ClientRunnable RunnableTwo = new ClientRunnable(nc);
+      ClientRunnable RunnableThree = new ClientRunnable(nc);
+      ClientRunnable RunnableFour = new ClientRunnable(nc);
+      testPrattle.hashCode();
+      RunnableOne.setName("shivam");
+      RunnableOne.run();
+      RunnableTwo.setName("yash");
+      RunnableTwo.run();
+      RunnableThree.setName("yash1");
+      RunnableThree.run();
+      RunnableFour.setName("yash2");
+      RunnableFour.run();
+      newActive.add(RunnableOne);
+      newActive.add(RunnableTwo);
+      newActive.add(RunnableThree);
+      newActive.add(RunnableFour);
+
+      Field prField = Class.forName(prattleLoc).getDeclaredField("active");
+      prField.setAccessible(true);
+      prField.set(testPrattle, newActive);
+
+      Field ini = RunnableTwo.getClass().getDeclaredField("initialized");
+      ini.setAccessible(true);
+      ini.set(RunnableTwo, true);
+
+      Field ini1 = RunnableThree.getClass().getDeclaredField("initialized");
+      ini1.setAccessible(true);
+      ini1.set(RunnableThree, true);
+
+      Field ini2 = RunnableFour.getClass().getDeclaredField("initialized");
+      ini2.setAccessible(true);
+      ini2.set(RunnableFour, true);
+      s.add("yash1");
+
+      int activeSize = newActive.size();
+      // tests for remove client
+      testPrattle.groupMessage(Message.makeGroupMessage("shivam", s, "group 1", "this is my message"));
+      Queue<Message> res = RunnableTwo.getMessageList();
+      assertEquals("GRP 6 shivam 4 yash 5 yash1 18 this is my message", res.remove().toString());
+      Queue<Message> res1 = RunnableThree.getMessageList();
+      assertEquals("GRP 6 shivam 4 yash 5 yash1 18 this is my message", res1.remove().toString());
+      Queue<Message> res2 = RunnableThree.getMessageList();
+      NoSuchElementException thrown =
+              assertThrows(NoSuchElementException.class,
+                      () -> res2.remove(),
+                      "Expected method to throw, but it didn't");
+      RunnableTwo.run();
+    } catch (IOException io) {
+
+    } finally {
+      if (sc != null)
+        sc.close();
+    }
   }
 }
 
