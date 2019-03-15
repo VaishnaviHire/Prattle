@@ -1,28 +1,32 @@
-package serverTest;
+package edu.northeastern.ccs.im.server;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import edu.northeastern.ccs.im.Message;
+import edu.northeastern.ccs.im.NetworkConnection;
+
+import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.InetSocketAddress;
 
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
+import java.util.ArrayList;
+
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ScheduledExecutorService;
-
-import edu.northeastern.ccs.im.Message;
-import edu.northeastern.ccs.im.NetworkConnection;
-import edu.northeastern.ccs.im.server.*;
-
 
 
 /**
@@ -41,6 +45,7 @@ public class PrattleTest {
 
   private Prattle testPrattle;
   private String prattleLoc;
+  private String clientRunnable;
   private static Thread mainThread;
 
   /**
@@ -50,7 +55,7 @@ public class PrattleTest {
   void setUp() {
     testPrattle = Prattle.getInstance();
     prattleLoc = "edu.northeastern.ccs.im.server.Prattle";
-
+    clientRunnable = "edu.northeastern.ccs.im.server.ClientRunnable";
   }
 
   /**
@@ -62,7 +67,7 @@ public class PrattleTest {
    *                                accessible.
    */
   @Test
-  void prattleMessageTest() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException,InvocationTargetException {
+  void prattleMessageTest() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
     ConcurrentLinkedQueue<ClientRunnable> newActive = new ConcurrentLinkedQueue<>();
     ClientRunnable mockRunnableOne = mock(ClientRunnable.class);
     ClientRunnable mockRunnableTwo = mock(ClientRunnable.class);
@@ -81,8 +86,80 @@ public class PrattleTest {
     int activeSize = newActive.size();
     // tests for remove client
     Prattle.removeClient(mockRunnableOne);
-    assertEquals(newActive.size(), activeSize-1);
+    assertEquals(newActive.size(), activeSize - 1);
     testPrattle.broadcastMessage(Message.makeBroadcastMessage("Tom", "hi"));
+  }
+
+  @Test
+  void prattlePvtMessageTest() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, IOException, NoSuchMethodException, InvocationTargetException {
+    Field isReadyField = Class.forName(prattleLoc).getDeclaredField("isReady");
+    isReadyField.setAccessible(true);
+    isReadyField.set(testPrattle, true);
+    SocketChannel sc = SocketChannel.open();
+
+    try {
+
+      List<String> s = new ArrayList<>();
+
+      s.add("yash");
+
+      sc.configureBlocking(true);
+      sc.connect(new InetSocketAddress(ServerConstants.HOST, ServerConstants.PORT));
+      NetworkConnection nc = new NetworkConnection(sc);
+
+      Field msgField = NetworkConnection.class.getDeclaredField("messages");
+      msgField.setAccessible(true);
+      ConcurrentLinkedQueue<ClientRunnable> newActive = new ConcurrentLinkedQueue<>();
+      Message[] messages = {Message.makePrivateMessage("shivam", s, "this is my message")};
+
+      ClientRunnable RunnableOne = new ClientRunnable(nc);
+      ClientRunnable RunnableTwo = new ClientRunnable(nc);
+
+      testPrattle.hashCode();
+      RunnableOne.setName("shivam");
+      RunnableOne.run();
+      RunnableTwo.setName("yash");
+      RunnableTwo.run();
+
+      newActive.add(RunnableOne);
+      newActive.add(RunnableTwo);
+
+
+      Field prField = Class.forName(prattleLoc).getDeclaredField("active");
+      prField.setAccessible(true);
+      prField.set(testPrattle, newActive);
+
+      Field ini = RunnableTwo.getClass().getDeclaredField("initialized");
+      ini.setAccessible(true);
+      ini.set(RunnableTwo, true);
+
+      int activeSize = newActive.size();
+      // tests for remove client
+      Message msg = Message.makePrivateMessage("shivam", s, "this is my message");
+      testPrattle.privateMessage(msg);
+      Queue<Message> res = RunnableTwo.getMessageList();
+      assertEquals("PVT 6 shivam 4 yash 18 this is my message", res.remove().toString());
+
+      assertThrows(NoSuchElementException.class, () -> {
+        nc.iterator().next();
+      });
+
+
+      testPrattle.stopServer();
+      nc.close();
+
+    } catch (IOException io) {
+
+    } finally {
+      if (sc != null)
+        sc.close();
+    }
+  }
+
+
+  @Test
+  void prattlePrivateMessageTest() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+// adding private message tests here
   }
 
   /**
@@ -115,7 +192,7 @@ public class PrattleTest {
    * @throws IOException               thrown if mock channel fails
    */
   @Test
-  void createThreadTest() throws  IllegalAccessException, IOException, ClassNotFoundException,NoSuchFieldException, NoSuchMethodException, InvocationTargetException {
+  void createThreadTest() throws IllegalAccessException, IOException, ClassNotFoundException, NoSuchFieldException, NoSuchMethodException, InvocationTargetException {
     Field isReadyField = Class.forName(prattleLoc).getDeclaredField("isReady");
     isReadyField.setAccessible(true);
     isReadyField.set(testPrattle, true);
@@ -124,20 +201,22 @@ public class PrattleTest {
     try {
 
       sc.configureBlocking(true);
-      sc.connect(new InetSocketAddress("localhost", 4545));
+      sc.connect(new InetSocketAddress(ServerConstants.HOST, ServerConstants.PORT));
       NetworkConnection nc = new NetworkConnection(sc);
 
       Field msgField = NetworkConnection.class.getDeclaredField("messages");
       msgField.setAccessible(true);
       ConcurrentLinkedQueue<Message> messages = (ConcurrentLinkedQueue<Message>) msgField.get(nc);
-      Message testMsg = Message.makeBroadcastMessage("Vaish","Hello\n How are you?");
+      Message testMsg = Message.makeBroadcastMessage("Vaish", "Hello\n How are you?");
       messages.add(testMsg);
 
       // Tests for Message Iterator
       assertTrue(nc.iterator().hasNext());
-      assertEquals(nc.iterator().next().getText(),"Hello\n How are you?");
+      assertEquals(nc.iterator().next().getText(), "Hello\n How are you?");
       assertFalse(nc.iterator().hasNext());
-      assertThrows(NoSuchElementException.class, () -> { nc.iterator().next() ;});
+      assertThrows(NoSuchElementException.class, () -> {
+        nc.iterator().next();
+      });
 
 
       testPrattle.stopServer();
@@ -145,13 +224,11 @@ public class PrattleTest {
 
     } catch (IOException io) {
 
-    }
-    finally {
-      if(sc != null)
+    } finally {
+      if (sc != null)
         sc.close();
     }
   }
-
 
 
   /**
@@ -213,24 +290,24 @@ public class PrattleTest {
     try {
       SocketChannel sc = SocketChannel.open();
       sc.configureBlocking(true);
-      sc.connect(new InetSocketAddress("localhost", 4545));
+      sc.connect(new InetSocketAddress(ServerConstants.HOST, ServerConstants.PORT));
       NetworkConnection nc = new NetworkConnection(sc);
       ClientRunnable clientRunnable = new ClientRunnable(nc);
+
 
       // test for sendMessage in NetworkConnection
       assertTrue(nc.sendMessage(Message.makeBroadcastMessage("Vaish", "Hello!!")));
 
-      testPrattle.stopServer();
+      Prattle.stopServer();
 
-    } catch (IOException io) {
+    } catch (IOException ignored) {
 
     }
   }
 
 
-
   @Test
-  public void testPrattleMainFullCover() throws ClassNotFoundException, IOException, NoSuchFieldException,IllegalAccessException {
+  public void testPrattleMainFullCover() throws ClassNotFoundException, IOException, NoSuchFieldException, IllegalAccessException {
 
     Field isReadyField = Class.forName(prattleLoc).getDeclaredField("isReady");
     isReadyField.setAccessible(true);
@@ -241,31 +318,102 @@ public class PrattleTest {
     SocketChannel sc = SocketChannel.open();
     Thread thread = new Thread(() -> {
       try {
-        socketChannel.socket().bind(new InetSocketAddress("localhost", 4555));
-
+        socketChannel.socket().bind(new InetSocketAddress(ServerConstants.HOST, ServerConstants.PORT));
       } catch (IOException e) {
         e.printStackTrace();
       }
       try {
-        testPrattle.startServer(socketChannel);
-
+        Prattle.startServer(socketChannel);
       } catch (IOException e) {
         e.printStackTrace();
       }
 
     });
-
     thread.start();
     Prattle.stopServer();
-
   }
 
 
-  @AfterAll
-  public static void afterAll() {
-    mainThread.interrupt();
-  }
+  @Test
+  void prattleGrpMessageTest() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
 
+    Field isReadyField = Class.forName(prattleLoc).getDeclaredField("isReady");
+    isReadyField.setAccessible(true);
+    isReadyField.set(testPrattle, true);
+    SocketChannel sc = SocketChannel.open();
+
+    try {
+
+      List<String> s = new ArrayList<>();
+
+      s.add("yash");
+
+      sc.configureBlocking(true);
+      sc.connect(new InetSocketAddress(ServerConstants.HOST, ServerConstants.PORT));
+      NetworkConnection nc = new NetworkConnection(sc);
+
+      Field msgField = NetworkConnection.class.getDeclaredField("messages");
+      msgField.setAccessible(true);
+      ConcurrentLinkedQueue<ClientRunnable> newActive = new ConcurrentLinkedQueue<>();
+      Message[] messages = {Message.makePrivateMessage("shivam", s, "this is my message")};
+
+
+      ClientRunnable RunnableOne = new ClientRunnable(nc);
+      ClientRunnable RunnableTwo = new ClientRunnable(nc);
+      ClientRunnable RunnableThree = new ClientRunnable(nc);
+      ClientRunnable RunnableFour = new ClientRunnable(nc);
+      testPrattle.hashCode();
+      RunnableOne.setName("shivam");
+      RunnableOne.run();
+      RunnableTwo.setName("yash");
+      RunnableTwo.run();
+      RunnableThree.setName("yash1");
+      RunnableThree.run();
+      RunnableFour.setName("yash2");
+      RunnableFour.run();
+      newActive.add(RunnableOne);
+      newActive.add(RunnableTwo);
+      newActive.add(RunnableThree);
+      newActive.add(RunnableFour);
+
+      Field prField = Class.forName(prattleLoc).getDeclaredField("active");
+      prField.setAccessible(true);
+      prField.set(testPrattle, newActive);
+
+      Field ini = RunnableTwo.getClass().getDeclaredField("initialized");
+      ini.setAccessible(true);
+      ini.set(RunnableTwo, true);
+
+      Field ini1 = RunnableThree.getClass().getDeclaredField("initialized");
+      ini1.setAccessible(true);
+      ini1.set(RunnableThree, true);
+
+      Field ini2 = RunnableFour.getClass().getDeclaredField("initialized");
+      ini2.setAccessible(true);
+      ini2.set(RunnableFour, true);
+      s.add("yash1");
+
+      int activeSize = newActive.size();
+      // tests for remove client
+      testPrattle.groupMessage(Message.makeGroupMessage("shivam", s, "group 1", "this is my message"));
+      Queue<Message> res = RunnableTwo.getMessageList();
+      assertEquals("GRP 6 shivam 4 yash 5 yash1 18 this is my message", res.remove().toString());
+      Queue<Message> res1 = RunnableThree.getMessageList();
+      assertEquals("GRP 6 shivam 4 yash 5 yash1 18 this is my message", res1.remove().toString());
+      Queue<Message> res2 = RunnableThree.getMessageList();
+      NoSuchElementException thrown =
+              assertThrows(NoSuchElementException.class,
+                      () -> res2.remove(),
+                      "Expected method to throw, but it didn't");
+      RunnableTwo.run();
+    } catch (IOException io) {
+
+    } finally {
+      if (sc != null)
+        sc.close();
+    }
+  }
 }
+
 
 

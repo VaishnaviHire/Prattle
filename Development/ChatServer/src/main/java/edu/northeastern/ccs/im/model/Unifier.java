@@ -1,11 +1,17 @@
 package edu.northeastern.ccs.im.model;
 
+import java.util.List;
+
 /**
- *  Parent class of Users and Groups
+ * Parent class of Users and Groups
  */
 public interface Unifier {
 
-    public String getName();
-    public void setName(String name);
-    public String getType();
+  String getName();
+
+  void setName(String name);
+
+  List<Unifier> getMembers();
+
+  boolean isGroup();
 }

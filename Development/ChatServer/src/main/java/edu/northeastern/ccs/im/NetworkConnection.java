@@ -1,5 +1,7 @@
 package edu.northeastern.ccs.im;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -34,9 +36,6 @@ public class NetworkConnection implements Iterable<Message> {
 
 	/** The base for number conversions. */
 	private static final int DECIMAL_RADIX = 10;
-
-	/** The length of the message handle. */ // MEJ: why is this not in Message?
-	private static final int HANDLE_LENGTH = 3;
 
 	/** The minimum length of a message. */ // MEJ: why is this not in Message?
 	private static final int MIN_MESSAGE_LENGTH = 7;
@@ -189,18 +188,15 @@ public class NetworkConnection implements Iterable<Message> {
 							if (start != 0) {
 								charBuffer.position(start);
 							}
+							// Here the first arguement is the entire string containing Handle, sender, and Message Info
 							// First read in the handle
-							String handle = charBuffer.subSequence(0, HANDLE_LENGTH).toString();
-							// Skip past the handle
-							charBuffer.position(start + HANDLE_LENGTH + 1);
-							// Read the first argument containing the sender's name
-							String sender = readArgument(charBuffer);
-							// Skip past the leading space
-							charBuffer.position(charBuffer.position() + 2);
-							// Read in the second argument containing the message
-							String message = readArgument(charBuffer);
+
+							// Read in the  argument containing the message
+							String jsonString = readArgument(charBuffer);
+							// Convert entire String request to JsonObject
+							JSONObject serverRequest = new JSONObject(jsonString);
 							// Add this message into our queue
-							Message newMsg = Message.makeMessage(handle, sender, message);
+							Message newMsg = Message.makeMessage(serverRequest);
 							messages.add(newMsg);
 							// And move the position to the start of the next character
 							start = charBuffer.position() + 1;
