@@ -21,19 +21,19 @@ class MessageTest {
   @Test
   void testToStringBCT() {
     Message m = Message.makeBroadcastMessage(name, Msg);
-    assertEquals("BCT 6 Shivam 2 -- 2 -- 17 this is a message", m.toString());
+    assertEquals("BCT 6 Shivam 2 -- 17 this is a message", m.toString());
   }
 
   @org.junit.jupiter.api.Test
   void testToStringQuit() {
     Message m = Message.makeQuitMessage(name);
-    assertEquals("BYE 6 Shivam 2 -- 2 -- 2 --", m.toString());
+    assertEquals("BYE 6 Shivam 2 -- 2 --", m.toString());
   }
 
   @org.junit.jupiter.api.Test
   void testToStringHLO() {
     Message m = Message.makeSimpleLoginMessage(name);
-    assertEquals("HLO 6 Shivam 2 -- 2 -- 2 --", m.toString());
+    assertEquals("HLO 6 Shivam 2 -- 2 --", m.toString());
   }
 
   @org.junit.jupiter.api.Test
@@ -205,11 +205,11 @@ class MessageTest {
     Message hello = (Message) makeMessage.invoke("Message", helloMsg);
     Message broadcast = (Message) makeMessage.invoke("Message", bctMsg);
     // Initializating different types of messages
-    assertEquals("PVT 2 -- 4 yash 5 yash1 5 yash2 2 -- 17 this is a message",
+    assertEquals("PVT 2 -- 4 yash 5 yash1 5 yash2 17 this is a message",
             pvt.toString());
-    assertEquals("HLO 2 -- 2 -- 2 -- 2 --", hello.toString());
-    assertEquals("BCT 6 Shivam 2 -- 2 -- 17 this is a message", broadcast.toString());
-    assertEquals("BYE 6 Shivam 2 -- 2 -- 2 --", bye.toString());
+    assertEquals("HLO 2 -- 2 -- 2 --", hello.toString());
+    assertEquals("BCT 6 Shivam 2 -- 17 this is a message", broadcast.toString());
+    assertEquals("BYE 6 Shivam 2 -- 2 --", bye.toString());
     assertTrue(pvt.isPrivateMessage());
     assertNull(pvt.getReceivingGrpName());
   }
