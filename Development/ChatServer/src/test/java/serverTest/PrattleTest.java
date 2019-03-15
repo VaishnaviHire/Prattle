@@ -15,6 +15,8 @@ import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ScheduledExecutorService;
@@ -84,7 +86,30 @@ public class PrattleTest {
     assertEquals(newActive.size(), activeSize-1);
     testPrattle.broadcastMessage(Message.makeBroadcastMessage("Tom", "hi"));
   }
+  @Test
+  void prattlePvtMessageTest() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException,InvocationTargetException {
+    ConcurrentLinkedQueue<ClientRunnable> newActive = new ConcurrentLinkedQueue<>();
+    ClientRunnable mockRunnableOne = mock(ClientRunnable.class);
+    ClientRunnable mockRunnableTwo = mock(ClientRunnable.class);
+    when(mockRunnableOne.isInitialized()).thenReturn(true);
+    when(mockRunnableTwo.isInitialized()).thenReturn(true);
+    assertNotNull(testPrattle.hashCode());
+    mockRunnableOne.setName("shivam");
+    mockRunnableTwo.setName("yash");
 
+    newActive.add(mockRunnableOne);
+    newActive.add(mockRunnableTwo);
+
+    Field prField = Class.forName(prattleLoc).getDeclaredField("active");
+    prField.setAccessible(true);
+    prField.set(testPrattle, newActive);
+
+    int activeSize = newActive.size();
+    // tests for remove client
+    List<String> s = new ArrayList<>();
+    s.add("yash");
+    testPrattle.privateMessage(Message.makePrivateMessage("Tom", s,"this is my message"));
+  }
   @Test
   void prattlePrivateMessageTest() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException,InvocationTargetException {
 // adding private message tests here
