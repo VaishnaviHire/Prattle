@@ -135,7 +135,6 @@ public class Message {
   protected static Message makeMessage(JSONObject serverRequest) {
     String handle = "";
     String srcName;
-    String grpName;
     if (serverRequest.has("handle")) {
       handle = serverRequest.getString("handle");
     }
@@ -155,9 +154,7 @@ public class Message {
     }
 
 
-    if (serverRequest.has("grpName")) {
-      grpName = serverRequest.getString("grpName");
-    }
+
     String text = serverRequest.getString("message");
     Message result = null;
     if (handle.compareTo(MessageType.QUIT.toString()) == 0) {

@@ -1,8 +1,13 @@
-package serverTest;
+package edu.northeastern.ccs.im.server;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import edu.northeastern.ccs.im.Message;
+import edu.northeastern.ccs.im.NetworkConnection;
+import edu.northeastern.ccs.im.server.ClientRunnable;
+import edu.northeastern.ccs.im.server.Prattle;
+import edu.northeastern.ccs.im.server.ServerConstants;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
@@ -24,10 +29,6 @@ import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ScheduledExecutorService;
-
-import edu.northeastern.ccs.im.Message;
-import edu.northeastern.ccs.im.NetworkConnection;
-import edu.northeastern.ccs.im.server.*;
 
 
 /**
@@ -172,7 +173,7 @@ public class PrattleTest {
     try {
 
       sc.configureBlocking(true);
-      sc.connect(new InetSocketAddress("localhost", 4545));
+      sc.connect(new InetSocketAddress(ServerConstants.HOST, ServerConstants.PORT));
       NetworkConnection nc = new NetworkConnection(sc);
 
       Field msgField = NetworkConnection.class.getDeclaredField("messages");
@@ -261,7 +262,7 @@ public class PrattleTest {
     try {
       SocketChannel sc = SocketChannel.open();
       sc.configureBlocking(true);
-      sc.connect(new InetSocketAddress("localhost", 4545));
+      sc.connect(new InetSocketAddress(ServerConstants.HOST, ServerConstants.PORT));
       NetworkConnection nc = new NetworkConnection(sc);
       ClientRunnable clientRunnable = new ClientRunnable(nc);
 
@@ -288,7 +289,7 @@ public class PrattleTest {
     SocketChannel sc = SocketChannel.open();
     Thread thread = new Thread(() -> {
       try {
-        socketChannel.socket().bind(new InetSocketAddress("localhost", 4555));
+        socketChannel.socket().bind(new InetSocketAddress(ServerConstants.HOST, ServerConstants.PORT));
 
       } catch (IOException e) {
         e.printStackTrace();

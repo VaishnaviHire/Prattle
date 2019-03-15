@@ -1,4 +1,4 @@
-package serverTest;
+package edu.northeastern.ccs.im;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

@@ -1,5 +1,9 @@
 package edu.northeastern.ccs.im.server;
 
+import edu.northeastern.ccs.im.ChatLogger;
+import edu.northeastern.ccs.im.Message;
+import edu.northeastern.ccs.im.NetworkConnection;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
@@ -15,10 +19,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
-import edu.northeastern.ccs.im.ChatLogger;
-import edu.northeastern.ccs.im.Message;
-import edu.northeastern.ccs.im.NetworkConnection;
 
 /**
  * A network server that communicates with IM clients that connect to it. This version of the server
@@ -85,13 +85,10 @@ public abstract class Prattle {
     Message msg = Message.makeBroadcastMessage(message.getName(), messageText);
 
     // Loop through all of our active threads
-    System.out.println(active.size());
     for (ClientRunnable tt : active) {
       // Loop through all the receivers
       for (String receiver : receivers) {
         // Do not send the message to any clients that are not ready to receive it.
-        System.out.println(tt.getName());
-        System.out.println(tt.isInitialized());
         if (receiver.equals(tt.getName()) && tt.isInitialized()) {
           tt.enqueueMessage(msg);
         }
