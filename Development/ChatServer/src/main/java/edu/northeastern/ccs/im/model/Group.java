@@ -9,7 +9,6 @@ import java.util.List;
 public class Group implements Unifier {
 
   private String groupName;
-  private int groupId;
   protected List<Unifier> members;
   private UserToAdminAdapter admin;
 
