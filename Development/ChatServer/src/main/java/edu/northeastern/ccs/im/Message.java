@@ -127,7 +127,7 @@ public class Message {
    * @param myName Name of the sender.
    * @param grpName Name of the group.
    * @param text Message text.
-   * @return
+   * @return return Message of type group.
    */
   public static Message makeGroupMessage(String myName, String grpName, String text) {
     return new Message(MessageType.GROUP, myName, null, grpName, text);
@@ -163,22 +163,21 @@ public class Message {
     } else {
       srcName = null;
     }
-    List<String> receiversName = new ArrayList<>();
+    List<String> receiversName = null;
     if (serverRequest.has("receivers")) {
+      receiversName = new ArrayList<>();
       JSONArray arr = serverRequest.getJSONArray("receivers");
       for (int i = 0; i < arr.length(); i++) {
         receiversName.add(arr.getJSONObject(i).getString("name"));
       }
-    } else {
-      receiversName = null;
     }
-
 
     if (serverRequest.has("grpName")) {
       grpName = serverRequest.getString("grpName");
     } else {
       grpName = null;
     }
+
     String text = serverRequest.getString("message");
     Message result = null;
     if (handle.compareTo(MessageType.QUIT.toString()) == 0) {
@@ -304,11 +303,6 @@ public class Message {
       for (String msgReceiver : msgReceivers) {
         result.append(" ").append(msgReceiver.length()).append(" ").append(msgReceiver);
       }
-    } else {
-      result.append(" ").append(NULL_OUTPUT.length()).append(" ").append(NULL_OUTPUT);
-    }
-    if (receivingGrpName != null) {
-      result.append(" ").append(receivingGrpName.length()).append(" ").append(receivingGrpName);
     } else {
       result.append(" ").append(NULL_OUTPUT.length()).append(" ").append(NULL_OUTPUT);
     }

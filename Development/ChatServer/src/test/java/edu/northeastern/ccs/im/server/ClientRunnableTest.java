@@ -1,5 +1,8 @@
-package serverTest;
+package edu.northeastern.ccs.im.server;
 
+import edu.northeastern.ccs.im.Message;
+import edu.northeastern.ccs.im.NetworkConnection;
+import edu.northeastern.ccs.im.server.ClientTimer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
@@ -20,10 +23,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import edu.northeastern.ccs.im.Message;
-import edu.northeastern.ccs.im.NetworkConnection;
 import edu.northeastern.ccs.im.server.ClientRunnable;
-import edu.northeastern.ccs.im.server.ClientTimer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -97,10 +97,7 @@ public class ClientRunnableTest {
 
     makeMessage.setAccessible(true);
     Message pvt = (Message) makeMessage.invoke("Message",pvtMsg);
-
     assertTrue(mockConnection1.sendMessage(pvt));
-
-
   }
 
   @Test
