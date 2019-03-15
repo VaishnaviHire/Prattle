@@ -244,6 +244,8 @@ public class ClientRunnable implements Runnable {
 					// Check for our "special messages"
 					if(msg.isPrivateMessage()){
 						Prattle.privateMessage(msg);
+					} else if (msg.isGroupMessage()) {
+						Prattle.groupMessage(msg);
 					}
 					else if (msg.isBroadcastMessage()) {
 						// Check for our "special messages"

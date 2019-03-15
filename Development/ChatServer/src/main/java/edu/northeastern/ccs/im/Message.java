@@ -110,12 +110,24 @@ public class Message {
    * Create a new private message.
    *
    * @param myName Name of the sender.
-   * @param receiversName
-   * @param text
+   * @param receiversName Name of the receivers.
+   * @param text Message text.
    * @return
    */
   public static Message makePrivateMessage(String myName, List<String> receiversName, String text) {
     return new Message(MessageType.PRIVATE, myName, receiversName, null, text);
+  }
+
+  /**
+   * Create a new Group message.
+   *
+   * @param myName Name of the sender.
+   * @param grpName Name of the group.
+   * @param text Message text.
+   * @return
+   */
+  public static Message makeGroupMessage(String myName, String grpName, String text) {
+    return new Message(MessageType.GROUP, myName, null, grpName, text);
   }
 
   /**
@@ -154,6 +166,8 @@ public class Message {
       result = makePrivateMessage(srcName, receiversName, text);
     } else if (handle.compareTo(MessageType.BROADCAST.toString()) == 0) {
       result = makeBroadcastMessage(srcName, text);
+    } else if (handle.compareTo(MessageType.GROUP.toString()) == 0) {
+      result = makeGroupMessage(srcName, grpName, text);
     }
     return result;
   }
@@ -220,6 +234,15 @@ public class Message {
    */
   public boolean isPrivateMessage() {
     return (msgType == MessageType.PRIVATE);
+  }
+
+  /**
+   * Determine if this message is group message or not.
+   *
+   * @return True if the message is a group message, false otherwise.
+   */
+  public boolean isGroupMessage() {
+    return (msgType == MessageType.GROUP);
   }
 
   /**
