@@ -137,11 +137,13 @@ public class ClientRunnableTest {
     when(mockConnection.iterator()).thenReturn(messageItr);
     clientRunnable.run();
     Message msg = Message.makeBroadcastMessage("yash", "hi");
+    Message pvtmsg = Message.makePrivateMessage("yash", new ArrayList<>(), "hi");
     clientRunnable.enqueueMessage(msg);
+    clientRunnable.enqueueMessage(pvtmsg);
     clientRunnable.run();
     assertFalse(verify(mockConnection).sendMessage(msg));
+    assertFalse(verify(mockConnection).sendMessage(pvtmsg));
 //    assertEquals(mockConnection.iterator().hasNext(),messageItr.hasNext());
-
   }
 
   @Test

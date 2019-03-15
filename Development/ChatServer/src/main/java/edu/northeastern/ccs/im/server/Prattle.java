@@ -35,191 +35,192 @@ import edu.northeastern.ccs.im.NetworkConnection;
  */
 public abstract class Prattle {
 
-	private static Prattle singleTon;
+  private static Prattle singleTon;
 
-	/**
-	 * Don't do anything unless the server is ready.
-	 */
-	private static boolean isReady = false;
+  /**
+   * Don't do anything unless the server is ready.
+   */
+  private static boolean isReady = false;
 
-	/**
-	 * Collection of threads that are currently being used.
-	 */
-	private static ConcurrentLinkedQueue<ClientRunnable> active;
+  /**
+   * Collection of threads that are currently being used.
+   */
+  private static ConcurrentLinkedQueue<ClientRunnable> active;
 
-	/** All of the static initialization occurs in this "method" */
-	static {
-		// Create the new queue of active threads.
-		active = new ConcurrentLinkedQueue<>();
-	}
+  /** All of the static initialization occurs in this "method" */
+  static {
+    // Create the new queue of active threads.
+    active = new ConcurrentLinkedQueue<>();
+  }
 
-	/**
-	 * Broadcast a given message to all the other IM clients currently on the system. This message
-	 * _will_ be sent to the client who originally sent it.
-	 *
-	 * @param message Message that the client sent.
-	 */
-	public static void broadcastMessage(Message message) {
-		// Loop through all of our active threads
-		for (ClientRunnable tt : active) {
-			// Do not send the message to any clients that are not ready to receive it.
-			if (tt.isInitialized()) {
-				tt.enqueueMessage(message);
-			}
-		}
-	}
+  /**
+   * Broadcast a given message to all the other IM clients currently on the system. This message
+   * _will_ be sent to the client who originally sent it.
+   *
+   * @param message Message that the client sent.
+   */
+  public static void broadcastMessage(Message message) {
+    // Loop through all of our active threads
+    for (ClientRunnable tt : active) {
+      // Do not send the message to any clients that are not ready to receive it.
+      if (tt.isInitialized()) {
+        tt.enqueueMessage(message);
+      }
+    }
+  }
 
-	/**
-	 * Sends private message to the given user. Username is embedded in the message text.
-	 * Eg. username%MessageText
-	 * @param message Message that the client sent
-	 */
-	public static void privateMessage(Message message) {
+  /**
+   * Sends private message to the given user. Username is embedded in the message text. Eg.
+   * username%MessageText
+   *
+   * @param message Message that the client sent
+   */
+  public static void privateMessage(Message message) {
 
-		//get receivers from the text
+    //get receivers from the text
 
-		String messageText = message.getText();
-		List<String> receivers = message.getMsgReceivers();
+    String messageText = message.getText();
+    List<String> receivers = message.getMsgReceivers();
 
-		Message msg = Message.makeBroadcastMessage(message.getName(),messageText);
+    Message msg = Message.makeBroadcastMessage(message.getName(), messageText);
 
-		// Loop through all of our active threads
-		for (ClientRunnable tt : active) {
-			// Loop through all the receivers
-			for (String receiver : receivers) {
-				// Do not send the message to any clients that are not ready to receive it.
-				if (receiver.equals(tt.getName()) && tt.isInitialized()) {
-					tt.enqueueMessage(msg);
-				}
-			}
-		}
+    // Loop through all of our active threads
+    for (ClientRunnable tt : active) {
+      // Loop through all the receivers
+      for (String receiver : receivers) {
+        // Do not send the message to any clients that are not ready to receive it.
+        if (receiver.equals(tt.getName()) && tt.isInitialized()) {
+          tt.enqueueMessage(msg);
+        }
+      }
+    }
 
-	}
+  }
 
-	private Prattle() {
-	}
+  private Prattle() {
+  }
 
-	public static Prattle getInstance() {
-		if (singleTon == null)
-			singleTon = new Prattle() {
-				@Override
-				public int hashCode() {
-					return super.hashCode();
-				}
+  public static Prattle getInstance() {
+    if (singleTon == null)
+      singleTon = new Prattle() {
+        @Override
+        public int hashCode() {
+          return super.hashCode();
+        }
 
-				@Override
-				public boolean equals(Object obj){
-					return super.equals(obj);
-				}
-			};
+        @Override
+        public boolean equals(Object obj) {
+          return super.equals(obj);
+        }
+      };
 
-		return singleTon;
-	}
+    return singleTon;
+  }
 
-	/**
-	 * Remove the given IM client from the list of active threads.
-	 *
-	 * @param dead Thread which had been handling all the I/O for a client who has since quit.
-	 */
-	public static void removeClient(ClientRunnable dead) {
-		// Test and see if the thread was in our list of active clients so that we
-		// can remove it.
-		if (!active.remove(dead)) {
-			ChatLogger.LOGGER.info("Could not find a thread that I tried to remove!\n");
-		}
-	}
+  /**
+   * Remove the given IM client from the list of active threads.
+   *
+   * @param dead Thread which had been handling all the I/O for a client who has since quit.
+   */
+  public static void removeClient(ClientRunnable dead) {
+    // Test and see if the thread was in our list of active clients so that we
+    // can remove it.
+    if (!active.remove(dead)) {
+      ChatLogger.LOGGER.info("Could not find a thread that I tried to remove!\n");
+    }
+  }
 
-	/**
-	 * Terminates the server.
-	 */
-	public static void stopServer() {
-		isReady = false;
-	}
+  /**
+   * Terminates the server.
+   */
+  public static void stopServer() {
+    isReady = false;
+  }
 
-	/**
-	 * Start up the threaded talk server. This class accepts incoming connections on a specific port
-	 * specified on the command-line. Whenever it receives a new connection, it will spawn a thread to
-	 * perform all of the I/O with that client. This class relies on the server not receiving too many
-	 * requests -- it does not include any code to limit the number of extant threads.
-	 *
-	 * @param args String arguments to the server from the command line. At present the only legal
-	 *             (and required) argument is the port on which this server should list.
-	 * @throws IOException Exception thrown if the server cannot connect to the port to which it is
-	 *                     supposed to listen.
-	 */
-	public static void main(String[] args) {
+  /**
+   * Start up the threaded talk server. This class accepts incoming connections on a specific port
+   * specified on the command-line. Whenever it receives a new connection, it will spawn a thread to
+   * perform all of the I/O with that client. This class relies on the server not receiving too many
+   * requests -- it does not include any code to limit the number of extant threads.
+   *
+   * @param args String arguments to the server from the command line. At present the only legal
+   *             (and required) argument is the port on which this server should list.
+   * @throws IOException Exception thrown if the server cannot connect to the port to which it is
+   *                     supposed to listen.
+   */
+  public static void main(String[] args) {
 
-		// Connect to the socket on the appropriate port to which this server connects.
-		try (ServerSocketChannel serverSocket = ServerSocketChannel.open()) {
-			serverSocket.configureBlocking(false);
-			serverSocket.socket().bind(new InetSocketAddress(ServerConstants.PORT));
-			// Create the Selector with which our channel is registered.
-			Prattle.startServer(serverSocket);
-		} catch (IOException ex) {
-			ChatLogger.LOGGER.error("Fatal error: " + ex.getMessage());
-			throw new IllegalStateException(ex.getMessage());
-		}
+    // Connect to the socket on the appropriate port to which this server connects.
+    try (ServerSocketChannel serverSocket = ServerSocketChannel.open()) {
+      serverSocket.configureBlocking(false);
+      serverSocket.socket().bind(new InetSocketAddress(ServerConstants.PORT));
+      // Create the Selector with which our channel is registered.
+      Prattle.startServer(serverSocket);
+    } catch (IOException ex) {
+      ChatLogger.LOGGER.error("Fatal error: " + ex.getMessage());
+      throw new IllegalStateException(ex.getMessage());
+    }
 
-	}
+  }
 
-	public static void startServer(ServerSocketChannel serverSocket) throws IOException {
-		Selector selector = SelectorProvider.provider().openSelector();
-		// Register to receive any incoming connection messages.
-		serverSocket.register(selector, SelectionKey.OP_ACCEPT);
-		// Create our pool of threads on which we will execute.
-		ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(ServerConstants.THREAD_POOL_SIZE);
-		// If we get this far than the server is initialized correctly
-		isReady = true;
-		// Now listen on this port as long as the server is ready
-		while (isReady) {
-			// Check if we have a valid incoming request, but limit the time we may wait.
-			while (selector.select(ServerConstants.DELAY_IN_MS) != 0) {
-				// Get the list of keys that have arrived since our last check
-				Set<SelectionKey> acceptKeys = selector.selectedKeys();
-				// Now iterate through all of the keys
-				Iterator<SelectionKey> it = acceptKeys.iterator();
-				while (it.hasNext()) {
-					// Get the next key; it had better be from a new incoming connection
-					SelectionKey key = it.next();
-					it.remove();
-					// Assert certain things I really hope is true
-					assert key.isAcceptable();
-					if( key.channel() != serverSocket){
-						ChatLogger.LOGGER.error("Should be : key.channel() == serverSocket");
-					}
+  public static void startServer(ServerSocketChannel serverSocket) throws IOException {
+    Selector selector = SelectorProvider.provider().openSelector();
+    // Register to receive any incoming connection messages.
+    serverSocket.register(selector, SelectionKey.OP_ACCEPT);
+    // Create our pool of threads on which we will execute.
+    ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(ServerConstants.THREAD_POOL_SIZE);
+    // If we get this far than the server is initialized correctly
+    isReady = true;
+    // Now listen on this port as long as the server is ready
+    while (isReady) {
+      // Check if we have a valid incoming request, but limit the time we may wait.
+      while (selector.select(ServerConstants.DELAY_IN_MS) != 0) {
+        // Get the list of keys that have arrived since our last check
+        Set<SelectionKey> acceptKeys = selector.selectedKeys();
+        // Now iterate through all of the keys
+        Iterator<SelectionKey> it = acceptKeys.iterator();
+        while (it.hasNext()) {
+          // Get the next key; it had better be from a new incoming connection
+          SelectionKey key = it.next();
+          it.remove();
+          // Assert certain things I really hope is true
+          assert key.isAcceptable();
+          if (key.channel() != serverSocket) {
+            ChatLogger.LOGGER.error("Should be : key.channel() == serverSocket");
+          }
 
-					// Create new thread to handle client for which we just received request.
-					createClientThread(serverSocket, threadPool);
-				}
-			}
-		}
-	}
+          // Create new thread to handle client for which we just received request.
+          createClientThread(serverSocket, threadPool);
+        }
+      }
+    }
+  }
 
-	/**
-	 * Create a new thread to handle the client for which a request is received.
-	 *
-	 * @param serverSocket The channel to use.
-	 * @param threadPool   The thread pool to add client to.
-	 */
-	private static void createClientThread(ServerSocketChannel serverSocket, ScheduledExecutorService threadPool) {
-		try {
-			// Accept the connection and create a new thread to handle this client.
-			SocketChannel socket = serverSocket.accept();
-			// Make sure we have a connection to work with.
-			if (socket != null) {
-				NetworkConnection connection = new NetworkConnection(socket);
-				ClientRunnable tt = new ClientRunnable(connection);
-				// Add the thread to the queue of active threads
-				active.add(tt);
-				// Have the client executed by our pool of threads.
-				ScheduledFuture<?> clientFuture = threadPool.scheduleAtFixedRate(tt, ServerConstants.CLIENT_CHECK_DELAY,
-						ServerConstants.CLIENT_CHECK_DELAY, TimeUnit.MILLISECONDS);
-				tt.setFuture(clientFuture);
-			}
-		} catch (AssertionError ae) {
-			ChatLogger.LOGGER.error("Caught Assertion: " + ae.toString());
-		} catch (IOException e) {
-			ChatLogger.LOGGER.error("Caught Exception: " + e.toString());
-		}
-	}
+  /**
+   * Create a new thread to handle the client for which a request is received.
+   *
+   * @param serverSocket The channel to use.
+   * @param threadPool   The thread pool to add client to.
+   */
+  private static void createClientThread(ServerSocketChannel serverSocket, ScheduledExecutorService threadPool) {
+    try {
+      // Accept the connection and create a new thread to handle this client.
+      SocketChannel socket = serverSocket.accept();
+      // Make sure we have a connection to work with.
+      if (socket != null) {
+        NetworkConnection connection = new NetworkConnection(socket);
+        ClientRunnable tt = new ClientRunnable(connection);
+        // Add the thread to the queue of active threads
+        active.add(tt);
+        // Have the client executed by our pool of threads.
+        ScheduledFuture<?> clientFuture = threadPool.scheduleAtFixedRate(tt, ServerConstants.CLIENT_CHECK_DELAY,
+                ServerConstants.CLIENT_CHECK_DELAY, TimeUnit.MILLISECONDS);
+        tt.setFuture(clientFuture);
+      }
+    } catch (AssertionError ae) {
+      ChatLogger.LOGGER.error("Caught Assertion: " + ae.toString());
+    } catch (IOException e) {
+      ChatLogger.LOGGER.error("Caught Exception: " + e.toString());
+    }
+  }
 }
