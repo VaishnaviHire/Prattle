@@ -89,7 +89,7 @@ public abstract class Prattle {
       // Loop through all the receivers
       for (String receiver : receivers) {
         // Do not send the message to any clients that are not ready to receive it.
-        if (receiver.equals(tt.getName()) && tt.isInitialized()) {
+        if (receiver.equals(tt.getName())) {
           tt.enqueueMessage(msg);
         }
       }
