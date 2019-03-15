@@ -1,13 +1,11 @@
 package edu.northeastern.ccs.im.server;
 
+import edu.northeastern.ccs.im.*;
+
 import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ScheduledFuture;
-
-import edu.northeastern.ccs.im.ChatLogger;
-import edu.northeastern.ccs.im.Message;
-import edu.northeastern.ccs.im.NetworkConnection;
 
 /**
  * Instances of this class handle all of the incoming communication from a
@@ -242,7 +240,12 @@ public class ClientRunnable implements Runnable {
 				// Check if the message is legal formatted
 				if (messageChecks(msg)) {
 					// Check for our "special messages"
-					if (msg.isBroadcastMessage()) {
+					if(msg.isPrivateMessage()){
+						Prattle.privateMessage(msg);
+					} else if (msg.isGroupMessage()) {
+						Prattle.groupMessage(msg);
+					}
+					else if (msg.isBroadcastMessage()) {
 						// Check for our "special messages"
 						Prattle.broadcastMessage(msg);
 					}

@@ -1,10 +1,17 @@
-package serverTest;
+package edu.northeastern.ccs.im.server;
 
+import edu.northeastern.ccs.im.Message;
+import edu.northeastern.ccs.im.NetworkConnection;
+import edu.northeastern.ccs.im.server.ClientTimer;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,10 +23,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import edu.northeastern.ccs.im.Message;
-import edu.northeastern.ccs.im.NetworkConnection;
 import edu.northeastern.ccs.im.server.ClientRunnable;
-import edu.northeastern.ccs.im.server.ClientTimer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -70,6 +74,31 @@ public class ClientRunnableTest {
     clientRunnable = new ClientRunnable(mockConnection);
     Rnloc = "edu.northeastern.ccs.im.server.ClientRunnable";
   }
+  @Test
+  void pvtMsgTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+
+    NetworkConnection mockConnection1 = mock(NetworkConnection.class);
+    when(mockConnection1.iterator()).thenReturn(new MockMessageIterator());
+    when(mockConnection1.sendMessage(any())).thenReturn(true);
+    ClientRunnable clientRunnable1 = new ClientRunnable(mockConnection1);
+    clientRunnable1.setName("shivam");
+    clientRunnable.setName("yash");
+
+    Method makeMessage = Message.class.getDeclaredMethod("makeMessage", JSONObject.class);
+
+    JSONObject pvtMsg = new JSONObject();
+    JSONArray x = new JSONArray();
+    x.put(new JSONObject().put("name", "yash"));
+    pvtMsg.put("handle", "PVT");
+    pvtMsg.put("sender", "shivam");
+    pvtMsg.put("message", "this is a message");
+    pvtMsg.put("receivers", x);
+    pvtMsg.put("grpName", "");
+
+    makeMessage.setAccessible(true);
+    Message pvt = (Message) makeMessage.invoke("Message",pvtMsg);
+    assertTrue(mockConnection1.sendMessage(pvt));
+  }
 
   @Test
   void testisInitialized() {
@@ -105,11 +134,13 @@ public class ClientRunnableTest {
     when(mockConnection.iterator()).thenReturn(messageItr);
     clientRunnable.run();
     Message msg = Message.makeBroadcastMessage("yash", "hi");
+    Message pvtmsg = Message.makePrivateMessage("yash", new ArrayList<>(), "hi");
     clientRunnable.enqueueMessage(msg);
+    clientRunnable.enqueueMessage(pvtmsg);
     clientRunnable.run();
     assertFalse(verify(mockConnection).sendMessage(msg));
+    assertFalse(verify(mockConnection).sendMessage(pvtmsg));
 //    assertEquals(mockConnection.iterator().hasNext(),messageItr.hasNext());
-
   }
 
   @Test
