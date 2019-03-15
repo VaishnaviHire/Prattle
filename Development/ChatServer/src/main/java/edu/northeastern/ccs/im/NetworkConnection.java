@@ -37,9 +37,6 @@ public class NetworkConnection implements Iterable<Message> {
 	/** The base for number conversions. */
 	private static final int DECIMAL_RADIX = 10;
 
-	/** The length of the message handle. */ // MEJ: why is this not in Message?
-	private static final int HANDLE_LENGTH = 3;
-
 	/** The minimum length of a message. */ // MEJ: why is this not in Message?
 	private static final int MIN_MESSAGE_LENGTH = 7;
 
