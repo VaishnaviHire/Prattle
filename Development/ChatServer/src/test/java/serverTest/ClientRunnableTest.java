@@ -97,10 +97,7 @@ public class ClientRunnableTest {
 
     makeMessage.setAccessible(true);
     Message pvt = (Message) makeMessage.invoke("Message",pvtMsg);
-
     assertTrue(mockConnection1.sendMessage(pvt));
-
-
   }
 
   @Test

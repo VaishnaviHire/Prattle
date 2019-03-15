@@ -145,14 +145,13 @@ public class Message {
     } else {
       srcName = null;
     }
-    List<String> receiversName = new ArrayList<>();
+    List<String> receiversName = null;
     if (serverRequest.has("receivers")) {
+      receiversName = new ArrayList<>();
       JSONArray arr = serverRequest.getJSONArray("receivers");
       for (int i = 0; i < arr.length(); i++) {
         receiversName.add(arr.getJSONObject(i).getString("name"));
       }
-    } else {
-      receiversName = null;
     }
 
 
