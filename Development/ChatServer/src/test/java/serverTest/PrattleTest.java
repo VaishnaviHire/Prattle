@@ -26,7 +26,6 @@ import edu.northeastern.ccs.im.NetworkConnection;
 import edu.northeastern.ccs.im.server.*;
 
 
-
 /**
  * Test for the Prattle class
  */
@@ -64,7 +63,7 @@ public class PrattleTest {
    *                                accessible.
    */
   @Test
-  void prattleMessageTest() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException,InvocationTargetException {
+  void prattleMessageTest() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
     ConcurrentLinkedQueue<ClientRunnable> newActive = new ConcurrentLinkedQueue<>();
     ClientRunnable mockRunnableOne = mock(ClientRunnable.class);
     ClientRunnable mockRunnableTwo = mock(ClientRunnable.class);
@@ -83,11 +82,12 @@ public class PrattleTest {
     int activeSize = newActive.size();
     // tests for remove client
     Prattle.removeClient(mockRunnableOne);
-    assertEquals(newActive.size(), activeSize-1);
+    assertEquals(newActive.size(), activeSize - 1);
     testPrattle.broadcastMessage(Message.makeBroadcastMessage("Tom", "hi"));
   }
+
   @Test
-  void prattlePvtMessageTest() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException,InvocationTargetException {
+  void prattlePvtMessageTest() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
     ConcurrentLinkedQueue<ClientRunnable> newActive = new ConcurrentLinkedQueue<>();
     ClientRunnable mockRunnableOne = mock(ClientRunnable.class);
     ClientRunnable mockRunnableTwo = mock(ClientRunnable.class);
@@ -108,10 +108,11 @@ public class PrattleTest {
     // tests for remove client
     List<String> s = new ArrayList<>();
     s.add("yash");
-    testPrattle.privateMessage(Message.makePrivateMessage("Tom", s,"this is my message"));
+    Prattle.privateMessage(Message.makePrivateMessage("Tom", s, "this is my message"));
   }
+
   @Test
-  void prattlePrivateMessageTest() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException,InvocationTargetException {
+  void prattlePrivateMessageTest() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
 // adding private message tests here
   }
 
@@ -145,7 +146,7 @@ public class PrattleTest {
    * @throws IOException               thrown if mock channel fails
    */
   @Test
-  void createThreadTest() throws  IllegalAccessException, IOException, ClassNotFoundException,NoSuchFieldException, NoSuchMethodException, InvocationTargetException {
+  void createThreadTest() throws IllegalAccessException, IOException, ClassNotFoundException, NoSuchFieldException, NoSuchMethodException, InvocationTargetException {
     Field isReadyField = Class.forName(prattleLoc).getDeclaredField("isReady");
     isReadyField.setAccessible(true);
     isReadyField.set(testPrattle, true);
@@ -160,14 +161,16 @@ public class PrattleTest {
       Field msgField = NetworkConnection.class.getDeclaredField("messages");
       msgField.setAccessible(true);
       ConcurrentLinkedQueue<Message> messages = (ConcurrentLinkedQueue<Message>) msgField.get(nc);
-      Message testMsg = Message.makeBroadcastMessage("Vaish","Hello\n How are you?");
+      Message testMsg = Message.makeBroadcastMessage("Vaish", "Hello\n How are you?");
       messages.add(testMsg);
 
       // Tests for Message Iterator
       assertTrue(nc.iterator().hasNext());
-      assertEquals(nc.iterator().next().getText(),"Hello\n How are you?");
+      assertEquals(nc.iterator().next().getText(), "Hello\n How are you?");
       assertFalse(nc.iterator().hasNext());
-      assertThrows(NoSuchElementException.class, () -> { nc.iterator().next() ;});
+      assertThrows(NoSuchElementException.class, () -> {
+        nc.iterator().next();
+      });
 
 
       testPrattle.stopServer();
@@ -175,13 +178,11 @@ public class PrattleTest {
 
     } catch (IOException io) {
 
-    }
-    finally {
-      if(sc != null)
+    } finally {
+      if (sc != null)
         sc.close();
     }
   }
-
 
 
   /**
@@ -258,9 +259,8 @@ public class PrattleTest {
   }
 
 
-
   @Test
-  public void testPrattleMainFullCover() throws ClassNotFoundException, IOException, NoSuchFieldException,IllegalAccessException {
+  public void testPrattleMainFullCover() throws ClassNotFoundException, IOException, NoSuchFieldException, IllegalAccessException {
 
     Field isReadyField = Class.forName(prattleLoc).getDeclaredField("isReady");
     isReadyField.setAccessible(true);

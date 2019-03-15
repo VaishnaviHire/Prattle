@@ -136,14 +136,25 @@ public class Message {
    * @return Instance of Message (or its subclasses) representing the handle, name, & text.
    */
   protected static Message makeMessage(JSONObject serverRequest) {
-    String handle = serverRequest.getString("handle");
-    String srcName = serverRequest.getString("sender");
+    String handle = null;
+    String srcName = null;
+    String grpName = null;
+    if(serverRequest.has("handle")) {
+      handle = serverRequest.getString("handle");
+    }
+    if(serverRequest.has("sender")) {
+      srcName = serverRequest.getString("sender");
+    }
+
     JSONArray arr = serverRequest.getJSONArray("receivers");
     List<String> receiversName = new ArrayList<>();
-    for(int i = 0; i < arr.length(); i++){
+    for(int i = 0; i < arr.length(); i++) {
       receiversName.add(arr.getJSONObject(i).getString("name"));
     }
 
+    if (serverRequest.has("grpName")){
+      grpName = serverRequest.getString("grpName");
+    }
     String text = serverRequest.getString("message");
     Message result = null;
     if (handle.compareTo(MessageType.QUIT.toString()) == 0) {
