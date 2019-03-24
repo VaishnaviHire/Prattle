@@ -4,8 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
-import edu.northeastern.ccs.im.ChatLogger;
-import edu.northeastern.ccs.im.Message;
+import edu.northeastern.ccs.im.message.Message;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -81,7 +80,7 @@ class MessageTest {
   @org.junit.jupiter.api.Test
   void messageBodyGetter() {
     Message m = Message.makeBroadcastMessage(name, Msg);
-    assertEquals(Msg, m.getText());
+    assertEquals(Msg, m.getBody());
   }
 
   @org.junit.jupiter.api.Test
@@ -93,7 +92,7 @@ class MessageTest {
   @org.junit.jupiter.api.Test
   void messageBodyGetterFail() {
     Message m = Message.makeBroadcastMessage(name, null);
-    assertNull(m.getText());
+    assertNull(m.getBody());
   }
 
   @org.junit.jupiter.api.Test
@@ -101,7 +100,7 @@ class MessageTest {
     Method m = Message.class.getDeclaredMethod("makeHelloMessage", String.class);
     m.setAccessible(true);
 
-    assertEquals("this is a message", ((Message) m.invoke("Message", Msg)).getText());
+    assertEquals("this is a message", ((Message) m.invoke("message", Msg)).getBody());
   }
 
   @Test
@@ -129,9 +128,9 @@ class MessageTest {
     byeMsg.put("grpName", "");
 
     makeMessage.setAccessible(true);
-    Message bye = (Message) makeMessage.invoke("Message", byeMsg);
-    Message hello = (Message) makeMessage.invoke("Message", helloMsg);
-    Message broadcast = (Message) makeMessage.invoke("Message", bctMsg);
+    Message bye = (Message) makeMessage.invoke("message", byeMsg);
+    Message hello = (Message) makeMessage.invoke("message", helloMsg);
+    Message broadcast = (Message) makeMessage.invoke("message", bctMsg);
 
     // Initializating different types of messages
     assertFalse(bye.isInitialization());
@@ -158,7 +157,7 @@ class MessageTest {
     pvtMsg.put("grpName", "");
 
     makeMessage.setAccessible(true);
-    Message pvt = (Message) makeMessage.invoke("Message", pvtMsg);
+    Message pvt = (Message) makeMessage.invoke("message", pvtMsg);
 
     // Initializating different types of messages
     assertEquals("{\"sender\":\"Shivam\",\"receivers\":[{\"name\":\"yash\"}]," +
@@ -200,10 +199,10 @@ class MessageTest {
     byeMsg.put("receivers", new ArrayList<>());
     byeMsg.put("grpName", "");
     makeMessage.setAccessible(true);
-    Message pvt = (Message) makeMessage.invoke("Message", pvtMsg);
-    Message bye = (Message) makeMessage.invoke("Message", byeMsg);
-    Message hello = (Message) makeMessage.invoke("Message", helloMsg);
-    Message broadcast = (Message) makeMessage.invoke("Message", bctMsg);
+    Message pvt = (Message) makeMessage.invoke("message", pvtMsg);
+    Message bye = (Message) makeMessage.invoke("message", byeMsg);
+    Message hello = (Message) makeMessage.invoke("message", helloMsg);
+    Message broadcast = (Message) makeMessage.invoke("message", bctMsg);
     // Initializating different types of messages
     assertEquals("PVT 2 -- 4 yash 5 yash1 5 yash2 17 this is a message",
             pvt.toString());

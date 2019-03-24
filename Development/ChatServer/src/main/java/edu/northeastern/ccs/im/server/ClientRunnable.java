@@ -3,6 +3,7 @@ package edu.northeastern.ccs.im.server;
 import edu.northeastern.ccs.im.*;
 import edu.northeastern.ccs.im.model.User;
 import edu.northeastern.ccs.im.model.UserDAO;
+import edu.northeastern.ccs.im.message.Message;
 
 import java.util.Iterator;
 import java.util.Queue;
@@ -115,7 +116,7 @@ public class ClientRunnable implements Runnable {
 	 * Check if the message is properly formed. At the moment, this means checking
 	 * that the identifier is set properly.
 	 * 
-	 * @param msg Message to be checked
+	 * @param msg message to be checked
 	 * @return True if message is correct; false otherwise
 	 */
 	private boolean messageChecks(Message msg) {
@@ -127,7 +128,7 @@ public class ClientRunnable implements Runnable {
 	 * Immediately send this message to the client. This returns if we were
 	 * successful or not in our attempt to send the message.
 	 * 
-	 * @param message Message to be sent immediately.
+	 * @param message message to be sent immediately.
 	 * @return True if we sent the message successfully; false otherwise.
 	 */
 	private boolean sendMessage(Message message) {
@@ -252,16 +253,7 @@ public class ClientRunnable implements Runnable {
 			} else {
 				// Check if the message is legal formatted
 				if (messageChecks(msg)) {
-					// Check for our "special messages"
-					if(msg.isPrivateMessage()){
-						Prattle.privateMessage(msg);
-					} else if (msg.isGroupMessage()) {
-						Prattle.groupMessage(msg);
-					}
-					else if (msg.isBroadcastMessage()) {
-						// Check for our "special messages"
-						Prattle.broadcastMessage(msg);
-					}
+					Prattle.sendMessage(msg);
 				} else {
 					Message sendMsg;
 					sendMsg = Message.makeBroadcastMessage(ServerConstants.BOUNCER_ID,

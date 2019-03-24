@@ -3,17 +3,15 @@ package edu.northeastern.ccs.im.server;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import edu.northeastern.ccs.im.Message;
+import edu.northeastern.ccs.im.message.Message;
 import edu.northeastern.ccs.im.NetworkConnection;
 
-import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.InetSocketAddress;
 
@@ -210,7 +208,7 @@ public class PrattleTest {
       Message testMsg = Message.makeBroadcastMessage("Vaish", "Hello\n How are you?");
       messages.add(testMsg);
 
-      // Tests for Message Iterator
+      // Tests for message Iterator
       assertTrue(nc.iterator().hasNext());
       assertEquals(nc.iterator().next().getText(), "Hello\n How are you?");
       assertFalse(nc.iterator().hasNext());
