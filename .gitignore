@@ -7,5 +7,5 @@ log4j.log
 ChatLogger.log.1.*
 .DS_Store
 
-
+.attach_pid*
 

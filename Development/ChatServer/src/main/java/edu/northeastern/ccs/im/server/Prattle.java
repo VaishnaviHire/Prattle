@@ -1,7 +1,7 @@
 package edu.northeastern.ccs.im.server;
 
 import edu.northeastern.ccs.im.ChatLogger;
-import edu.northeastern.ccs.im.Message;
+import edu.northeastern.ccs.im.message.Message;
 import edu.northeastern.ccs.im.NetworkConnection;
 import edu.northeastern.ccs.im.model.Group;
 import edu.northeastern.ccs.im.model.Group1;
@@ -16,7 +16,6 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.channels.spi.SelectorProvider;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executors;
@@ -58,65 +57,69 @@ public abstract class Prattle {
     active = new ConcurrentLinkedQueue<>();
   }
 
-  /**
-   * Broadcast a given message to all the other IM clients currently on the system. This message
-   * _will_ be sent to the client who originally sent it.
-   *
-   * @param message Message that the client sent.
-   */
-  public static void broadcastMessage(Message message) {
-    // Loop through all of our active threads
-    for (ClientRunnable tt : active) {
-      // Do not send the message to any clients that are not ready to receive it.
-      if (tt.isInitialized()) {
-        tt.enqueueMessage(message);
-      }
-    }
+//  /**
+//   * Broadcast a given message to all the other IM clients currently on the system. This message
+//   * _will_ be sent to the client who originally sent it.
+//   *
+//   * @param message message that the client sent.
+//   */
+//  public static void broadcastMessage(message message) {
+//    // Loop through all of our active threads
+//    for (ClientRunnable tt : active) {
+//      // Do not send the message to any clients that are not ready to receive it.
+//      if (tt.isInitialized()) {
+//        tt.enqueueMessage(message);
+//      }
+//    }
+//  }
+
+//  /**
+//   * Sends private message to the given user. Username is embedded in the message text. Eg.
+//   * username%MessageText
+//   *
+//   * @param message message that the client sent
+//   */
+//  public static void privateMessage(message message) {
+//
+//    //get receivers from the text
+//
+//    List<String> receivers = message.getMsgReceivers();
+//
+//    // Loop through all of our active threads
+//    for (ClientRunnable tt : active) {
+//      // Loop through all the receivers
+//      for (String receiver : receivers) {
+//        // Do not send the message to any clients that are not ready to receive it.
+//        if (receiver.equals(tt.getName()) && tt.isInitialized()) {
+//          tt.enqueueMessage(message);
+//        }
+//      }
+//    }
+//  }
+
+
+  public static void sendMessage(Message message) {
+    message.send(active);
   }
 
-  /**
-   * Sends private message to the given user. Username is embedded in the message text. Eg.
-   * username%MessageText
-   *
-   * @param message Message that the client sent
-   */
-  public static void privateMessage(Message message) {
 
-    //get receivers from the text
 
-    List<String> receivers = message.getMsgReceivers();
-
-    // Loop through all of our active threads
-    for (ClientRunnable tt : active) {
-      // Loop through all the receivers
-      for (String receiver : receivers) {
-        // Do not send the message to any clients that are not ready to receive it.
-        if (receiver.equals(tt.getName()) && tt.isInitialized()) {
-          tt.enqueueMessage(message);
-        }
-      }
-    }
-  }
-
-  public static void groupMessage(Message message) {
-    GroupDao d = new GroupDao(new StringBuilder());
-    Group1 g = new Group1(message.getReceivingGrpName());
-    Group1 g1 = d.getGroup(g);
-    List<User> x = g1.getMembers();
-
-    List<String> receivers = message.getMsgReceivers();
-
-    // Loop through all of our active threads
-    for (ClientRunnable tt : active) {
-      // Loop through all the receivers
-      for (User receiver : x) {
-        // Do not send the message to any clients that are not ready to receive it.
-        if (receiver.getUName().equals(tt.getName()) && tt.isInitialized()) {
-          tt.enqueueMessage(message);
-        }
-      }
-    }
-  }
+//  public static void groupMessage(message message) {
+//
+//
+//    List<String> receivers = message.getMsgReceivers();
+//
+//    // Loop through all of our active threads
+//    for (ClientRunnable tt : active) {
+//      // Loop through all the receivers
+//      for (String receiver : receivers) {
+//        // Do not send the message to any clients that are not ready to receive it.
+//        if (receiver.equals(tt.getName()) && tt.isInitialized()) {
+//          tt.enqueueMessage(message);
+//        }
+//      }
+//    }
+//  }
 
   private Prattle() {
   }

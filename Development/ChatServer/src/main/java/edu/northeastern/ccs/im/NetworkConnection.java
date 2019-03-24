@@ -1,5 +1,6 @@
 package edu.northeastern.ccs.im;
 
+import edu.northeastern.ccs.im.message.Message;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -37,7 +38,7 @@ public class NetworkConnection implements Iterable<Message> {
 	/** The base for number conversions. */
 	private static final int DECIMAL_RADIX = 10;
 
-	/** The minimum length of a message. */ // MEJ: why is this not in Message?
+	/** The minimum length of a message. */ // MEJ: why is this not in message?
 	private static final int MIN_MESSAGE_LENGTH = 7;
 
 	/** The default character set. */
@@ -95,12 +96,12 @@ public class NetworkConnection implements Iterable<Message> {
 	}
 
 	/**
-	 * Send a Message over the network. This method performs its actions by printing
-	 * the given Message over the SocketNB instance with which the PrintNetNB was
+	 * Send a message over the network. This method performs its actions by printing
+	 * the given message over the SocketNB instance with which the PrintNetNB was
 	 * instantiated. This returns whether our attempt to send the message was
 	 * successful.
 	 * 
-	 * @param msg Message to be sent out over the network.
+	 * @param msg message to be sent out over the network.
 	 * @return True if we successfully send this message; false otherwise.
 	 */
 	public boolean sendMessage(Message msg) {
@@ -188,15 +189,23 @@ public class NetworkConnection implements Iterable<Message> {
 							if (start != 0) {
 								charBuffer.position(start);
 							}
-							// Here the first arguement is the entire string containing Handle, sender, and Message Info
+							// Here the first arguement is the entire string containing Handle, sender, and message Info
 							// First read in the handle
+							String handle = charBuffer.subSequence(0, Message.HANDLE_LENGTH).toString();
+							// Skip past the handle
+							charBuffer.position(start + Message.HANDLE_LENGTH + 1);
+							// Read the first argument containing the sender's name
+							String sender = readArgument(charBuffer);
+							// Skip past the leading space
+							charBuffer.position(charBuffer.position() + 2);
+							// Read in the second argument containing the message
 
 							// Read in the  argument containing the message
 							String jsonString = readArgument(charBuffer);
 							// Convert entire String request to JsonObject
 							JSONObject serverRequest = new JSONObject(jsonString);
 							// Add this message into our queue
-							Message newMsg = Message.makeMessage(serverRequest);
+							Message newMsg = Message.makeMessage(handle, sender, serverRequest);
 							messages.add(newMsg);
 							// And move the position to the start of the next character
 							start = charBuffer.position() + 1;
