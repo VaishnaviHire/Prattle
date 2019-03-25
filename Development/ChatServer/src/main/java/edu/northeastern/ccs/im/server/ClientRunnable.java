@@ -105,6 +105,7 @@ public class ClientRunnable implements Runnable {
 				// Update the time until we terminate this client due to inactivity.
 				timer.updateAfterInitialization();
 				// Set that the client is initialized.
+				Prattle.activate(this);
 				initialized = true;
 			} else {
 				initialized = false;

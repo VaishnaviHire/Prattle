@@ -17,11 +17,7 @@ import java.nio.channels.SocketChannel;
 import java.nio.channels.spi.SelectorProvider;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * A network server that communicates with IM clients that connect to it. This version of the server
@@ -48,78 +44,28 @@ public abstract class Prattle {
   /**
    * Collection of threads that are currently being used.
    */
-  private static ConcurrentLinkedQueue<ClientRunnable> active;
+  private static ConcurrentHashMap<Integer, ClientRunnable> active;
+
+  /**
+   * Collection of threads that are not yet initialized
+   */
+  private static ConcurrentLinkedQueue<ClientRunnable> initializing;
 
 
   /** All of the static initialization occurs in this "method" */
   static {
+    initializing = new ConcurrentLinkedQueue<>();
     // Create the new queue of active threads.
-    active = new ConcurrentLinkedQueue<>();
+    active = new ConcurrentHashMap<>();
   }
 
-//  /**
-//   * Broadcast a given message to all the other IM clients currently on the system. This message
-//   * _will_ be sent to the client who originally sent it.
-//   *
-//   * @param message message that the client sent.
-//   */
-//  public static void broadcastMessage(message message) {
-//    // Loop through all of our active threads
-//    for (ClientRunnable tt : active) {
-//      // Do not send the message to any clients that are not ready to receive it.
-//      if (tt.isInitialized()) {
-//        tt.enqueueMessage(message);
-//      }
-//    }
-//  }
 
-//  /**
-//   * Sends private message to the given user. Username is embedded in the message text. Eg.
-//   * username%MessageText
-//   *
-//   * @param message message that the client sent
-//   */
-//  public static void privateMessage(message message) {
-//
-//    //get receivers from the text
-//
-//    List<String> receivers = message.getMsgReceivers();
-//
-//    // Loop through all of our active threads
-//    for (ClientRunnable tt : active) {
-//      // Loop through all the receivers
-//      for (String receiver : receivers) {
-//        // Do not send the message to any clients that are not ready to receive it.
-//        if (receiver.equals(tt.getName()) && tt.isInitialized()) {
-//          tt.enqueueMessage(message);
-//        }
-//      }
-//    }
-//  }
+//TODO: add is initialized to send message methods
 
 
   public static void sendMessage(Message message) {
     message.send(active);
   }
-
-
-
-//  public static void groupMessage(message message) {
-//
-//
-//    List<String> receivers = message.getMsgReceivers();
-//
-//    // Loop through all of our active threads
-//    for (ClientRunnable tt : active) {
-//      // Loop through all the receivers
-//      for (String receiver : receivers) {
-//        // Do not send the message to any clients that are not ready to receive it.
-//        if (receiver.equals(tt.getName()) && tt.isInitialized()) {
-//          tt.enqueueMessage(message);
-//        }
-//      }
-//    }
-//  }
 
   private Prattle() {
   }
@@ -149,7 +95,7 @@ public abstract class Prattle {
   public static void removeClient(ClientRunnable dead) {
     // Test and see if the thread was in our list of active clients so that we
     // can remove it.
-    if (!active.remove(dead)) {
+    if (active.remove(dead.getUserId()) == null) {
       ChatLogger.LOGGER.info("Could not find a thread that I tried to remove!\n");
     }
   }
@@ -236,7 +182,7 @@ public abstract class Prattle {
         ClientRunnable tt = new ClientRunnable(connection);
         // Add the thread to the queue of active threads
 
-        active.add(tt);
+        initializing.add(tt);
         // Have the client executed by our pool of threads.
         ScheduledFuture<?> clientFuture = threadPool.scheduleAtFixedRate(tt, ServerConstants.CLIENT_CHECK_DELAY,
                 ServerConstants.CLIENT_CHECK_DELAY, TimeUnit.MILLISECONDS);
@@ -246,6 +192,17 @@ public abstract class Prattle {
       ChatLogger.LOGGER.error("Caught Assertion: " + ae.toString());
     } catch (IOException e) {
       ChatLogger.LOGGER.error("Caught Exception: " + e.toString());
+    }
+  }
+
+  /**
+   * Takes the runnable out of initializing and puts into active map
+   *
+   * @param clientRunnable the client runnable we are activating
+   */
+  public static void activate(ClientRunnable clientRunnable) {
+    if (initializing.remove(clientRunnable)) {
+      active.put(clientRunnable.getUserId(), clientRunnable);
     }
   }
 }
