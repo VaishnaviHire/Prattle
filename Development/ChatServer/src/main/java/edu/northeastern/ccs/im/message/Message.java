@@ -4,8 +4,8 @@ import edu.northeastern.ccs.im.MessageType;
 import edu.northeastern.ccs.im.server.ClientRunnable;
 import org.json.JSONObject;
 
-import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Each instance of this class represents a single transmission by our IM clients.
@@ -25,12 +25,12 @@ public abstract class Message {
   private static final String NULL_OUTPUT = "--";
 
   /** The length of the message handle. */
-   static final int HANDLE_LENGTH = 3;
+  public static final int HANDLE_LENGTH = 3;
 
 
-  protected final String BODY = "body";
-  protected final String RECEIVER = "receiver";
-  protected final String RECEIVERS = "receivers";
+  protected static final String BODY = "body";
+  protected static final String RECEIVER = "receiver";
+  protected static final String RECEIVERS = "receivers";
 
 
   /**
@@ -50,96 +50,23 @@ public abstract class Message {
 
 
   /**
-   * Create a new message to continue the logout process.
-   *
-   * @param myName The name of the client that sent the quit message.
-   * @return Instance of message that specifies the process is logging out.
-   */
-  public static Message makeQuitMessage(String myName) {
-    return null;//new Message(MessageType.QUIT, myName, null);
-  }
-
-  /**
-   * Create a new message broadcasting an announcement to the world.
-   *
-   * @param myName Name of the sender of this very important missive.
-   * @param text   Text of the message that will be sent to all users
-   * @return Instance of message that transmits text to all logged in users.
-   */
-  public static Message makeBroadcastMessage(String myName, String text) {
-    return null;// new Message(MessageType.BROADCAST, myName, null, null, text);
-  }
-
-  /**
-   * Create a new private message.
-   *
-   * @param myName Name of the sender.
-   * @param receiversName Name of the receivers.
-   * @param text message text.
-   * @return
-   */
-  public static Message makePrivateMessage(String myName, List<String> receiversName, String text) {
-    return null;//new Message(MessageType.PRIVATE, myName, receiversName, null, text);
-  }
-
-  /**
-   * Create a new Group message.
-   *
-   * @param myName Name of the sender.
-   * @param grpName Name of the group.
-   * @param text message text.
-   * @return return message of type group.
-   */
-  public static Message makeGroupMessage(String myName, List<String> msgReceivers, String grpName, String text) {
-    return null;//new Message(MessageType.GROUP, myName, msgReceivers, grpName, text);
-  }
-
-  /**
-   * Create a new message stating the name with which the user would like to login.
-   *
-   * @param text Name the user wishes to use as their screen name.
-   * @return Instance of message that can be sent to the server to try and login.
-   */
-  protected static Message makeHelloMessage(String text) {
-    return null;//new Message(MessageType.HELLO, null, text);
-  }
-
-  /**
-   * Given a handle, name and text, return the appropriate message instance or an instance from a
+   * Given a handle, name and jsonMsg, return the appropriate message instance or an instance from a
    * subclass of message.
    *
    * @param jsonMsg JSONObject containing the information.
+   * @param msgSender the sender of the message
+   * @param handle the message type
    * @return Instance of message (or its subclasses) representing the handle, name, & text.
    */
-  protected static Message makeMessage(String handle, String msgSender, JSONObject jsonMsg) {
-    String grpName;
-
-//    List<String> receiversName = null;
-//    if (jsonMsg.has("receivers")) {
-//      receiversName = new ArrayList<>();
-//      JSONArray arr = jsonMsg.getJSONArray("receivers");
-//      for (int i = 0; i < arr.length(); i++) {
-//        receiversName.add(arr.getJSONObject(i).getString("name"));
-//      }
-//    }
-//
-//    if (jsonMsg.has("grpName")) {
-//      grpName = jsonMsg.getString("grpName");
-//    } else {
-//      grpName = null;
-//    }
-
+  public static Message makeMessage(String handle, String msgSender, JSONObject jsonMsg) {
     if (handle.compareTo(MessageType.QUIT.toString()) == 0) {
       return new QuitMessage(msgSender);
-      //makeQuitMessage(srcName);
     } else if (handle.compareTo(MessageType.HELLO.toString()) == 0) {
-      return new SimpleLoginMessage(msgSender);//makeSimpleLoginMessage(srcName);
+      return new SimpleLoginMessage(msgSender);
     } else if ((handle.compareTo(MessageType.PRIVATE.toString()) == 0)) {
       return new PrivateMessage(msgSender, jsonMsg);
-    } else if (handle.compareTo(MessageType.BROADCAST.toString()) == 0) {
-      return new BroadcastMessage(msgSender, jsonMsg);//makeBroadcastMessage(srcName, text);
     } else if (handle.compareTo(MessageType.GROUP.toString()) == 0) {
-      return new GroupMessage(msgSender, jsonMsg);//makeGroupMessage(srcName, receiversName, grpName, text);
+      return new GroupMessage(msgSender, jsonMsg);
     }
     else {
       //should we throw error?????
@@ -148,14 +75,18 @@ public abstract class Message {
   }
 
   /**
-   * Create a new message for the early stages when the user logs in without all the special stuff.
+   * Create a new message to continue the logout process.
    *
-   * @param myName Name of the user who has just logged in.
-   * @return Instance of message specifying a new friend has just logged in.
+   * @param msgSender The name of the client that sent the quit message.
+   * @return Instance of message that specifies the process is logging out.
    */
-//  public static Message makeSimpleLoginMessage(String myName) {
-//    return new Message(MessageType.HELLO, myName);
-//  }
+  public static Message makeQuitMessage(String msgSender) {
+    return new QuitMessage(msgSender);
+  }
+
+  public static Message makeBroadcastMessage(String sender, String message) {
+    return new BroadcastMessage(sender, message);
+  }
 
   /**
    * Return the name of the sender of this message.
@@ -181,7 +112,7 @@ public abstract class Message {
    * @return True if the message is a broadcast message; false otherwise.
    */
   public boolean isBroadcastMessage() {
-    return false;//(msgType == MessageType.BROADCAST);
+    return false;
   }
 
   /**
@@ -190,7 +121,7 @@ public abstract class Message {
    * @return True if the message is a private message, false otherwise.
    */
   public boolean isPrivateMessage() {
-    return false;//(msgType == MessageType.PRIVATE);
+    return false;
   }
 
   /**
@@ -199,7 +130,7 @@ public abstract class Message {
    * @return True if the message is a group message, false otherwise.
    */
   public boolean isGroupMessage() {
-    return false;//(msgType == MessageType.GROUP);
+    return false;
   }
 
   /**
@@ -208,7 +139,7 @@ public abstract class Message {
    * @return True if the message is an initialization message; false otherwise
    */
   public boolean isInitialization() {
-    return false;//(msgType == MessageType.HELLO);
+    return false;
   }
 
   /**
@@ -217,7 +148,7 @@ public abstract class Message {
    * @return True if the message is sent when signing off; false otherwise
    */
   public boolean terminate() {
-    return false;//(msgType == MessageType.QUIT);
+    return false;
   }
 
   /**
@@ -249,5 +180,5 @@ public abstract class Message {
     return result.toString();
   }
 
-  public abstract void send(ConcurrentLinkedQueue<ClientRunnable> active);
+  public abstract void send(ConcurrentMap<Integer, ClientRunnable> active);
 }

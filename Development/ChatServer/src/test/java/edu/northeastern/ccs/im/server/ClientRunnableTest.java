@@ -1,7 +1,9 @@
 package edu.northeastern.ccs.im.server;
 
+import edu.northeastern.ccs.im.MessageType;
 import edu.northeastern.ccs.im.message.Message;
 import edu.northeastern.ccs.im.NetworkConnection;
+import edu.northeastern.ccs.im.message.SimpleLoginMessage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
@@ -63,6 +65,10 @@ public class ClientRunnableTest {
     }
   }
 
+  public static Message makeSimpleLoginMessage() {
+    return Message.makeMessage(MessageType.HELLO.toString(), "yash", new JSONObject());
+  }
+
   @BeforeEach
   void setup() {
     mockConnection = mock(NetworkConnection.class);
@@ -72,7 +78,7 @@ public class ClientRunnableTest {
     Rnloc = "edu.northeastern.ccs.im.server.ClientRunnable";
   }
   @Test
-  void pvtMsgTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+  void pvtMsgTest() {
 
     NetworkConnection mockConnection1 = mock(NetworkConnection.class);
     when(mockConnection1.iterator()).thenReturn(new MockMessageIterator());
@@ -81,19 +87,12 @@ public class ClientRunnableTest {
     clientRunnable1.setName("shivam");
     clientRunnable.setName("yash");
 
-    Method makeMessage = Message.class.getDeclaredMethod("makeMessage", JSONObject.class);
-
     JSONObject pvtMsg = new JSONObject();
-    JSONArray x = new JSONArray();
-    x.put(new JSONObject().put("name", "yash"));
-    pvtMsg.put("handle", "PVT");
-    pvtMsg.put("sender", "shivam");
-    pvtMsg.put("message", "this is a message");
-    pvtMsg.put("receivers", x);
+    pvtMsg.put("body", "this is a message");
+    pvtMsg.put("receivers", new String[]{"yash"});
     pvtMsg.put("grpName", "");
 
-    makeMessage.setAccessible(true);
-    Message pvt = (Message) makeMessage.invoke("message",pvtMsg);
+    Message pvt = Message.makeMessage(MessageType.PRIVATE.toString(), "shivam", pvtMsg);
     assertTrue(mockConnection1.sendMessage(pvt));
   }
 
@@ -126,12 +125,19 @@ public class ClientRunnableTest {
 
   @Test
   void testEnqueueMessage() {
-    Message[] messages = {Message.makeSimpleLoginMessage("yash")};
+    Message[] messages = {makeSimpleLoginMessage()};
     MockMessageIterator messageItr = new MockMessageIterator(Arrays.asList(messages));
     when(mockConnection.iterator()).thenReturn(messageItr);
     clientRunnable.run();
     Message msg = Message.makeBroadcastMessage("yash", "hi");
-    Message pvtmsg = Message.makePrivateMessage("yash", new ArrayList<>(), "hi");
+
+
+    JSONObject pvtMsgJSON = new JSONObject();
+    pvtMsgJSON.put("body", "hi");
+    pvtMsgJSON.put("receivers", new ArrayList<>());
+//    pvtMsgJSON.put("grpName", "grp1");
+
+    Message pvtmsg = Message.makeMessage(MessageType.PRIVATE.toString() , "yash", pvtMsgJSON);
     clientRunnable.enqueueMessage(msg);
     clientRunnable.enqueueMessage(pvtmsg);
     clientRunnable.run();
@@ -142,7 +148,7 @@ public class ClientRunnableTest {
 
   @Test
   void testGetName() {
-    Message[] messages = {Message.makeSimpleLoginMessage("yash")};
+    Message[] messages = {makeSimpleLoginMessage()};
     when(mockConnection.iterator()).thenReturn(new MockMessageIterator(Arrays.asList(messages)));
     clientRunnable.run();
     assertEquals("yash", clientRunnable.getName());
@@ -156,7 +162,7 @@ public class ClientRunnableTest {
 
   @Test
   void testGetUserId() {
-    Message[] messages = {Message.makeSimpleLoginMessage("yash")};
+    Message[] messages = {Message.makeMessage(MessageType.HELLO.toString(),"yash", new JSONObject())};
     when(mockConnection.iterator()).thenReturn(new MockMessageIterator(Arrays.asList(messages)));
     clientRunnable.run();
     assertEquals(clientRunnable.hashCode(), clientRunnable.getUserId());
@@ -169,7 +175,7 @@ public class ClientRunnableTest {
 
   @Test
   void testIsInitializedTrue() {
-    Message[] messages = {Message.makeSimpleLoginMessage("yash")};
+    Message[] messages = {Message.makeMessage(MessageType.HELLO.toString(),"yash", new JSONObject())};
     when(mockConnection.iterator()).thenReturn(new MockMessageIterator(Arrays.asList(messages)));
     clientRunnable.run();
     assertTrue(clientRunnable.isInitialized());
@@ -177,7 +183,7 @@ public class ClientRunnableTest {
 
   @Test
   void testRunInitializedTrue() {
-    Message[] messages = {Message.makeSimpleLoginMessage("yash")};
+    Message[] messages = {Message.makeMessage(MessageType.HELLO.toString(),"yash", new JSONObject())};
     when(mockConnection.iterator()).thenReturn(new MockMessageIterator(Arrays.asList(messages)));
     clientRunnable.run();
     assertTrue(clientRunnable.isInitialized());
@@ -193,7 +199,7 @@ public class ClientRunnableTest {
 
   @Test
   void testRunUninitializedLogin() {
-    Message[] messages = {Message.makeSimpleLoginMessage("yash")};
+    Message[] messages = {Message.makeMessage(MessageType.HELLO.toString(),"yash", new JSONObject())};
     when(mockConnection.iterator()).thenReturn(new MockMessageIterator(Arrays.asList(messages)));
     assertFalse(clientRunnable.isInitialized());
     clientRunnable.run();
@@ -208,7 +214,7 @@ public class ClientRunnableTest {
 
   @Test
   void testRunInitializedIncomingMessages() {
-    Message[] m1 = {Message.makeSimpleLoginMessage("yash")};
+    Message[] m1 = {makeSimpleLoginMessage()};
     Message[] m2 = {Message.makeBroadcastMessage("yash", "my message")};
     when(mockConnection.iterator()).thenReturn(new MockMessageIterator(Arrays.asList(m1)));
     clientRunnable.run();
@@ -220,7 +226,7 @@ public class ClientRunnableTest {
 
   @Test
   void testRunInitializedInvalidMessage() {
-    Message[] m1 = {Message.makeSimpleLoginMessage("yash")};
+    Message[] m1 = {makeSimpleLoginMessage()};
     Message[] m2 = {Message.makeBroadcastMessage("fake_user", "my message")};
     when(mockConnection.iterator()).thenReturn(new MockMessageIterator(Arrays.asList(m1)));
     clientRunnable.run();
@@ -232,7 +238,7 @@ public class ClientRunnableTest {
 
   @Test
   void testRunInitializeQuitMessage() {
-    Message[] message1 = {Message.makeSimpleLoginMessage("yash")};
+    Message[] message1 = {makeSimpleLoginMessage()};
     Message[] message2 = {Message.makeQuitMessage("yash")};
     when(mockConnection.iterator()).thenReturn(new MockMessageIterator(Arrays.asList(message1)));
     ClientRunnable spyClient = spy(clientRunnable);
@@ -255,7 +261,7 @@ public class ClientRunnableTest {
 
   @Test
   void testIterator() {
-    Message[] messages = {Message.makeSimpleLoginMessage("yash"), Message.makeBroadcastMessage("yash", "hi")};
+    Message[] messages = {makeSimpleLoginMessage()};
     when(mockConnection.iterator()).thenReturn(new MockMessageIterator(Arrays.asList(messages)));
     Iterator<Message> iterator = mockConnection.iterator();
     while(iterator.hasNext()) {

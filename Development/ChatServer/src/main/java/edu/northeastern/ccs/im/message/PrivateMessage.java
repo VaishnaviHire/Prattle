@@ -4,7 +4,7 @@ import edu.northeastern.ccs.im.MessageType;
 import edu.northeastern.ccs.im.server.ClientRunnable;
 import org.json.JSONObject;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentMap;
 
 public class PrivateMessage extends Message {
 
@@ -23,12 +23,8 @@ public class PrivateMessage extends Message {
 
 
     @Override
-    public void send(ConcurrentLinkedQueue<ClientRunnable> active) {
-        for (ClientRunnable runnable : active) {
-            if (runnable.getUserId() == this.receiver) {
-                runnable.enqueueMessage(this);
-            }
-        }
+    public void send(ConcurrentMap<Integer, ClientRunnable> active) {
+        active.get(this.receiver).enqueueMessage(this);
     }
 
     @Override
