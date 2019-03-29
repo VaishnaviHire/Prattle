@@ -19,14 +19,14 @@ class MessageTest {
 
   @Test
   void testToStringBCT() {
-    Message m = Message.makeBroadcastMessage(name, Msg);
-    assertEquals("BCT 6 Shivam 2 -- 17 this is a message", m.toString());
+    Message m = Message.makeBroadcastMessage(1234, Msg);
+    assertEquals("BCT 4 1234 17 this is a message", m.toString());
   }
 
   @org.junit.jupiter.api.Test
   void testToStringQuit() {
-    Message m = Message.makeQuitMessage(name);
-    assertEquals("BYE 6 Shivam 2 -- 2 --", m.toString());
+    Message m = Message.makeQuitMessage(1234);
+    assertEquals("BYE 4 1234 2 --", m.toString());
   }
 
 //  @org.junit.jupiter.api.Test
@@ -36,8 +36,8 @@ class MessageTest {
 //  }
 
   @org.junit.jupiter.api.Test
-  void testToStringIsBCT() {
-    Message m = Message.makeBroadcastMessage(name, Msg);
+  void testIsBCT() {
+    Message m = Message.makeBroadcastMessage(1234, Msg);
     assertTrue(m.isBroadcastMessage());
   }
 
@@ -48,14 +48,14 @@ class MessageTest {
 //  }
 
   @org.junit.jupiter.api.Test
-  void testToStringIsQUIT() {
-    Message m = Message.makeQuitMessage(name);
+  void testIsQUIT() {
+    Message m = Message.makeQuitMessage(1234);
     assertTrue(m.terminate());
   }
 
   @org.junit.jupiter.api.Test
-  void testToStringIsNotQUIT() {
-    Message m = Message.makeBroadcastMessage(name, Msg);
+  void testIsNotQUIT() {
+    Message m = Message.makeBroadcastMessage(1234, Msg);
     assertFalse(m.terminate());
   }
 
@@ -66,65 +66,66 @@ class MessageTest {
 //  }
 
   @org.junit.jupiter.api.Test
-  void testToStringIsNotHLO() {
-    Message m = Message.makeQuitMessage(name);
+  void testIsNotHLO() {
+    Message m = Message.makeQuitMessage(1234);
     assertFalse(m.isInitialization());
   }
 
   @org.junit.jupiter.api.Test
   void userGetter() {
-    Message m = Message.makeBroadcastMessage(name, Msg);
-    assertEquals(name, m.getName());
+    Message m = Message.makeBroadcastMessage(1234, Msg);
+    assertEquals(1234, m.getUserId());
   }
 
   @org.junit.jupiter.api.Test
   void messageBodyGetter() {
-    Message m = Message.makeBroadcastMessage(name, Msg);
+    Message m = Message.makeBroadcastMessage(1234, Msg);
     assertEquals(Msg, m.getBody());
   }
 
-  @org.junit.jupiter.api.Test
-  void userGetterFail() {
-    Message m = Message.makeBroadcastMessage(null, Msg);
-    assertNull(m.getName());
-  }
+//  @org.junit.jupiter.api.Test
+//  void userGetterFail() {
+//    Message m = Message.makeBroadcastMessage(-1, Msg);
+//    assertEquals(m.getUserId(), -1);
+//  }
 
   @org.junit.jupiter.api.Test
   void messageBodyGetterFail() {
-    Message m = Message.makeBroadcastMessage(name, null);
+    Message m = Message.makeBroadcastMessage(name.hashCode(), null);
     assertNull(m.getBody());
   }
 
-  @org.junit.jupiter.api.Test
-  void messageHelloTest() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-    Method m = Message.class.getDeclaredMethod("makeHelloMessage", String.class);
-    m.setAccessible(true);
-
-    assertEquals("this is a message", ((Message) m.invoke("message", Msg)).getBody());
-  }
+//  @org.junit.jupiter.api.Test
+//  void messageHelloTest() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+//    Method m = Message.class.getDeclaredMethod("makeHelloMessage", String.class);
+//    m.setAccessible(true);
+//
+//    assertEquals("this is a message", ((Message) m.invoke("message", Msg)).getBody());
+//  }
 
   @Test
-  void makeMessageTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-    Method makeMessage = Message.class.getDeclaredMethod("makeMessage", JSONObject.class);
+  void makeMessageTest() {
     JSONObject helloMsg = new JSONObject();
+    helloMsg.put(Message.USERNAME, name);
     helloMsg.put("body", Msg);
     helloMsg.put("receivers", new ArrayList<>());
     helloMsg.put("grpName", "");
 
     JSONObject bctMsg = new JSONObject();
+    bctMsg.put(Message.USERNAME, name);
     bctMsg.put("body", Msg);
     bctMsg.put("receivers", new ArrayList<>());
     bctMsg.put("grpName", "");
 
     JSONObject byeMsg = new JSONObject();
+    byeMsg.put(Message.USERNAME, name);
     byeMsg.put("body", Msg);
     byeMsg.put("receivers", new ArrayList<>());
     byeMsg.put("grpName", "");
 
-    makeMessage.setAccessible(true);
-    Message bye = Message.makeMessage(MessageType.QUIT.toString(), name,byeMsg);
-    Message hello = Message.makeMessage(MessageType.HELLO.toString(), name, helloMsg);
-    Message broadcast = Message.makeMessage(MessageType.BROADCAST.toString(), name, bctMsg);
+    Message bye = Message.makeMessage(MessageType.QUIT.toString(),byeMsg);
+    Message hello = Message.makeMessage(MessageType.HELLO.toString(), helloMsg);
+    Message broadcast = Message.makeMessage(MessageType.BROADCAST.toString(), bctMsg);
 
     // Initializating different types of messages
     assertFalse(bye.isInitialization());
@@ -140,7 +141,6 @@ class MessageTest {
 
   @Test
   void privateMessageTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-    Method makeMessage = Message.class.getDeclaredMethod("makeMessage", JSONObject.class);
     JSONArray arr = new JSONArray();
     arr.put(new JSONObject().put("name", "yash"));
     JSONObject pvtMsg = new JSONObject();
@@ -148,55 +148,47 @@ class MessageTest {
     pvtMsg.put("receivers", arr);
     pvtMsg.put("grpName", "");
 
-    makeMessage.setAccessible(true);
-    Message pvt = (Message) makeMessage.invoke("message", pvtMsg);
+    Message pvt = Message.makeMessage(MessageType.PRIVATE.toString(), pvtMsg);
 
     assertTrue(pvt.isPrivateMessage());
   }
 
   @Test
-  void message() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-    Method makeMessage = Message.class.getDeclaredMethod("makeMessage", JSONObject.class);
-    JSONArray arr = new JSONArray();
-    arr.put(new JSONObject().put("name", "yash"));
-    arr.put(new JSONObject().put("name", "yash1"));
-    arr.put(new JSONObject().put("name", "yash2"));
+  void testToString() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    int USERID = 999;
+    JSONArray receivers = new JSONArray();
+    receivers.put(111);
+    receivers.put(222);
+    receivers.put(333);
+
     JSONObject pvtMsg = new JSONObject();
-    pvtMsg.put("handle", "PVT");
-    pvtMsg.put("message", Msg);
-    pvtMsg.put("receivers", arr);
-    pvtMsg.put("grpName", "grp1");
+    pvtMsg.put(Message.USERID, USERID);
+    pvtMsg.put(Message.BODY, Msg);
+    pvtMsg.put(Message.RECEIVERS, receivers);
 
     JSONObject helloMsg = new JSONObject();
-    helloMsg.put("handle", "HLO");
-    helloMsg.put("message", Msg);
-    helloMsg.put("receivers", new ArrayList<>());
-    helloMsg.put("grpName", "");
+    helloMsg.put(Message.USERNAME, name);
+    helloMsg.put(Message.PASSWORD, "password");
 
     JSONObject bctMsg = new JSONObject();
-    bctMsg.put("handle", "BCT");
-    bctMsg.put("sender", name);
-    bctMsg.put("message", Msg);
-    bctMsg.put("receivers", new ArrayList<>());
-    bctMsg.put("grpName", "");
+    bctMsg.put(Message.USERID, USERID);
+    bctMsg.put(Message.BODY, Msg);
 
     JSONObject byeMsg = new JSONObject();
-    byeMsg.put("handle", "BYE");
-    byeMsg.put("sender", name);
-    byeMsg.put("message", Msg);
-    byeMsg.put("receivers", new ArrayList<>());
-    byeMsg.put("grpName", "");
-    makeMessage.setAccessible(true);
-    Message pvt = (Message) makeMessage.invoke("message", pvtMsg);
-    Message bye = (Message) makeMessage.invoke("message", byeMsg);
-    Message hello = (Message) makeMessage.invoke("message", helloMsg);
-    Message broadcast = (Message) makeMessage.invoke("message", bctMsg);
+    byeMsg.put(Message.USERID, USERID);
+    byeMsg.put(Message.BODY, Msg);
+
+    Message pvt = Message.makeMessage(MessageType.PRIVATE.toString(), pvtMsg);
+    Message bye = Message.makeQuitMessage(1234);
+    Message hello = Message.makeMessage(MessageType.HELLO.toString(), helloMsg);
+    Message broadcast = Message.makeMessage(MessageType.BROADCAST.toString(), bctMsg);
     // Initializating different types of messages
-    assertEquals("PVT 2 -- 4 yash 5 yash1 5 yash2 17 this is a message",
+    assertEquals("PVT 3 999 3 111 3 222 3 333 17 this is a message",
             pvt.toString());
-    assertEquals("HLO 2 -- 2 -- 2 --", hello.toString());
-    assertEquals("BCT 6 Shivam 2 -- 17 this is a message", broadcast.toString());
-    assertEquals("BYE 6 Shivam 2 -- 2 --", bye.toString());
+    assertEquals("BCT 3 999 17 this is a message", broadcast.toString());
+    //HLO idLength id msgLength msg
+    assertEquals("HLO 1 0 2 --", hello.toString());
+    assertEquals("BYE 4 1234 2 --", bye.toString());
     assertTrue(pvt.isPrivateMessage());
 //    assertNull(pvt.getReceivingGrpName());
   }

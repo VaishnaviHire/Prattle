@@ -51,14 +51,24 @@ public abstract class Prattle {
    */
   private static ConcurrentLinkedQueue<ClientRunnable> initializing;
 
+  /**
+   * Next id to be fetched
+   */
+  private static int userId;
+
 
   /** All of the static initialization occurs in this "method" */
   static {
     initializing = new ConcurrentLinkedQueue<>();
     // Create the new queue of active threads.
     active = new ConcurrentHashMap<>();
+    //set first userId
+    userId = 0;
   }
 
+  public static void resetId() {
+    userId = 0;
+  }
 
 //TODO: add is initialized to send message methods
 
@@ -98,6 +108,12 @@ public abstract class Prattle {
     if (active.remove(dead.getUserId()) == null) {
       ChatLogger.LOGGER.info("Could not find a thread that I tried to remove!\n");
     }
+  }
+
+  public static int getNextUserId() {
+    int before = userId;
+    userId++;
+    return before;
   }
 
   /**

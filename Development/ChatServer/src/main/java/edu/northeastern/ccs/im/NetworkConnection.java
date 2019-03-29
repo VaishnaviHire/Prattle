@@ -194,18 +194,12 @@ public class NetworkConnection implements Iterable<Message> {
 							String handle = charBuffer.subSequence(0, Message.HANDLE_LENGTH).toString();
 							// Skip past the handle
 							charBuffer.position(start + Message.HANDLE_LENGTH + 1);
-							// Read the first argument containing the sender's name
-							String sender = readArgument(charBuffer);
-							// Skip past the leading space
-							charBuffer.position(charBuffer.position() + 2);
 							// Read in the second argument containing the message
-
-							// Read in the  argument containing the message
 							String jsonString = readArgument(charBuffer);
 							// Convert entire String request to JsonObject
 							JSONObject serverRequest = new JSONObject(jsonString);
 							// Add this message into our queue
-							Message newMsg = Message.makeMessage(handle, sender, serverRequest);
+							Message newMsg = Message.makeMessage(handle, serverRequest);
 							messages.add(newMsg);
 							// And move the position to the start of the next character
 							start = charBuffer.position() + 1;
