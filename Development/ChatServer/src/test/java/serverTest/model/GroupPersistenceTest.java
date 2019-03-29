@@ -1,8 +1,9 @@
 package serverTest.model;
 
+import edu.northeastern.ccs.im.Message;
 import edu.northeastern.ccs.im.model.*;
 import org.junit.jupiter.api.Test;
-
+import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 
 public class GroupPersistenceTest {
@@ -21,7 +22,30 @@ public class GroupPersistenceTest {
         StringBuilder b = new StringBuilder();
         GroupDao udao = new GroupDao(b);
         Group1 x = udao.getGroup(g);
-        System.out.println(x.getName());
+        assertFalse(x==null);
+    }
+    @Test
+    public void getSpecificGroupTest1(){
+        Group1 g = new Group1("name1");
+        StringBuilder b = new StringBuilder();
+        GroupDao udao = new GroupDao(b);
+        Group1 x = udao.getGroup(g);
+        assertTrue(x==null);
+    }
+    @Test
+    public void getAllNonPrivateGroupTest(){
+        StringBuilder b = new StringBuilder();
+        GroupDao udao = new GroupDao(b);
+        List<Object> x = udao.getGroupNonPrivate();
+        assertFalse(x==null);
+    }
+    @Test
+    public void getSpecificGroupTest2(){
+        Group1 g = new Group1("SELECT *");
+        StringBuilder b = new StringBuilder();
+        GroupDao udao = new GroupDao(b);
+        Group1 x = udao.getGroup(g);
+        assertTrue(x==null);
     }
 }
 

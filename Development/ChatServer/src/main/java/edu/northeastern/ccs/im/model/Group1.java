@@ -39,6 +39,7 @@ public class Group1 {
      )
   private List<User> moderators;
 
+    public Group1(){}
     public Group1(String groupName){
         this.groupName = groupName;
     }

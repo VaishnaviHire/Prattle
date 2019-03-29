@@ -9,7 +9,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "user")
-public class User implements Unifier {
+public class User{
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,54 +27,30 @@ public class User implements Unifier {
   private Date dob;
   @Column(name = "is_private")
   private boolean is_private;
-//  private String userRole;
-//  private List<Unifier> members;
   public User(){
 
   }
   public User(String username) {
-    // Modify the constructor to create user with clientRunnable
     this.uName = username;
-//    this.userRole = "plain_user";
-//    this.members = new ArrayList<>();
   }
   public User(String username,String password){
   this.uName = username;
   this.password = password;
   }
-  /**
-   * @return the role of user as a plain user or admin
-   */
-  public String getUserRole() {
-//    return userRole;
-    return "";
-  }
 
-  /**
-   * @param role set user to specified role
-   */
-  public void setUserRole(String role) {
-//    this.userRole = role;
-  }
+
 
 
   /**
    * @return method to get username
    */
-  @Override
+
   public String getName() {
     return uName;
   }
-
-  public List<Unifier> getMembers() {
-//    return this.members;
-    return null;
-  }
-
   /**
    * @param name method to set given name to user
    */
-  @Override
   public void setName(String name) {
     this.uName = name;
 
@@ -83,7 +59,6 @@ public class User implements Unifier {
   /**
    * @return the type of unifier
    */
-  @Override
   public boolean isGroup() {
     return false;
   }
