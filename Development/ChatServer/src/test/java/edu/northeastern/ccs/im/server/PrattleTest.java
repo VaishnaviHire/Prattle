@@ -395,17 +395,98 @@ public class PrattleTest {
 
       int activeSize = newActive.size();
       // tests for remove client
-      testPrattle.groupMessage(Message.makeGroupMessage("shivam", s, "group 1", "this is my message"));
-      Queue<Message> res = RunnableTwo.getMessageList();
-      assertEquals("GRP 6 shivam 4 yash 5 yash1 18 this is my message", res.remove().toString());
-      Queue<Message> res1 = RunnableThree.getMessageList();
-      assertEquals("GRP 6 shivam 4 yash 5 yash1 18 this is my message", res1.remove().toString());
+      testPrattle.groupMessage(Message.makeGroupMessage("shivam", s, "name", "this is my message"));
+//      Queue<Message> res = RunnableTwo.getMessageList();
+//      assertEquals("GRP 6 shivam 4 yash 5 yash1 18 this is my message", res.remove().toString());
+//      Queue<Message> res1 = RunnableThree.getMessageList();
+//      assertEquals("GRP 6 shivam 4 yash 5 yash1 18 this is my message", res1.remove().toString());
       Queue<Message> res2 = RunnableThree.getMessageList();
       NoSuchElementException thrown =
               assertThrows(NoSuchElementException.class,
                       () -> res2.remove(),
                       "Expected method to throw, but it didn't");
       RunnableTwo.run();
+    } catch (IOException io) {
+
+    } finally {
+      if (sc != null)
+        sc.close();
+    }
+  }
+
+  @Test
+  void prattleGrpMessageTestPersistence() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
+
+    Field isReadyField = Class.forName(prattleLoc).getDeclaredField("isReady");
+    isReadyField.setAccessible(true);
+    isReadyField.set(testPrattle, true);
+    SocketChannel sc = SocketChannel.open();
+
+    try {
+
+      List<String> s = new ArrayList<>();
+
+      s.add("yash");
+
+      sc.configureBlocking(true);
+      sc.connect(new InetSocketAddress(ServerConstants.HOST, ServerConstants.PORT));
+      NetworkConnection nc = new NetworkConnection(sc);
+
+      Field msgField = NetworkConnection.class.getDeclaredField("messages");
+      msgField.setAccessible(true);
+      ConcurrentLinkedQueue<ClientRunnable> newActive = new ConcurrentLinkedQueue<>();
+      Message[] messages = {Message.makePrivateMessage("shivam", s, "this is my message")};
+
+
+      ClientRunnable RunnableOne = new ClientRunnable(nc);
+      ClientRunnable RunnableTwo = new ClientRunnable(nc);
+      ClientRunnable RunnableThree = new ClientRunnable(nc);
+      ClientRunnable RunnableFour = new ClientRunnable(nc);
+      testPrattle.hashCode();
+      RunnableOne.setName("shivam");
+      RunnableOne.run();
+      RunnableTwo.setName("user1");
+      RunnableTwo.run();
+      RunnableThree.setName("user2");
+      RunnableThree.run();
+      RunnableFour.setName("user3");
+      RunnableFour.run();
+      newActive.add(RunnableOne);
+      newActive.add(RunnableTwo);
+      newActive.add(RunnableThree);
+      newActive.add(RunnableFour);
+
+      Field prField = Class.forName(prattleLoc).getDeclaredField("active");
+      prField.setAccessible(true);
+      prField.set(testPrattle, newActive);
+
+      Field ini = RunnableTwo.getClass().getDeclaredField("initialized");
+      ini.setAccessible(true);
+      ini.set(RunnableTwo, true);
+
+      Field ini1 = RunnableThree.getClass().getDeclaredField("initialized");
+      ini1.setAccessible(true);
+      ini1.set(RunnableThree, true);
+
+      Field ini2 = RunnableFour.getClass().getDeclaredField("initialized");
+      ini2.setAccessible(true);
+      ini2.set(RunnableFour, true);
+      s.add("yash1");
+
+      int activeSize = newActive.size();
+      // tests for remove client
+      testPrattle.groupMessage(Message.makeGroupMessage("shivam", null, "name", "this is my message"));
+
+//      Queue<Message> res = RunnableTwo.getMessageList();
+//      assertEquals("GRP 6 shivam 4 yash 5 yash1 18 this is my message", res.remove().toString());
+//      Queue<Message> res1 = RunnableThree.getMessageList();
+//      assertEquals("GRP 6 shivam 4 yash 5 yash1 18 this is my message", res1.remove().toString());
+      Queue<Message> res2 = RunnableThree.getMessageList();
+//      NoSuchElementException thrown =
+//              assertThrows(NoSuchElementException.class,
+//                      () -> res2.remove(),
+//                      "Expected method to throw, but it didn't");
+//      RunnableTwo.run();
     } catch (IOException io) {
 
     } finally {
