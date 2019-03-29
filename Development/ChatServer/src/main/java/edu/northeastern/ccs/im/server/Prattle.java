@@ -3,6 +3,10 @@ package edu.northeastern.ccs.im.server;
 import edu.northeastern.ccs.im.ChatLogger;
 import edu.northeastern.ccs.im.Message;
 import edu.northeastern.ccs.im.NetworkConnection;
+import edu.northeastern.ccs.im.model.Group;
+import edu.northeastern.ccs.im.model.Group1;
+import edu.northeastern.ccs.im.model.GroupDao;
+import edu.northeastern.ccs.im.model.User;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -95,16 +99,19 @@ public abstract class Prattle {
   }
 
   public static void groupMessage(Message message) {
-
+    GroupDao d = new GroupDao(new StringBuilder());
+    Group1 g = new Group1(message.getReceivingGrpName());
+    Group1 g1 = d.getGroup(g);
+    List<User> x = g1.getMembers();
 
     List<String> receivers = message.getMsgReceivers();
 
     // Loop through all of our active threads
     for (ClientRunnable tt : active) {
       // Loop through all the receivers
-      for (String receiver : receivers) {
+      for (User receiver : x) {
         // Do not send the message to any clients that are not ready to receive it.
-        if (receiver.equals(tt.getName()) && tt.isInitialized()) {
+        if (receiver.getUName().equals(tt.getName()) && tt.isInitialized()) {
           tt.enqueueMessage(message);
         }
       }
