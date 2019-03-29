@@ -1,6 +1,8 @@
 package edu.northeastern.ccs.im.server;
 
 import edu.northeastern.ccs.im.*;
+import edu.northeastern.ccs.im.model.User;
+import edu.northeastern.ccs.im.model.UserDAO;
 
 import java.util.Iterator;
 import java.util.Queue;
@@ -34,6 +36,9 @@ public class ClientRunnable implements Runnable {
 
 	/** Name that the client used when connecting to the server. */
 	private String name;
+
+
+	private User user;
 
 	/**
 	 * Whether this client has been initialized, set its user name, and is ready to
@@ -87,6 +92,14 @@ public class ClientRunnable implements Runnable {
 		if (messageIter.hasNext()) {
 			// If a message exists, try to use it to initialize the connection
 			Message msg = messageIter.next();
+//			UserDAO u = new UserDAO(new StringBuilder());
+//			String username = msg.getName();
+//			User new1 = new User();
+//			new1.setUName(username);
+//			User n = u.getUser(new1);
+//			if (n==null){
+//				return;
+//			}
 			if (setUserName(msg.getName())) {
 				// Update the time until we terminate this client due to inactivity.
 				timer.updateAfterInitialization();
