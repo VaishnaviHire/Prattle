@@ -4,17 +4,22 @@ import edu.northeastern.ccs.im.MessageType;
 import edu.northeastern.ccs.im.server.ClientRunnable;
 import org.json.JSONObject;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 
 public class BroadcastMessage extends Message {
 
-    private String text;
-
-    public BroadcastMessage(String msgSender, String text) {
+    public BroadcastMessage(int userId, String body) {
         this.msgType = MessageType.BROADCAST;
-        this.msgSender = msgSender;
-        this.text = text;
+        this.userId = userId;
+        this.body = body;
+    }
+
+    public BroadcastMessage(JSONObject json) {
+        this.msgType = MessageType.BROADCAST;
+        if (json.has(USERID) && json.has(BODY)) {
+            this.body = json.getString(BODY);
+            this.userId = json.getInt(USERID);
+        }
     }
 
     @Override
@@ -25,5 +30,10 @@ public class BroadcastMessage extends Message {
                 tt.enqueueMessage(this);
             }
         }
+    }
+
+    @Override
+    public boolean isBroadcastMessage() {
+        return true;
     }
 }

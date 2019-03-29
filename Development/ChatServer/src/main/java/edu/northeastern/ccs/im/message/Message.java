@@ -4,7 +4,6 @@ import edu.northeastern.ccs.im.MessageType;
 import edu.northeastern.ccs.im.server.ClientRunnable;
 import org.json.JSONObject;
 
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -22,15 +21,20 @@ public abstract class Message {
   /**
    * The string sent when a field is null.
    */
-  private static final String NULL_OUTPUT = "--";
+  protected static final String NULL_OUTPUT = "--";
 
   /** The length of the message handle. */
   public static final int HANDLE_LENGTH = 3;
 
 
-  protected static final String BODY = "body";
-  protected static final String RECEIVER = "receiver";
-  protected static final String RECEIVERS = "receivers";
+  public static final String BODY = "body";
+  public final static String GROUPID = "groupId";
+  public static final String RECEIVER = "receiver";
+  public static final String RECEIVERS = "receivers";
+  public final static String USERNAME = "username";
+  public final static String PASSWORD = "password";
+  public final static String USERID   = "userId";
+
 
 
   /**
@@ -39,14 +43,21 @@ public abstract class Message {
   protected MessageType msgType;
 
   /**
-   * The first argument used in the message. This will be the sender's identifier.
+   * The sender's userId
    */
-  protected String msgSender;
+  protected int userId = -1;
+
+
 
   /**
    * The third argument used in the message.
    */
   protected String body;
+
+  /**
+   * The sender's username
+   */
+  protected String username;
 
 
   /**
@@ -54,19 +65,21 @@ public abstract class Message {
    * subclass of message.
    *
    * @param jsonMsg JSONObject containing the information.
-   * @param msgSender the sender of the message
    * @param handle the message type
    * @return Instance of message (or its subclasses) representing the handle, name, & text.
    */
-  public static Message makeMessage(String handle, String msgSender, JSONObject jsonMsg) {
+  public static Message makeMessage(String handle, JSONObject jsonMsg) {
+
     if (handle.compareTo(MessageType.QUIT.toString()) == 0) {
-      return new QuitMessage(msgSender);
+      return new QuitMessage(jsonMsg);
     } else if (handle.compareTo(MessageType.HELLO.toString()) == 0) {
-      return new SimpleLoginMessage(msgSender);
+      return new SimpleLoginMessage(jsonMsg);
     } else if ((handle.compareTo(MessageType.PRIVATE.toString()) == 0)) {
-      return new PrivateMessage(msgSender, jsonMsg);
+      return new PrivateMessage(jsonMsg);
+    } else if (handle.compareTo(MessageType.BROADCAST.toString()) == 0) {
+      return new BroadcastMessage(jsonMsg);
     } else if (handle.compareTo(MessageType.GROUP.toString()) == 0) {
-      return new GroupMessage(msgSender, jsonMsg);
+      return new GroupMessage(jsonMsg);
     }
     else {
       //should we throw error?????
@@ -77,24 +90,34 @@ public abstract class Message {
   /**
    * Create a new message to continue the logout process.
    *
-   * @param msgSender The name of the client that sent the quit message.
+   * @param userId The id of the client that sent the quit message.
    * @return Instance of message that specifies the process is logging out.
    */
-  public static Message makeQuitMessage(String msgSender) {
-    return new QuitMessage(msgSender);
+  public static Message makeQuitMessage(int userId) {
+    return new QuitMessage(userId);
   }
 
-  public static Message makeBroadcastMessage(String sender, String message) {
-    return new BroadcastMessage(sender, message);
+  public static Message makeBroadcastMessage(int senderId, String message) {
+    return new BroadcastMessage(senderId, message);
   }
 
   /**
-   * Return the name of the sender of this message.
+   * Return the id of the sender of this message.
+   *
+   * @return int specifying the name of the message originator.
+   */
+  public int getUserId() {
+    return this.userId;
+  }
+
+
+  /**
+   * Return the username of the sender of this message.
    *
    * @return String specifying the name of the message originator.
    */
-  public String getName() {
-    return msgSender;
+  public String getUsername() {
+    return this.username;
   }
 
   /**
@@ -151,6 +174,27 @@ public abstract class Message {
     return false;
   }
 
+
+
+
+  protected void appendMessageType(StringBuilder builder) {
+    if (userId != -1) {
+      builder.append(" ").append(Integer.toString(userId).length()).append(" ").append(userId);
+    } else {
+      builder.append(" ").append(NULL_OUTPUT.length()).append(" ").append(NULL_OUTPUT);
+    }
+  }
+
+
+  protected void appendBody(StringBuilder builder) {
+    if (this.body != null) {
+      builder.append(" ").append(this.body.length()).append(" ").append(this.body);
+    } else {
+      builder.append(" ").append(NULL_OUTPUT.length()).append(" ").append(NULL_OUTPUT);
+    }
+  }
+
+
   /**
    * Representation of this message as a String. This begins with the message handle and then
    * contains the length (as an integer) and the value of the next two arguments.
@@ -159,12 +203,8 @@ public abstract class Message {
    */
   @Override
   public String toString() {
-    StringBuilder result = new StringBuilder(msgType.toString());
-    if (msgSender != null) {
-      result.append(" ").append(msgSender.length()).append(" ").append(msgSender);
-    } else {
-      result.append(" ").append(NULL_OUTPUT.length()).append(" ").append(NULL_OUTPUT);
-    }
+    StringBuilder result = new StringBuilder(this.msgType.toString());
+    this.appendMessageType(result);
 //    if (msgReceivers != null) {
 //      for (String msgReceiver : msgReceivers) {
 //        result.append(" ").append(msgReceiver.length()).append(" ").append(msgReceiver);
@@ -172,13 +212,11 @@ public abstract class Message {
 //    } else {
 //      result.append(" ").append(NULL_OUTPUT.length()).append(" ").append(NULL_OUTPUT);
 //    }
-    if (this.body != null) {
-      result.append(" ").append(this.body.length()).append(" ").append(this.body);
-    } else {
-      result.append(" ").append(NULL_OUTPUT.length()).append(" ").append(NULL_OUTPUT);
-    }
+    this.appendBody(result);
     return result.toString();
   }
 
   public abstract void send(ConcurrentMap<Integer, ClientRunnable> active);
+
+  public boolean login_succeeds(){ return false; }
 }

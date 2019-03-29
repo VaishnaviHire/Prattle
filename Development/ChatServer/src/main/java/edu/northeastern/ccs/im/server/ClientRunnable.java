@@ -33,10 +33,10 @@ public class ClientRunnable implements Runnable {
 	private NetworkConnection connection;
 
 	/** Id for the user for whom we use this ClientRunnable to communicate. */
-	private int userId;
+	private int userId = -1;
 
 	/** Name that the client used when connecting to the server. */
-	private String name;
+	private String username;
 
 
 	private User user;
@@ -93,16 +93,11 @@ public class ClientRunnable implements Runnable {
 		if (messageIter.hasNext()) {
 			// If a message exists, try to use it to initialize the connection
 			Message msg = messageIter.next();
-//			UserDAO u = new UserDAO(new StringBuilder());
-//			String username = msg.getName();
-//			User new1 = new User();
-//			new1.setUName(username);
-//			User n = u.getUser(new1);
-//			if (n==null){
-//				return;
-//			}
-			if (setUserName(msg.getName())) {
+
+			if (msg.login_succeeds()) {
 				// Update the time until we terminate this client due to inactivity.
+				this.userId = msg.getUserId();
+				this.setUsername(msg.getUsername());
 				timer.updateAfterInitialization();
 				// Set that the client is initialized.
 				Prattle.activate(this);
@@ -122,7 +117,8 @@ public class ClientRunnable implements Runnable {
 	 */
 	private boolean messageChecks(Message msg) {
 		// Check that the message name matches.
-		return (msg.getName() != null) && (msg.getName().compareToIgnoreCase(getName()) == 0);
+		//msg.getName().compareToIgnoreCase(getName()) == 0
+		return (msg.getUserId() != -1) && (msg.getUserId() == getUserId());
 	}
 
 	/**
@@ -137,26 +133,26 @@ public class ClientRunnable implements Runnable {
 		return connection.sendMessage(message);
 	}
 
-	/**
-	 * Try allowing this user to set his/her user name to the given username.
-	 * 
-	 * @param userName The new value to which we will try to set userName.
-	 * @return True if the username is deemed acceptable; false otherwise
-	 */
-	private boolean setUserName(String userName) {
-		boolean result = false;
-		// Now make sure this name is legal.
-		if (userName != null) {
-			// Optimistically set this users ID number.
-			setName(userName);
-			userId = hashCode();
-			result = true;
-		} else {
-			// Clear this name; we cannot use it. *sigh*
-			userId = -1;
-		}
-		return result;
-	}
+//	/**
+//	 * Try to login the user
+//	 *
+//	 * @param msg The msg that we will check for the correct user name and password
+//	 * @return True if login succeeds with the right username and password
+//	 */
+//	private boolean login_succeeds(Message msg) {
+//		boolean result = false;
+//		// Now make sure this name is legal.
+//		if (userName != null) {
+//			// Optimistically set this users ID number.
+//			setName(userName);
+//			userId = hashCode();
+//			result = true;
+//		} else {
+//			// Clear this name; we cannot use it. *sigh*
+//			userId = -1;
+//		}
+//		return result;
+//	}
 
 	/**
 	 * Add the given message to this client to the queue of message to be sent to
@@ -177,17 +173,17 @@ public class ClientRunnable implements Runnable {
 	 * 
 	 * @return Returns the name of this client.
 	 */
-	public String getName() {
-		return name;
+	public String getUsername() {
+		return this.username;
 	}
 
 	/**
 	 * Set the name of the user for which this ClientRunnable was created.
 	 * 
-	 * @param name The name for which this ClientRunnable.
+	 * @param username The name for which this ClientRunnable.
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	/**
@@ -225,7 +221,7 @@ public class ClientRunnable implements Runnable {
 		// Finally, check if this client have been inactive for too long and,
 		// when they have, terminate the client.
 		if (timer.isBehind()) {
-			ChatLogger.LOGGER.error("Timing out or forcing off a user " + name);
+			ChatLogger.LOGGER.error("Timing out or forcing off a user " + username);
 			terminate = true;
 		}
 		if (terminate) {
@@ -250,16 +246,16 @@ public class ClientRunnable implements Runnable {
 				// Stop sending the poor client message.
 				terminate = true;
 				// Reply with a quit message.
-				enqueueMessage(Message.makeQuitMessage(name));
+				enqueueMessage(Message.makeQuitMessage(userId));
 			} else {
 				// Check if the message is legal formatted
 				if (messageChecks(msg)) {
 					Prattle.sendMessage(msg);
 				} else {
-					Message sendMsg;
-					sendMsg = Message.makeBroadcastMessage(ServerConstants.BOUNCER_ID,
-							"Last message was rejected because it specified an incorrect user name.");
-					enqueueMessage(sendMsg);
+//					Message sendMsg;
+//					sendMsg = Message.makeBroadcastMessage(ServerConstants.BOUNCER_ID,
+//							"Last message was rejected because it specified an incorrect user name.");
+//					enqueueMessage(sendMsg);
 				}
 			}
 		}
