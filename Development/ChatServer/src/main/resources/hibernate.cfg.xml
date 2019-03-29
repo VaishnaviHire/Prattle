@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+        <!-- SQL Dialect -->
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+
+        <!-- Database Connection Settings -->
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://msdteam101.cpe0qck0pwu6.us-east-2.rds.amazonaws.com/development_database?autoReconnect=true&amp;useSSL=false</property>
+        <property name="hibernate.connection.username">teamAdmin101</property>
+        <property name="hibernate.connection.password">qwerty123456101</property>
+        <!-- Specifying Session Context -->
+        <property name="hibernate.current_session_context_class">org.hibernate.context.internal.ThreadLocalSessionContext</property>
+        <property name="show_sql">true</property>
+        <!-- Mapping With Model Class Containing Annotations -->
+        <mapping class="edu.northeastern.ccs.im.model.User" />
+        <mapping class="edu.northeastern.ccs.im.model.Group" />
+        <mapping class="edu.northeastern.ccs.im.model.Group1" />
+    </session-factory>
+</hibernate-configuration>

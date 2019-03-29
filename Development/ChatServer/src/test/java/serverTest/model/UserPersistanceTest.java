@@ -1,0 +1,38 @@
+package serverTest.model;
+
+import edu.northeastern.ccs.im.model.User;
+import edu.northeastern.ccs.im.model.UserDAO;
+import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+public class UserPersistanceTest {
+    @Test
+    public void testGetSpecificUser(){
+        StringBuilder b = new StringBuilder();
+        User u = new User("user1","$2a$10$l5yWrk9hx0G3elzapp3t0.CWhUNCehQEUpBZ44vwhSUwmf7NueGRa");
+        UserDAO udao = new UserDAO(b);
+        User u1 = udao.getUser(u);
+        if(u1!=null){
+            System.out.println(u1.getUName());
+        }
+    }
+    @Test
+    public void testGetSpecificUser1(){
+        StringBuilder b = new StringBuilder();
+        UserDAO udao = new UserDAO(b);
+        List<Object> x = udao.getAllUsers();
+        System.out.println("1I am printing this shit here to checking if something is printing"+((User)x.get(1)).getUName());
+        System.out.println("2I am printing this shit here to checking if something is printing"+((User)x.get(2)).getUName());
+        System.out.println("3I am printing this shit here to checking if something is printing"+((User)x.get(3)).getUName());
+    }
+    @Test
+    public void testGetNonPrivateUser(){
+        StringBuilder b = new StringBuilder();
+        UserDAO udao = new UserDAO(b);
+        List<Object> x = udao.getUserNonPrivate();
+        System.out.println("1I am printing this shit here to checking if something is printing"+((User)x.get(1)).getUName());
+        System.out.println("2I am printing this shit here to checking if something is printing"+((User)x.get(2)).getUName());
+        System.out.println("3I am printing this shit here to checking if something is printing"+((User)x.get(3)).getUName());
+    }
+}

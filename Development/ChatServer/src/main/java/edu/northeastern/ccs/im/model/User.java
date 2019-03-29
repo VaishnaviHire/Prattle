@@ -1,36 +1,60 @@
 package edu.northeastern.ccs.im.model;
 
-import java.util.ArrayList;
+import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Class defining user model
  */
+@Entity
+@Table(name = "user")
 public class User implements Unifier {
 
-  private String username;
-  private String userRole;
-  private List<Unifier> members;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "userId")
+  private int userId;
+  @Column(name = "username")
+  private String uName;
+  @Column(name = "password")
+  private String password;
+  @Column(name = "first_name")
+  private String first_name;
+  @Column(name = "last_name")
+  private String last_name;
+  @Column(name = "date_of_birth")
+  private Date dob;
+  @Column(name = "is_private")
+  private boolean is_private;
+//  private String userRole;
+//  private List<Unifier> members;
+  public User(){
 
+  }
   public User(String username) {
     // Modify the constructor to create user with clientRunnable
-    this.username = username;
-    this.userRole = "plain_user";
-    this.members = new ArrayList<>();
+    this.uName = username;
+//    this.userRole = "plain_user";
+//    this.members = new ArrayList<>();
   }
-
+  public User(String username,String password){
+  this.uName = username;
+  this.password = password;
+  }
   /**
    * @return the role of user as a plain user or admin
    */
   public String getUserRole() {
-    return userRole;
+//    return userRole;
+    return "";
   }
 
   /**
    * @param role set user to specified role
    */
   public void setUserRole(String role) {
-    this.userRole = role;
+//    this.userRole = role;
   }
 
 
@@ -39,11 +63,12 @@ public class User implements Unifier {
    */
   @Override
   public String getName() {
-    return username;
+    return uName;
   }
 
   public List<Unifier> getMembers() {
-    return this.members;
+//    return this.members;
+    return null;
   }
 
   /**
@@ -51,7 +76,7 @@ public class User implements Unifier {
    */
   @Override
   public void setName(String name) {
-    this.username = name;
+    this.uName = name;
 
   }
 
@@ -63,4 +88,59 @@ public class User implements Unifier {
     return false;
   }
 
+  public int getUserId() {
+    return userId;
+  }
+
+  public void setUserId(int userId) {
+    this.userId = userId;
+  }
+
+  public String getUName() {
+    return uName;
+  }
+
+  public void setUName(String username) {
+    this.uName = username;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  public String getFirst_name() {
+    return first_name;
+  }
+
+  public void setFirst_name(String first_name) {
+    this.first_name = first_name;
+  }
+
+  public String getLast_name() {
+    return last_name;
+  }
+
+  public void setLast_name(String last_name) {
+    this.last_name = last_name;
+  }
+
+  public Date getDob() {
+    return dob;
+  }
+
+  public void setDob(Date dob) {
+    this.dob = dob;
+  }
+
+  public boolean isIs_private() {
+    return is_private;
+  }
+
+  public void setIs_private(boolean is_private) {
+    this.is_private = is_private;
+  }
 }
