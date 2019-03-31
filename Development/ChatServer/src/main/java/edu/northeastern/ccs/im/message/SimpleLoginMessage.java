@@ -14,9 +14,9 @@ public class SimpleLoginMessage extends Message {
 
     protected SimpleLoginMessage(JSONObject json) {
         this.msgType = MessageType.HELLO;
-        if (json.has(USERNAME) && json.has(PASSWORD)) {
+        if (json.has(USERNAME) && json.has(PW)) {
             this.username = json.getString(USERNAME);
-            this.password = json.getString(PASSWORD);
+            this.password = json.getString(PW);
             this.userId = Prattle.getNextUserId();
         }
     }

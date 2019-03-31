@@ -28,12 +28,11 @@ public abstract class Message {
 
 
   public static final String BODY = "body";
-  public final static String GROUPID = "groupId";
-  public static final String RECEIVER = "receiver";
+  public static final String GROUP_ID = "groupId";
   public static final String RECEIVERS = "receivers";
-  public final static String USERNAME = "username";
-  public final static String PASSWORD = "password";
-  public final static String USERID   = "userId";
+  public static final String USERNAME = "username";
+  public static final String PW = "password";
+  public static final String USER_ID   = "userId";
 
 
 

@@ -16,9 +16,9 @@ public class BroadcastMessage extends Message {
 
     public BroadcastMessage(JSONObject json) {
         this.msgType = MessageType.BROADCAST;
-        if (json.has(USERID) && json.has(BODY)) {
+        if (json.has(USER_ID) && json.has(BODY)) {
             this.body = json.getString(BODY);
-            this.userId = json.getInt(USERID);
+            this.userId = json.getInt(USER_ID);
         }
     }
 
