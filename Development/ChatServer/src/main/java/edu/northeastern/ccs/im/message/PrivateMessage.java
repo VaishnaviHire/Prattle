@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
 public class PrivateMessage extends Message {
@@ -42,9 +43,9 @@ public class PrivateMessage extends Message {
     }
 
 
-    private void appendReceivers(StringBuilder builder) {
-        if (this.receivers != null) {
-            for (int receiver : this.receivers) {
+    public static void stringAppendReceivers(StringBuilder builder, List<Integer> receivers) {
+        if (receivers != null) {
+            for (int receiver : receivers) {
                 String stringInt = Integer.toString(receiver);
                 builder.append(" ").append(stringInt.length()).append(" ").append(stringInt);
             }
@@ -58,7 +59,7 @@ public class PrivateMessage extends Message {
         StringBuilder result = new StringBuilder(this.msgType.toString());
 
         this.appendMessageType(result);
-        this.appendReceivers(result);
+        stringAppendReceivers(result, this.receivers);
         this.appendBody(result);
 
         return result.toString();
