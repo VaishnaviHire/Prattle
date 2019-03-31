@@ -1,5 +1,7 @@
 package edu.northeastern.ccs.im;
 
+import edu.northeastern.ccs.im.server.ClientRunnable;
+import edu.northeastern.ccs.im.server.ClientRunnableTest;
 import edu.northeastern.ccs.im.server.Prattle;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -11,8 +13,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 class MessageTest {
   private static final String Msg = "this is a message";
@@ -192,7 +197,6 @@ class MessageTest {
     assertEquals("HLO 1 0 2 --", hello.toString());
     assertEquals("BYE 4 1234 2 --", bye.toString());
     assertTrue(pvt.isPrivateMessage());
-//    assertNull(pvt.getReceivingGrpName());
   }
 
   @Test
@@ -217,5 +221,44 @@ class MessageTest {
     grpMsgJSON.put(Message.GROUPID, 9999);
     Message grpMsg = Message.makeMessage(MessageType.GROUP.toString(), grpMsgJSON);
     assertEquals("GRP 4 1234 3 111 3 222 3 333 17 this is a message", grpMsg.toString());
+  }
+
+  @Test
+  void testGroupMessageSend() {
+    Prattle.resetId();
+    int USERID = 999;
+    JSONArray receivers = new JSONArray();
+    receivers.put(111);
+    receivers.put(222);
+    receivers.put(333);
+
+    ClientRunnable cr1 = mock(ClientRunnable.class);
+    ClientRunnable cr2 = mock(ClientRunnable.class);
+    ClientRunnable cr3 = mock(ClientRunnable.class);
+    ClientRunnable cr4 = mock(ClientRunnable.class);
+
+    ConcurrentHashMap<Integer, ClientRunnable> active = new ConcurrentHashMap<>();
+
+    active.put(111, cr1);
+    active.put(222, cr2);
+    active.put(333, cr3);
+    active.put(444, cr4);
+
+    JSONObject groupMsg = new JSONObject();
+    groupMsg.put(Message.GROUPID, 999);
+    groupMsg.put(Message.USERID, USERID);
+    groupMsg.put(Message.BODY, Msg);
+    groupMsg.put(Message.RECEIVERS, receivers);
+
+    Message grp = Message.makeMessage(MessageType.GROUP.toString(), groupMsg);
+
+    grp.send(active);
+
+    verify(cr1, times(1)).enqueueMessage(grp);
+    verify(cr2, times(1)).enqueueMessage(grp);
+    verify(cr3, times(1)).enqueueMessage(grp);
+    verify(cr4, times(0)).enqueueMessage(grp);
+
+
   }
 }

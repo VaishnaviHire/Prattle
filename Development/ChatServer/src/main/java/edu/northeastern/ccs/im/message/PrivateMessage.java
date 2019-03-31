@@ -34,7 +34,6 @@ public class PrivateMessage extends Message {
                 active.get(receiver).enqueueMessage(this);
             }
         }
-
     }
 
     @Override
