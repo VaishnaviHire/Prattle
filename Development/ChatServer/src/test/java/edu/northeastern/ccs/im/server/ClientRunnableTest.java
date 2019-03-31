@@ -68,7 +68,7 @@ public class ClientRunnableTest {
   public static Message makeSimpleLoginMessage() {
     JSONObject jsonMsg = new JSONObject();
     jsonMsg.put(Message.USERNAME, "yash");
-    jsonMsg.put(Message.PASSWORD, "password");
+    jsonMsg.put(Message.PW, "password");
     return Message.makeMessage(MessageType.HELLO.toString(), jsonMsg);
   }
 

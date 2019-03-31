@@ -6,22 +6,21 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.concurrent.ConcurrentMap;
 
 public class GroupMessage extends Message {
 
     private ArrayList<Integer> receivers = new ArrayList<>();
-    private int groupId;
+//    private int groupId;
 
 
 
     public GroupMessage(JSONObject json) {
         this.msgType = MessageType.GROUP;
-        if (json.has(BODY) && json.has(RECEIVERS) && json.has(USERID) && json.has(GROUPID)) {
-            this.userId = json.getInt(USERID);
+        if (json.has(BODY) && json.has(RECEIVERS) && json.has(USER_ID) && json.has(GROUP_ID)) {
+            this.userId = json.getInt(USER_ID);
             this.body = json.getString(BODY);
-            this.groupId = json.getInt(GROUPID);
+//            this.groupId = json.getInt(GROUPID);
             JSONArray jsonUsers = json.getJSONArray(RECEIVERS);
             for (int i=0; i<jsonUsers.length(); i++) {
                 this.receivers.add(jsonUsers.getInt(i));

@@ -16,8 +16,8 @@ public class PrivateMessage extends Message {
 
     protected PrivateMessage(JSONObject json) {
         this.msgType = MessageType.PRIVATE;
-        if (json.has(BODY) && json.has(RECEIVERS) && json.has(USERID)) {
-            this.userId = json.getInt(USERID);
+        if (json.has(BODY) && json.has(RECEIVERS) && json.has(USER_ID)) {
+            this.userId = json.getInt(USER_ID);
             this.body = json.getString(BODY);
             JSONArray jsonUsers = json.getJSONArray(RECEIVERS);
             for (int i = 0; i < jsonUsers.length(); i++) {

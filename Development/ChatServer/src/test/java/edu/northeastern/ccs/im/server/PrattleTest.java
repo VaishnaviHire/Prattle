@@ -225,7 +225,7 @@ public class PrattleTest {
       ConcurrentLinkedQueue<Message> messages = (ConcurrentLinkedQueue<Message>) msgField.get(nc);
       JSONObject bctMsgJSON = new JSONObject();
       bctMsgJSON.put(Message.BODY, "Hello\n How are you?");
-      bctMsgJSON.put(Message.USERID, 1234);
+      bctMsgJSON.put(Message.USER_ID, 1234);
       Message testMsg = Message.makeMessage(MessageType.BROADCAST.toString(), bctMsgJSON);
       messages.add(testMsg);
 

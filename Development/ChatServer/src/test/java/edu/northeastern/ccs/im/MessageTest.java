@@ -169,20 +169,20 @@ class MessageTest {
     receivers.put(333);
 
     JSONObject pvtMsg = new JSONObject();
-    pvtMsg.put(Message.USERID, USERID);
+    pvtMsg.put(Message.USER_ID, USERID);
     pvtMsg.put(Message.BODY, Msg);
     pvtMsg.put(Message.RECEIVERS, receivers);
 
     JSONObject helloMsg = new JSONObject();
     helloMsg.put(Message.USERNAME, name);
-    helloMsg.put(Message.PASSWORD, "password");
+    helloMsg.put(Message.PW, "password");
 
     JSONObject bctMsg = new JSONObject();
-    bctMsg.put(Message.USERID, USERID);
+    bctMsg.put(Message.USER_ID, USERID);
     bctMsg.put(Message.BODY, Msg);
 
     JSONObject byeMsg = new JSONObject();
-    byeMsg.put(Message.USERID, USERID);
+    byeMsg.put(Message.USER_ID, USERID);
     byeMsg.put(Message.BODY, Msg);
 
     Message pvt = Message.makeMessage(MessageType.PRIVATE.toString(), pvtMsg);
@@ -215,16 +215,19 @@ class MessageTest {
     receivers.put(111);
     receivers.put(222);
     receivers.put(333);
-    grpMsgJSON.put(Message.USERID, 1234);
+    grpMsgJSON.put(Message.USER_ID, 1234);
     grpMsgJSON.put(Message.BODY, "this is a message");
     grpMsgJSON.put(Message.RECEIVERS, receivers);
-    grpMsgJSON.put(Message.GROUPID, 9999);
+    grpMsgJSON.put(Message.GROUP_ID, 9999);
     Message grpMsg = Message.makeMessage(MessageType.GROUP.toString(), grpMsgJSON);
     assertEquals("GRP 4 1234 3 111 3 222 3 333 17 this is a message", grpMsg.toString());
   }
 
+
+
   @Test
-  void testGroupMessageSend() {
+  void testPrivateMessageSend() {
+    //Will need to be changed upon merge with persistence story
     Prattle.resetId();
     int USERID = 999;
     JSONArray receivers = new JSONArray();
@@ -244,20 +247,20 @@ class MessageTest {
     active.put(333, cr3);
     active.put(444, cr4);
 
-    JSONObject groupMsg = new JSONObject();
-    groupMsg.put(Message.GROUPID, 999);
-    groupMsg.put(Message.USERID, USERID);
-    groupMsg.put(Message.BODY, Msg);
-    groupMsg.put(Message.RECEIVERS, receivers);
+    JSONObject pvtMsg = new JSONObject();
+    pvtMsg.put(Message.GROUP_ID, 999);
+    pvtMsg.put(Message.USER_ID, USERID);
+    pvtMsg.put(Message.BODY, Msg);
+    pvtMsg.put(Message.RECEIVERS, receivers);
 
-    Message grp = Message.makeMessage(MessageType.GROUP.toString(), groupMsg);
+    Message pvt = Message.makeMessage(MessageType.GROUP.toString(), pvtMsg);
 
-    grp.send(active);
+    pvt.send(active);
 
-    verify(cr1, times(1)).enqueueMessage(grp);
-    verify(cr2, times(1)).enqueueMessage(grp);
-    verify(cr3, times(1)).enqueueMessage(grp);
-    verify(cr4, times(0)).enqueueMessage(grp);
+    verify(cr1, times(1)).enqueueMessage(pvt);
+    verify(cr2, times(1)).enqueueMessage(pvt);
+    verify(cr3, times(1)).enqueueMessage(pvt);
+    verify(cr4, times(0)).enqueueMessage(pvt);
 
 
   }
