@@ -1,6 +1,5 @@
 package edu.northeastern.ccs.im.model;
 
-import edu.northeastern.ccs.im.Message;
 import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;

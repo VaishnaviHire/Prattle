@@ -1,6 +1,5 @@
 package serverTest.model;
 
-import edu.northeastern.ccs.im.Message;
 import edu.northeastern.ccs.im.model.*;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

@@ -31,6 +31,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ScheduledExecutorService;
 
 
+
+
 /**
  * Test for the Prattle class
  */
@@ -43,6 +45,13 @@ public class PrattleTest {
   @Test
   void testSingletonSameObject() {
     assertSame(Prattle.getInstance(), Prattle.getInstance());
+  }
+
+  public static Message makeSimpleLoginMessage() {
+    JSONObject jsonMsg = new JSONObject();
+    jsonMsg.put(Message.USERNAME, "yash");
+    jsonMsg.put(Message.PW, "password");
+    return Message.makeMessage(MessageType.HELLO.toString(), jsonMsg);
   }
 
   private Prattle testPrattle;
@@ -366,9 +375,9 @@ public class PrattleTest {
 
     try {
 
-      List<Integer> s = new ArrayList<>();
+      JSONArray s = new JSONArray();
 
-      s.add("yash".hashCode());
+      s.put(4567);
 
       sc.configureBlocking(true);
       sc.connect(new InetSocketAddress(ServerConstants.HOST, ServerConstants.PORT));
@@ -378,7 +387,7 @@ public class PrattleTest {
       msgField.setAccessible(true);
       ConcurrentHashMap<Integer, ClientRunnable> newActive = new ConcurrentHashMap<>();
       JSONObject pvtMsgJSON = new JSONObject();
-      pvtMsgJSON.put(Message.USERID, "shivam".hashCode());
+      pvtMsgJSON.put(Message.USER_ID, "shivam".hashCode());
       pvtMsgJSON.put(Message.RECEIVERS, s);
       pvtMsgJSON.put(Message.BODY, "this is my message");
       Message[] messages = {Message.makeMessage(MessageType.PRIVATE.toString(), pvtMsgJSON)};
@@ -397,10 +406,10 @@ public class PrattleTest {
       RunnableThree.run();
       RunnableFour.setUsername("yash2");
       RunnableFour.run();
-      newActive.put(RunnableOne.getUserId(), RunnableOne);
-      newActive.put(RunnableTwo.getUserId(), RunnableTwo);
-      newActive.put(RunnableThree.getUserId(), RunnableThree);
-      newActive.put(RunnableFour.getUserId(), RunnableFour);
+      newActive.put(4567, RunnableOne);
+      newActive.put(111, RunnableTwo);
+      newActive.put(222, RunnableThree);
+      newActive.put(333, RunnableFour);
 
       Field prField = Class.forName(prattleLoc).getDeclaredField("active");
       prField.setAccessible(true);
@@ -417,19 +426,19 @@ public class PrattleTest {
       Field ini2 = RunnableFour.getClass().getDeclaredField("initialized");
       ini2.setAccessible(true);
       ini2.set(RunnableFour, true);
-      s.add("yash1".hashCode());
-
       // tests for remove client
 
       JSONObject grpMsgJSON = new JSONObject();
-      grpMsgJSON.put(Message.USERNAME, "shivam");
+      grpMsgJSON.put(Message.USER_ID, 111);
       grpMsgJSON.put(Message.BODY, "this is a message");
       grpMsgJSON.put(Message.RECEIVERS, s);
-      testPrattle.sendMessage(Message.makeMessage(MessageType.GROUP.toString(), grpMsgJSON));
-      Queue<Message> res = RunnableTwo.getMessageList();
-      assertEquals("GRP 6 shivam 4 yash 5 yash1 18 this is my message", res.remove().toString());
-      Queue<Message> res1 = RunnableThree.getMessageList();
-      assertEquals("GRP 6 shivam 4 yash 5 yash1 18 this is my message", res1.remove().toString());
+      grpMsgJSON.put(Message.GROUP_ID, 888);
+
+      Message.makeMessage(MessageType.GROUP.toString(), grpMsgJSON).send(newActive);
+      Queue<Message> res = RunnableOne.getMessageList();
+      assertEquals("GRP 3 111 4 4567 17 this is a message", res.remove().toString());
+      Queue<Message> res1 = RunnableTwo.getMessageList();
+      assertEquals(res1.isEmpty(), true);
       Queue<Message> res2 = RunnableThree.getMessageList();
       assertThrows(NoSuchElementException.class,
               () -> res2.remove(),
@@ -453,18 +462,20 @@ public class PrattleTest {
 
     try {
 
-      List<String> s = new ArrayList<>();
-
-      s.add("yash");
-
       sc.configureBlocking(true);
       sc.connect(new InetSocketAddress(ServerConstants.HOST, ServerConstants.PORT));
       NetworkConnection nc = new NetworkConnection(sc);
 
       Field msgField = NetworkConnection.class.getDeclaredField("messages");
       msgField.setAccessible(true);
-      ConcurrentLinkedQueue<ClientRunnable> newActive = new ConcurrentLinkedQueue<>();
-      Message[] messages = {Message.makePrivateMessage("shivam", s, "this is my message")};
+      ConcurrentHashMap<Integer, ClientRunnable> newActive = new ConcurrentHashMap<>();
+      JSONArray s = new JSONArray();
+      s.put(9999);
+      JSONObject pvtMsgJSON = new JSONObject();
+      pvtMsgJSON.put(Message.USER_ID, 1234);
+      pvtMsgJSON.put(Message.RECEIVERS, s);
+      pvtMsgJSON.put(Message.BODY, "this is my message");
+      Message[] messages = {Message.makeMessage(MessageType.PRIVATE.toString(), pvtMsgJSON)};
 
 
       ClientRunnable RunnableOne = new ClientRunnable(nc);
@@ -472,18 +483,18 @@ public class PrattleTest {
       ClientRunnable RunnableThree = new ClientRunnable(nc);
       ClientRunnable RunnableFour = new ClientRunnable(nc);
       testPrattle.hashCode();
-      RunnableOne.setName("shivam");
+      RunnableOne.setUsername("shivam");
       RunnableOne.run();
-      RunnableTwo.setName("user1");
+      RunnableTwo.setUsername("user1");
       RunnableTwo.run();
-      RunnableThree.setName("user2");
+      RunnableThree.setUsername("user2");
       RunnableThree.run();
-      RunnableFour.setName("user3");
+      RunnableFour.setUsername("user3");
       RunnableFour.run();
-      newActive.add(RunnableOne);
-      newActive.add(RunnableTwo);
-      newActive.add(RunnableThree);
-      newActive.add(RunnableFour);
+      newActive.put(1, RunnableOne);
+      newActive.put(2, RunnableTwo);
+      newActive.put(3, RunnableThree);
+      newActive.put(4, RunnableFour);
 
       Field prField = Class.forName(prattleLoc).getDeclaredField("active");
       prField.setAccessible(true);
@@ -500,11 +511,15 @@ public class PrattleTest {
       Field ini2 = RunnableFour.getClass().getDeclaredField("initialized");
       ini2.setAccessible(true);
       ini2.set(RunnableFour, true);
-      s.add("yash1");
+      s.put(1111);
 
       int activeSize = newActive.size();
       // tests for remove client
-      testPrattle.groupMessage(Message.makeGroupMessage("shivam", null, "name", "this is my message"));
+      JSONObject grpMsgJSON = new JSONObject();
+      grpMsgJSON.put(Message.USER_ID, 1234);
+      grpMsgJSON.put(Message.RECEIVERS, s);
+      grpMsgJSON.put(Message.BODY, "this is my message");
+      testPrattle.sendMessage(Message.makeMessage(MessageType.GROUP.toString(), grpMsgJSON));
 
 //  @Test
 //  void prattleGrpMessageTest() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException, IOException {
