@@ -1,5 +1,6 @@
 package edu.northeastern.ccs.im;
 
+import edu.northeastern.ccs.im.server.Prattle;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -155,6 +156,7 @@ class MessageTest {
 
   @Test
   void testToString() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    Prattle.resetId();
     int USERID = 999;
     JSONArray receivers = new JSONArray();
     receivers.put(111);
@@ -200,5 +202,20 @@ class MessageTest {
       chatLoggerConstructor.setAccessible(true);
       chatLoggerConstructor.newInstance();
     });
+  }
+
+  @Test
+  void testGroupMessageToString() {
+    JSONObject grpMsgJSON = new JSONObject();
+    JSONArray receivers = new JSONArray();
+    receivers.put(111);
+    receivers.put(222);
+    receivers.put(333);
+    grpMsgJSON.put(Message.USERID, 1234);
+    grpMsgJSON.put(Message.BODY, "this is a message");
+    grpMsgJSON.put(Message.RECEIVERS, receivers);
+    grpMsgJSON.put(Message.GROUPID, 9999);
+    Message grpMsg = Message.makeMessage(MessageType.GROUP.toString(), grpMsgJSON);
+    assertEquals("GRP 4 1234 3 111 3 222 3 333 17 this is a message", grpMsg.toString());
   }
 }

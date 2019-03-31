@@ -177,7 +177,7 @@ public class ClientRunnableTest {
     Message[] messages = {makeSimpleLoginMessage()};
     when(mockConnection.iterator()).thenReturn(new MockMessageIterator(Arrays.asList(messages)));
     clientRunnable.run();
-    assertEquals(2, clientRunnable.getUserId());
+    assertEquals(0, clientRunnable.getUserId());
   }
 
   @Test
