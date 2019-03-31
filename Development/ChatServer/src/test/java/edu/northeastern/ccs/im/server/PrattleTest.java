@@ -231,7 +231,6 @@ public class PrattleTest {
 
       // Tests for message Iterator
       assertTrue(nc.iterator().hasNext());
-      //TODO: convert this to use the toString method
       assertEquals(nc.iterator().next().toString(), "BCT 4 1234 19 Hello\n How are you?");
       assertFalse(nc.iterator().hasNext());
       assertThrows(NoSuchElementException.class, () -> {
