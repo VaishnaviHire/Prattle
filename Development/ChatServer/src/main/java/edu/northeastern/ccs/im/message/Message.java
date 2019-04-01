@@ -1,6 +1,7 @@
 package edu.northeastern.ccs.im.message;
 
 import edu.northeastern.ccs.im.MessageType;
+import edu.northeastern.ccs.im.model.User;
 import edu.northeastern.ccs.im.server.ClientRunnable;
 import org.json.JSONObject;
 
@@ -57,6 +58,11 @@ public abstract class Message {
    * The sender's username
    */
   protected String username;
+
+  /**
+   * The sender's user object
+   */
+  protected User user;
 
 
   /**

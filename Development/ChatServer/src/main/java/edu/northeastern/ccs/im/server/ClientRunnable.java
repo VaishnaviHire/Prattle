@@ -133,26 +133,6 @@ public class ClientRunnable implements Runnable {
 		return connection.sendMessage(message);
 	}
 
-//	/**
-//	 * Try to login the user
-//	 *
-//	 * @param msg The msg that we will check for the correct user name and password
-//	 * @return True if login succeeds with the right username and password
-//	 */
-//	private boolean login_succeeds(Message msg) {
-//		boolean result = false;
-//		// Now make sure this name is legal.
-//		if (userName != null) {
-//			// Optimistically set this users ID number.
-//			setName(userName);
-//			userId = hashCode();
-//			result = true;
-//		} else {
-//			// Clear this name; we cannot use it. *sigh*
-//			userId = -1;
-//		}
-//		return result;
-//	}
 
 	/**
 	 * Add the given message to this client to the queue of message to be sent to
