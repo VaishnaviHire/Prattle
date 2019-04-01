@@ -6,6 +6,9 @@ import org.json.JSONObject;
 
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * Used for quitting the application.
+ */
 public class QuitMessage extends Message {
 
     public QuitMessage(JSONObject json) {

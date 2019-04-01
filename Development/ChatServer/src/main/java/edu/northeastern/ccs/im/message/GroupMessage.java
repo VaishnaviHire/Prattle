@@ -8,6 +8,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * This class is used for Group Messaging, where we are sending a message from one user to all the
+ * members of the group.
+ */
 public class GroupMessage extends Message {
 
     private ArrayList<Integer> receivers = new ArrayList<>();

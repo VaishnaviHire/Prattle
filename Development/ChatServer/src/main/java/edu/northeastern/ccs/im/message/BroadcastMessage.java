@@ -6,6 +6,9 @@ import org.json.JSONObject;
 
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * This class is used for generaly purpose messages such as error messages
+ */
 public class BroadcastMessage extends Message {
 
     public BroadcastMessage(int userId, String body) {

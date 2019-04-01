@@ -232,10 +232,9 @@ public class ClientRunnable implements Runnable {
 				if (messageChecks(msg)) {
 					Prattle.sendMessage(msg);
 				} else {
-//					Message sendMsg;
-//					sendMsg = Message.makeBroadcastMessage(ServerConstants.BOUNCER_ID,
-//							"Last message was rejected because it specified an incorrect user name.");
-//					enqueueMessage(sendMsg);
+					Message sendMsg = Message.makeBroadcastMessage(ServerConstants.BOUNCER_ID,
+							"Last message was rejected because it specified an incorrect user name.");
+					enqueueMessage(sendMsg);
 				}
 			}
 		}
