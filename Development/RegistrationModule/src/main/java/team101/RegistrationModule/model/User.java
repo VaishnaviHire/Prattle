@@ -24,8 +24,6 @@ public class User {
 
     private Set<GroupAdmin> groupAdmins = new HashSet<>();
 
-    private Set<JoinRequests> joinRequests = new HashSet<>();
-
     private Set<GroupMember> groupMembers = new HashSet<>();
 
     private int userid;
@@ -43,48 +41,48 @@ public class User {
     private int enabled;
 
 
+    /**
+     *
+     * @return the unique user id
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "userid")
+    public int getUserid() {
+        return userid;
+    }
 
-    public void addGroupToAdmin(GroupAdmin group) {
-        this.groupAdmins.add(group);
+    /**
+     *
+     * @param userid set the given value as user id
+     */
+    public void setUserid(int userid) {
+        this.userid = userid;
     }
 
 
-
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user", orphanRemoval = true)
-    public Set<GroupAdmin> getGroupAdmins() {
-        return groupAdmins;
+    /**
+     *
+     * @return the associated user password as string
+     */
+    @Column(name = "password")
+    public String getPassword(){
+        return password;
     }
 
-    public void setGroupAdmins(Set<GroupAdmin> grpMem) {
-        this.groupAdmins = grpMem;
-    }
-
-    public void addGroupMembers(GroupAdmin groupMem) {
-        this.groupAdmins.add(groupMem);
-    }
-
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user", orphanRemoval = true)
-    public Set<GroupMember> getGroupMembers() {
-        return groupMembers;
-    }
-
-    public void setGroupMembers(Set<GroupMember> grpMem) {
-        this.groupMembers = grpMem;
-    }
-
-    public void addGroupMembers(GroupMember groupMem) {
-        this.groupMembers.add(groupMem);
-    }
-
-
-
-
-
+    /**
+     *
+     * @return 1 if the user is logged in, else 0
+     */
     @Column(name = "enabled")
     public int getEnabled() {
             return enabled;
     }
 
+    /**
+     *
+     * @param enabled set the given value as enabled
+     */
     public void setEnabled(int enabled) {
             this.enabled = enabled;
     }
@@ -94,64 +92,95 @@ public class User {
 //        private boolean isPrivate;
 
 
+    /**
+     *
+     * @param password set the given string value as password
+     */
     public void setPassword(String password){
             this.password = password;
     }
 
+    /**
+     *
+     * @return get the display name for the user
+     */
     @Column(name = "username")
     public String getUsername() {
         return username;
     }
 
+    /**
+     *
+     * @param username set the given value as username
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
 
+    /**
+     *
+     * @return get the first name for the user
+     */
     @Column(name = "first_name")
     public String getFirstName() {
         return firstName;
     }
 
+    /**
+     *
+     * @param firstName set the given value as first name
+     */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
+    /**
+     *
+     * @return get the last name for the user
+     */
     @Column(name = "last_name")
     public String getLastName() {
         return lastName;
     }
 
+    /**
+     *
+     * @param lastName set the given value as last name
+     */
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
+    /**
+     *
+     * @return get the date of birth for the user
+     */
     @Column(name = "date_of_birth")
     public String getDateOfBirth() {
         return dateOfBirth;
     }
 
+    /**
+     *
+     * @param dateOfBirth set the given value as date of birth
+     */
     public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userid")
-    public int getUserid() {
-        return userid;
-    }
 
-    public void setUserid(int userid) {
-        this.userid = userid;
+
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user", orphanRemoval = true)
+    public Set<GroupAdmin> getGroupAdmins() {
+        return groupAdmins;
     }
 
 
-    @Column(name = "password")
-    public String getPassword(){
-            return password;
-        }
+    public void addGroupMembers(GroupMember groupMem) {
+        this.groupMembers.add(groupMem);
+    }
 
 
     @Override

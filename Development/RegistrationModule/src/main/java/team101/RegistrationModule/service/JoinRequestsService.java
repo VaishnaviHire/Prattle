@@ -21,11 +21,20 @@ public class JoinRequestsService {
         this.joinRequestsRepo = joinRequestsRepo;
     }
 
+    /**
+     * insert join request into table
+     * @param joinRequests
+     */
     public void saveJoinRequests(JoinRequests joinRequests){
 
         joinRequestsRepo.save(joinRequests);
     }
 
+    /**
+     *
+     * @param u user object
+     * @return list of join requests associated with the user
+     */
     public List<String> getJoinRequests(User u){
 
         List<JoinRequests> jr =  joinRequestsRepo.findjoinRequests(u.getUserid());
@@ -38,10 +47,19 @@ public class JoinRequestsService {
         return result;
     }
 
+    /**
+     *
+     * @param id unique id of request
+     * @return request associated with the id
+     */
     public JoinRequests findRequestById(int id){
         return joinRequestsRepo.findByRequestid(id);
     }
 
+    /**
+     * Function to delete requests given a request id
+     * @param id unique id of request
+     */
     @Transactional
     public void removeRequest(int id){
         joinRequestsRepo.removeByRequestid(id);

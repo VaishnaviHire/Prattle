@@ -20,10 +20,19 @@ public class GroupService {
         this.groupRepository = groupRepository;
     }
 
+    /**
+     *
+     * @param groupname name of the group
+     * @return group object associated with the name
+     */
     public Group findGroupByGroupName(String groupname) {
         return groupRepository.findByGroupName(groupname);
     }
 
+    /**
+     * Insert given group object into table
+     * @param grp
+     */
     public void saveGroup(Group grp) {
         groupRepository.save(grp);
     }

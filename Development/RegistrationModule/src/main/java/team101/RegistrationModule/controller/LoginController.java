@@ -30,6 +30,10 @@ public class LoginController {
     @Autowired
     private JoinRequestsService joinRequestsService;
 
+    /**
+     * Endpoint to login the user with username and password
+     * @return
+     */
     @RequestMapping(value={"/", "/login"}, method = RequestMethod.GET)
     public ModelAndView login(){
         ModelAndView modelAndView = new ModelAndView();
@@ -38,6 +42,10 @@ public class LoginController {
     }
 
 
+    /**
+     * display registration page
+     * @return
+     */
     @RequestMapping(value="/registration", method = RequestMethod.GET)
     public ModelAndView registration(){
         ModelAndView modelAndView = new ModelAndView();
@@ -47,6 +55,12 @@ public class LoginController {
         return modelAndView;
     }
 
+    /**
+     * endpoint to register the user
+     * @param user
+     * @param bindingResult
+     * @return
+     */
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public ModelAndView createNewUser(@Valid User user, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
@@ -68,6 +82,10 @@ public class LoginController {
         return modelAndView;
     }
 
+    /**
+     * Display user groups, member groups, friend list of the user
+     * @return
+     */
     @RequestMapping(value="/admin/home", method = RequestMethod.GET)
     public ModelAndView home(){
         ModelAndView modelAndView = new ModelAndView();
@@ -85,8 +103,11 @@ public class LoginController {
     }
 
 
-
-
+    /**
+     * endpoint to create join request
+     * @param jr
+     * @return
+     */
     @RequestMapping(value="/admin/home", method = RequestMethod.POST)
     public ModelAndView createNewRequest(@RequestParam("groupname") String jr) {
             ModelAndView modelAndView = new ModelAndView();

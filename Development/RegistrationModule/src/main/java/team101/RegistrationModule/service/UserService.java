@@ -23,16 +23,30 @@ public class UserService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
+    /**
+     *
+      * @param username display name of the user
+     * @return user object with the given name
+     */
     public User findUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
+    /**
+     * insert user object into table
+     * @param user
+     */
     public void saveUser(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setEnabled(1);
         userRepository.save(user);
     }
 
+    /**
+     *
+     * @param user
+     * @return list of all other users
+     */
     public List<String> allUsernames(User user){
         return userRepository.getAllUsername(user.getUserid());
     }

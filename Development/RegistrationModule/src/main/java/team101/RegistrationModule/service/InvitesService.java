@@ -21,14 +21,19 @@ public class InvitesService {
         this.invitesRepo = invitesRepo;
     }
 
-//    public Group findGroupByGroupName(String groupname) {
-//        return groupRepository.findByGroupName(groupname);
-//    }
-
+    /**
+     * Insert invite to table
+     * @param invite
+     */
     public void saveInvite(Invites invite) {
         invitesRepo.save(invite);
     }
 
+    /**
+     *
+     * @param u user object
+     * @return list of invites associated with the user
+     */
     public List<String> getInvites(User u){
 
         List<Invites> jr =  invitesRepo.findInvites(u.getUserid());
@@ -40,6 +45,7 @@ public class InvitesService {
         }
         return result;
     }
+
 
     @Transactional
     public void removeInvite(Group group, User receiver){

@@ -15,12 +15,25 @@ public class GroupMember {
     Group group;
     private int adminStatus;
 
+    /**
+     * Constructor for creating a group member object
+     * @param user user object associated with the member
+     * @param group group that the user is part of
+     * @param adminStatus boolean value for admin status of the user for the given group
+     */
     public GroupMember(User user, Group group, int adminStatus) {
         this.user = user;
         this.group = group;
         this.adminStatus = adminStatus;
     }
 
+    public GroupMember() {
+    }
+
+    /**
+     *
+     * @return the id of member object
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idgroup_member")
@@ -33,6 +46,10 @@ public class GroupMember {
     }
 
 
+    /**
+     *
+     * @return the user object associated with the member object
+     */
     @JoinColumn(name = "userid")
     @ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL,targetEntity = User.class)
     public User getUser() {
@@ -40,10 +57,18 @@ public class GroupMember {
     }
 
 
+    /**
+     *
+     * @param user set the given user value
+     */
     public void setUser(User user) {
         this.user = user;
     }
 
+    /**
+     *
+     * @return  group the member is part of
+     */
     @ManyToOne(fetch = FetchType.LAZY,
             cascade = CascadeType.ALL, targetEntity = Group.class)
     @JoinColumn(name = "groupid")
@@ -51,21 +76,32 @@ public class GroupMember {
         return group;
     }
 
+    /**
+     *
+     * @param group set the given group value
+     */
     public void setGroup(Group group) {
         this.group = group;
     }
 
+    /**
+     *
+     * @return 1 if user is admin of the group, else returns 0
+     */
     @Column(name = "is_admin")
     public int getAdminStatus() {
         return adminStatus;
     }
 
+    /**
+     *
+     * @param adminStatus set the given admin status
+     */
     public void setAdminStatus(int adminStatus) {
         this.adminStatus = adminStatus;
     }
 
-    public GroupMember() {
-    }
+
 
     @Override
     public boolean equals(Object o) {

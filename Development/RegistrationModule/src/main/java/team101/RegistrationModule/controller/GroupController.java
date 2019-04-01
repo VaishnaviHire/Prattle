@@ -36,6 +36,10 @@ public class GroupController {
     @Autowired
     private InvitesService invitesService;
 
+    /**
+     * display create group page
+     * @return
+     */
     @RequestMapping(value="/admin/home/groups", method = RequestMethod.GET)
     public ModelAndView groups(){
         ModelAndView modelAndView = new ModelAndView();
@@ -45,6 +49,12 @@ public class GroupController {
         return modelAndView;
     }
 
+    /**
+     * endpoint to create a new group
+     * @param grp
+     * @param bindingResult
+     * @return
+     */
     @RequestMapping(value = "/admin/home/groups", method = RequestMethod.POST)
     public ModelAndView createNewGroup(@Valid Group grp, BindingResult bindingResult) {
         ModelAndView modelAndView = new ModelAndView();
@@ -75,6 +85,10 @@ public class GroupController {
         return modelAndView;
     }
 
+    /**
+     * display join requests
+     * @return
+     */
     @RequestMapping(value="/admin/home/requests", method = RequestMethod.GET)
     public ModelAndView requests(){
         ModelAndView modelAndView = new ModelAndView();
@@ -86,6 +100,11 @@ public class GroupController {
     }
 
 
+    /**
+     * endpoint to accept given join requests
+     * @param id
+     * @return
+     */
     @RequestMapping(value="/admin/home/requests", method = RequestMethod.POST)
     public ModelAndView acceptRequests(@RequestParam("requestID") int id){
         ModelAndView modelAndView = new ModelAndView();

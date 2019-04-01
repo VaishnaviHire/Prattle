@@ -36,7 +36,10 @@ public class InvitesController {
     private InvitesService invitesService;
 
 
-
+    /**
+     * display group invites
+     * @return
+     */
     @RequestMapping(value="/admin/home/sendinvites", method = RequestMethod.GET)
     public ModelAndView sendinvites(){
         ModelAndView modelAndView = new ModelAndView();
@@ -47,6 +50,12 @@ public class InvitesController {
         return modelAndView;
     }
 
+    /**
+     * endpoint to create new invite
+     * @param groupname
+     * @param receivername
+     * @return
+     */
     @RequestMapping(value="/admin/home/sendinvites", method = RequestMethod.POST)
     public ModelAndView createNewInvites(@RequestParam("groupname") String groupname, @RequestParam("receivername") String receivername){
         ModelAndView modelAndView = new ModelAndView();
