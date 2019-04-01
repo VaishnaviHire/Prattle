@@ -1,8 +1,10 @@
 package edu.northeastern.ccs.im.message;
 
+import com.mysql.fabric.Server;
 import edu.northeastern.ccs.im.MessageType;
 import edu.northeastern.ccs.im.model.User;
 import edu.northeastern.ccs.im.server.ClientRunnable;
+import edu.northeastern.ccs.im.server.ServerConstants;
 import org.json.JSONObject;
 
 import java.util.concurrent.ConcurrentMap;
@@ -85,10 +87,8 @@ public abstract class Message {
       return new BroadcastMessage(jsonMsg);
     } else if (handle.compareTo(MessageType.GROUP.toString()) == 0) {
       return new GroupMessage(jsonMsg);
-    }
-    else {
-      //should we throw error?????
-      return null;
+    } else {
+      return makeBroadcastMessage(ServerConstants.BOUNCER_ID, "Invalid Message Type.");
     }
   }
 
@@ -180,8 +180,11 @@ public abstract class Message {
   }
 
 
-
-
+  /**
+   * Appends the message's type to the string message.
+   *
+   * @param builder the builder that is being used to stringify the message.
+   */
   protected void appendMessageType(StringBuilder builder) {
     if (userId != -1) {
       builder.append(" ").append(Integer.toString(userId).length()).append(" ").append(userId);
@@ -191,6 +194,11 @@ public abstract class Message {
   }
 
 
+  /**
+   * Appends the body of the message to the string message.
+   *
+   * @param builder the builder that is being used to stringify the message
+   */
   protected void appendBody(StringBuilder builder) {
     if (this.body != null) {
       builder.append(" ").append(this.body.length()).append(" ").append(this.body);
@@ -210,13 +218,6 @@ public abstract class Message {
   public String toString() {
     StringBuilder result = new StringBuilder(this.msgType.toString());
     this.appendMessageType(result);
-//    if (msgReceivers != null) {
-//      for (String msgReceiver : msgReceivers) {
-//        result.append(" ").append(msgReceiver.length()).append(" ").append(msgReceiver);
-//      }
-//    } else {
-//      result.append(" ").append(NULL_OUTPUT.length()).append(" ").append(NULL_OUTPUT);
-//    }
     this.appendBody(result);
     return result.toString();
   }

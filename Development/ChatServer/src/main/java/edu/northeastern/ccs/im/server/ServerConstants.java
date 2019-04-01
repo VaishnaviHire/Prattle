@@ -35,7 +35,7 @@ public class ServerConstants {
 	protected static final String SERVER_NAME = "Prattle";
 
 	/** Name of the private user who handles bad requests. */
-	protected static final String BOUNCER_ID = "Bouncer";
+	public static final int BOUNCER_ID = -999;
 
 	/** Private constructor to prevent anyone from creating one of these. */
 	private ServerConstants() {

@@ -9,6 +9,9 @@ import org.json.JSONObject;
 
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * A message the unitialized user sends to try and log in to the application.
+ */
 public class SimpleLoginMessage extends Message {
 
     private String password;

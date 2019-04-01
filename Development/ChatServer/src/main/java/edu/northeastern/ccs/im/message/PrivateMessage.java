@@ -9,6 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
+/**
+ * This Message is used for sending private messages between one or more recipients.
+ * We choose to handle this as a separate entity than group messages for the case when you
+ * are private messaging multiple people.
+ */
 public class PrivateMessage extends Message {
 
     private ArrayList<Integer> receivers = new ArrayList<>();
