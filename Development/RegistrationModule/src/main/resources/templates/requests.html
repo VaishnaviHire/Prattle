@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Requests Page</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+    <div>
+        <nav class="navbar navbar-primary">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">Prattle</a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/admin/home">Home</a></li>
+                    <li><a href="/admin/home/groups">Create Group</a></li>
+                    <li><a href="/admin/home/requests">Join Requests</a></li>
+                    <li><a href="/admin/home/sendinvites">Send Invites</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <div class="panel-group" style="margin-top:40px">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <span> Requests </span>
+            </div>
+
+            <p th:utext="${joinRequests}"></p>
+
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-1">
+            <form autocomplete="off" action="#" th:action="@{/admin/home/requests}"
+                  method="post" class="form-horizontal"
+                  role="form" >
+                <h2>Accept Requests</h2>
+
+                <input type="text" id="requestID" name="requestID" th:placeholder="requestID"
+                       class="form-control"/> <br/>
+
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <button type="submit" class="btn btn-primary btn-block">Accept</button>
+                    </div>
+                </div>
+
+                <h2><span class="text-success" th:utext="${successMessage}"> </span></h2>
+
+            </form>
+        </div>
+    </div>
+
+
+
+</div>
+</body>
