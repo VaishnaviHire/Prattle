@@ -47,6 +47,7 @@ public class PrattleTest {
     assertSame(Prattle.getInstance(), Prattle.getInstance());
   }
 
+
   public static Message makeSimpleLoginMessage() {
     JSONObject jsonMsg = new JSONObject();
     jsonMsg.put(Message.USERNAME, "yash");
@@ -58,6 +59,8 @@ public class PrattleTest {
   private String prattleLoc;
   private String clientRunnable;
   private static Thread mainThread;
+  private static final int SERVER_PORT = 4555;
+
 
   /**
    * Initial setup, making a mock Prattle object.
@@ -226,7 +229,7 @@ public class PrattleTest {
     try {
 
       sc.configureBlocking(true);
-      sc.connect(new InetSocketAddress(ServerConstants.HOST, ServerConstants.PORT));
+      sc.connect(new InetSocketAddress(ServerConstants.HOST, SERVER_PORT));
       NetworkConnection nc = new NetworkConnection(sc);
 
       Field msgField = NetworkConnection.class.getDeclaredField("messages");
@@ -318,7 +321,7 @@ public class PrattleTest {
     try {
       SocketChannel sc = SocketChannel.open();
       sc.configureBlocking(true);
-      sc.connect(new InetSocketAddress(ServerConstants.HOST, ServerConstants.PORT));
+      sc.connect(new InetSocketAddress(ServerConstants.HOST, SERVER_PORT));
       NetworkConnection nc = new NetworkConnection(sc);
       ClientRunnable clientRunnable = new ClientRunnable(nc);
 
@@ -349,7 +352,7 @@ public class PrattleTest {
     SocketChannel sc = SocketChannel.open();
     Thread thread = new Thread(() -> {
       try {
-        socketChannel.socket().bind(new InetSocketAddress(ServerConstants.HOST, ServerConstants.PORT));
+        socketChannel.socket().bind(new InetSocketAddress(ServerConstants.HOST, SERVER_PORT));
       } catch (IOException e) {
         e.printStackTrace();
       }
@@ -380,7 +383,7 @@ public class PrattleTest {
       s.put(4567);
 
       sc.configureBlocking(true);
-      sc.connect(new InetSocketAddress(ServerConstants.HOST, ServerConstants.PORT));
+      sc.connect(new InetSocketAddress(ServerConstants.HOST, SERVER_PORT));
       NetworkConnection nc = new NetworkConnection(sc);
 
       Field msgField = NetworkConnection.class.getDeclaredField("messages");
@@ -463,7 +466,7 @@ public class PrattleTest {
     try {
 
       sc.configureBlocking(true);
-      sc.connect(new InetSocketAddress(ServerConstants.HOST, ServerConstants.PORT));
+      sc.connect(new InetSocketAddress(ServerConstants.HOST, SERVER_PORT));
       NetworkConnection nc = new NetworkConnection(sc);
 
       Field msgField = NetworkConnection.class.getDeclaredField("messages");
