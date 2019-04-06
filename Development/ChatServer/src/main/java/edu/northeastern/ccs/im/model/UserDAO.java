@@ -16,8 +16,7 @@ public class UserDAO {
         DataBaseOperations dataBaseOperation = new DataBaseOperations(this.output);
         Object l = dataBaseOperation.getSpecificUser(user.getUName(),user.getPassword());
         if(l!=null){
-            User u = (User)l;
-            return u;
+            return (User)l;
         }else{
             return null;
         }
