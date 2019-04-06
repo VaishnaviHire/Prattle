@@ -16,10 +16,10 @@ public class UserTest {
     public void createUserTest(){
         User firstuser = new User("firstUser");
 
-        assertEquals("firstUser",firstuser.getName());
+        assertEquals("firstUser",firstuser.getUName());
         assertFalse(firstuser.isGroup());
         firstuser.setName("modifiedName");
-        assertEquals("modifiedName", firstuser.getName());
+        assertEquals("modifiedName", firstuser.getUName());
 
     }
     @Test
@@ -28,18 +28,17 @@ public class UserTest {
         u.setUName("Shivam");
         u.setName("Shivam");
         u.setDob(new Date(Calendar.getInstance().getTime().getTime()));
-        u.setIs_private(false);
-        u.setFirst_name("Shivam");
-        u.setLast_name("Patel");
+        u.setPrivate(false);
+        u.setFirstName("Shivam");
+        u.setLastName("Patel");
         u.setPassword("this");
         u.setUserId(1);
         u.getUName();
         u.getPassword();
-        u.getName();
         u.getDob();
-        u.getFirst_name();
-        u.getLast_name();
-        u.isIs_private();
+        u.getFirstName();
+        u.getLastName();
+        u.isPrivate();
         u.getUserId();
 
     }
