@@ -2,7 +2,6 @@ package edu.northeastern.ccs.im.model;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Class defining user model
@@ -20,13 +19,13 @@ public class User{
   @Column(name = "password")
   private String password;
   @Column(name = "first_name")
-  private String first_name;
+  private String firstName;
   @Column(name = "last_name")
-  private String last_name;
+  private String lastName;
   @Column(name = "date_of_birth")
   private Date dob;
   @Column(name = "is_private")
-  private boolean is_private;
+  private boolean isPrivate;
   public User(){
 
   }
@@ -41,13 +40,6 @@ public class User{
 
 
 
-  /**
-   * @return method to get username
-   */
-
-  public String getName() {
-    return uName;
-  }
   /**
    * @param name method to set given name to user
    */
@@ -87,20 +79,20 @@ public class User{
     this.password = password;
   }
 
-  public String getFirst_name() {
-    return first_name;
+  public String getFirstName() {
+    return firstName;
   }
 
-  public void setFirst_name(String first_name) {
-    this.first_name = first_name;
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
   }
 
-  public String getLast_name() {
-    return last_name;
+  public String getLastName() {
+    return lastName;
   }
 
-  public void setLast_name(String last_name) {
-    this.last_name = last_name;
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
   }
 
   public Date getDob() {
@@ -111,11 +103,11 @@ public class User{
     this.dob = dob;
   }
 
-  public boolean isIs_private() {
-    return is_private;
+  public boolean isPrivate() {
+    return isPrivate;
   }
 
-  public void setIs_private(boolean is_private) {
-    this.is_private = is_private;
+  public void setPrivate(boolean aPrivate) {
+    this.isPrivate = aPrivate;
   }
 }

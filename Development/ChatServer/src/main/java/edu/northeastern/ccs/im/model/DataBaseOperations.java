@@ -1,14 +1,9 @@
 package edu.northeastern.ccs.im.model;
 
+import edu.northeastern.ccs.im.ChatLogger;
 import org.hibernate.*;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.service.ServiceRegistry;
-
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class DataBaseOperations {
@@ -27,9 +22,9 @@ public class DataBaseOperations {
             Query q = sessionObject.createQuery("from User where uName = :a and password = :b");
             q.setParameter("a", username);
             q.setParameter("b", password);
-            System.out.println(q.toString());
-                Object a = q.uniqueResult();
-                return a;
+            ChatLogger.LOGGER.info(q.toString());
+
+                return q.uniqueResult();
 
 
     }
@@ -37,8 +32,7 @@ public class DataBaseOperations {
     public Group1 getSpecificGrp(String grpname) {
         Session sessionObject = SessionFactoryConfiguration.getSessionFactory().openSession();
         Criteria criteria = sessionObject.createCriteria(Group1.class);
-            Group1 yourObject = (Group1) criteria.add(Restrictions.eq("groupName", grpname)).uniqueResult();
-            return yourObject;
+            return (Group1) criteria.add(Restrictions.eq("groupName", grpname)).uniqueResult();
     }
 
     public List getAllRecords(String objectType) {
@@ -77,8 +71,6 @@ public class DataBaseOperations {
 
         return objectList;
     }
-//    public void createRecord(Message m){
-//
-//    }
+
 
 }

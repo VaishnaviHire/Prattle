@@ -14,13 +14,13 @@ public class BroadcastMessage extends Message {
     public BroadcastMessage(int userId, String body) {
         this.msgType = MessageType.BROADCAST;
         this.userId = userId;
-        this.body = body;
+        this.messageBody = body;
     }
 
     public BroadcastMessage(JSONObject json) {
         this.msgType = MessageType.BROADCAST;
         if (json.has(USER_ID) && json.has(BODY)) {
-            this.body = json.getString(BODY);
+            this.messageBody = json.getString(BODY);
             this.userId = json.getInt(USER_ID);
         }
     }

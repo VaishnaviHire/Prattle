@@ -36,7 +36,7 @@ public class GroupTest {
     public void groupTest(){
         Group g = new Group();
         g.setName("this is the name");
-        assertEquals("this is the name",g.getName());
+        assertEquals("this is the name",g.getGroupName());
     }
     @Test
     public void groupTest1(){
@@ -51,8 +51,5 @@ public class GroupTest {
         assertFalse(g.isPrivate());
         assertEquals("this is the name",g.getName());
     }
-//    @Test
-//    public void checkGroupMessage(){
-//        Message m = ma
-//    }
+
 }
