@@ -1,16 +1,15 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-
 <head>
-    <title>Requests Page</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}"/>
+    <title>Registration Form</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/registration.css}"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
-
 <body>
+
 
 <div class="container">
     <div>
@@ -23,51 +22,37 @@
                     <li class="active"><a href="/admin/home">Home</a></li>
                     <li><a href="/admin/home/groups">Create Group</a></li>
                     <li><a href="/admin/home/requests">Join Requests</a></li>
-                    <li><a href="/admin/home/sendinvites">Invites</a></li>
+                    <li><a href="/admin/home/sendinvites">Send Invites</a></li>
                     <li><a href="/admin/home/deletegroup">Delete Groups</a></li>
                     <li><a href="/logout">Logout</a></li>
                 </ul>
             </div>
         </nav>
     </div>
-    <div class="panel-group" style="margin-top:40px">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <span> Invites </span>
-            </div>
-
-            <p th:utext="${invites}"></p>
-
-
-        </div>
-    </div>
-
     <div class="row">
-        <div class="col-md-6 col-md-offset-1">
-            <form autocomplete="off" action="#" th:action="@{/admin/home/sendinvites}"
-                  method="post" class="form-horizontal"
-                  role="form" >
-                <h2>Send Invites</h2>
-
-                <input type="text" id="groupname" name="groupname" th:placeholder="groupName"
-                       class="form-control"/> <br/>
-
-                <input type="text" id="receivername" name="receivername" th:placeholder="receiverName"
-                       class="form-control"/> <br/>
-
+        <div class="col-md-6 col-md-offset-3">
+            <form autocomplete="off" action="#" th:action="@{/admin/home/deletegroup}"
+                 method="post" class="form-horizontal"
+                  role="form">
+                <h2>Group Form</h2>
                 <div class="form-group">
                     <div class="col-sm-9">
-                        <button type="submit" class="btn btn-primary btn-block">Send</button>
+                        <input type="text" id="groupName" name="groupName" th:placeholder="groupName"
+                               class="form-control"/> <br/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <button type="submit" class="btn btn-primary btn-block">Delete Group</button>
                     </div>
                 </div>
 
-                <h2><span class="text-success" th:utext="${successMessage}"> </span></h2>
+                <h2><span class="text-success" th:utext="${successMessage}"></span></h2>
 
             </form>
         </div>
     </div>
-
-
-
 </div>
+
 </body>
+</html>

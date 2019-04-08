@@ -1,6 +1,7 @@
 package team101.RegistrationModule.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import team101.RegistrationModule.model.User;
@@ -32,7 +33,10 @@ public interface UserRepo  extends JpaRepository<User, Long> {
      */
     @Query("SELECT u.username from User u where u.userid <> :userid ")
         List<String> getAllUsername(@Param("userid") int userid);
-    }
 
 
 
+    @Modifying
+    @Query("delete from User u where u.userid <> :userid ")
+    void delete(@Param("userid") int userid);
+}

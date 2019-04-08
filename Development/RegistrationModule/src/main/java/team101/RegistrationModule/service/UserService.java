@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.HashSet;
 
@@ -53,5 +54,9 @@ public class UserService {
 
 
 
+    @Transactional
+    public void deleteUser(User user){
+        userRepository.delete(user.getUserid());
+    }
 
 }

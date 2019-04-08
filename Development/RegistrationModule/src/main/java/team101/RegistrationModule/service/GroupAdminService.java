@@ -2,6 +2,7 @@ package team101.RegistrationModule.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import team101.RegistrationModule.model.Group;
 import team101.RegistrationModule.model.GroupAdmin;
 import team101.RegistrationModule.repository.GroupAdminRepo;
 import team101.RegistrationModule.model.User;
@@ -42,6 +43,10 @@ public class GroupAdminService {
      */
     public List<String> getPublicGroups(User u){
         return groupAdminRepo.findPublicGroups(u.getUserid());
+    }
+
+    public GroupAdmin getGroupAdminByGroup(Group group){
+       return groupAdminRepo.findByGroup(group);
     }
 
 }

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import team101.RegistrationModule.model.GroupAdmin;
+import team101.RegistrationModule.model.Group;
 
 @Repository("groupAdminRepository")
 public interface GroupAdminRepo extends JpaRepository<GroupAdmin, Long> {
@@ -23,9 +24,10 @@ public interface GroupAdminRepo extends JpaRepository<GroupAdmin, Long> {
      * @param userid unique id of the user
      * @return list of required group names
      */
-    @Query("SELECT g.groupName FROM Group g , GroupAdmin ga, GroupMember gm  WHERE g.groupid = ga.group.groupid  AND g.groupid = gm.group.groupid AND ga.user.userid <> (:userid) AND g.privateGroup = 0 AND gm.user.userid <> (:userid) ")
+    @Query("SELECT DISTINCT g.groupName FROM Group g , GroupAdmin ga, GroupMember gm  WHERE g.groupid = ga.group.groupid  AND g.groupid = gm.group.groupid AND ga.user.userid <> (:userid) AND g.privateGroup = 0 AND gm.user.userid <> (:userid) ")
     public List<String> findPublicGroups(@Param("userid") int userid);
 
 
 
+    GroupAdmin findByGroup(Group group);
 }

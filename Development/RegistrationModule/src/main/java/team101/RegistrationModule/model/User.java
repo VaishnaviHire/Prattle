@@ -24,6 +24,8 @@ public class User {
 
     private Set<GroupAdmin> groupAdmins = new HashSet<>();
 
+    private Set<JoinRequests> joinRequests = new HashSet<>();
+
     private Set<GroupMember> groupMembers = new HashSet<>();
 
     private int userid;
@@ -170,6 +172,14 @@ public class User {
     }
 
 
+    /**
+     *
+     * @param group
+     */
+    public void addGroupToAdmin(GroupAdmin group) {
+        this.groupAdmins.add(group);
+    }
+
 
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "user", orphanRemoval = true)
@@ -177,6 +187,22 @@ public class User {
         return groupAdmins;
     }
 
+    public void setGroupAdmins(Set<GroupAdmin> grpMem) {
+        this.groupAdmins = grpMem;
+    }
+
+    public void addGroupMembers(GroupAdmin groupMem) {
+        this.groupAdmins.add(groupMem);
+    }
+
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "user", orphanRemoval = true)
+    public Set<GroupMember> getGroupMembers() {
+        return groupMembers;
+    }
+
+    public void setGroupMembers(Set<GroupMember> grpMem) {
+        this.groupMembers = grpMem;
+    }
 
     public void addGroupMembers(GroupMember groupMem) {
         this.groupMembers.add(groupMem);

@@ -125,8 +125,63 @@ public class GroupController {
 
     }
 
+    @RequestMapping(value="/admin/home/deletegroup", method = RequestMethod.POST)
+    public ModelAndView deleteGroupByName(@RequestParam("groupName") String groupname){
+        ModelAndView modelAndView = new ModelAndView();
 
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUsername(auth.getName());
+        Group group = groupService.findGroupByGroupName(groupname);
+        GroupAdmin groupAdmin = groupAdminService.getGroupAdminByGroup(group);
+        if(groupAdmin.getUser().getUserid() == user.getUserid()){
+            groupService.deleteGroupById(group);
+            modelAndView.addObject("successMessage", "Request successful");
+            modelAndView.setViewName("deletegroup");
+            return modelAndView;
+        }
+        else{
+            modelAndView.addObject("successMessage", "Cannot Delete the group. You need to be admin to delete a group");
+            modelAndView.setViewName("deletegroup");
+            return modelAndView;
 
+        }
+
+    }
+
+    @RequestMapping(value="/admin/home/deletegroup", method = RequestMethod.GET)
+    public ModelAndView dgroups(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("deletegroup");
+        return modelAndView;
+    }
+
+    @RequestMapping(value="/admin/home/profile", method = RequestMethod.GET)
+    public ModelAndView myprofile(){
+        ModelAndView modelAndView = new ModelAndView();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUsername(auth.getName());
+        modelAndView.addObject("username", user.getUsername());
+        modelAndView.addObject("firstname",user.getFirstName());
+        modelAndView.addObject("lastname",user.getLastName());
+        modelAndView.addObject("dob",user.getDateOfBirth());
+        modelAndView.setViewName("profile");
+        return modelAndView;
+    }
+
+    @RequestMapping(value="/admin/home/profile", method = RequestMethod.POST)
+    public ModelAndView deleteUser(){
+        ModelAndView modelAndView = new ModelAndView();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUsername(auth.getName());
+        modelAndView.addObject("username", user.getUsername());
+        modelAndView.addObject("firstname",user.getFirstName());
+        modelAndView.addObject("lastname",user.getLastName());
+        modelAndView.addObject("dob",user.getDateOfBirth());
+        modelAndView.addObject("successMessage", "user deleted");
+        userService.deleteUser(user);
+        modelAndView.setViewName("profile");
+        return modelAndView;
+    }
 
 
 }
