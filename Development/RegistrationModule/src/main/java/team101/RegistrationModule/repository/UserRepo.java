@@ -39,4 +39,6 @@ public interface UserRepo  extends JpaRepository<User, Long> {
     @Modifying
     @Query("delete from User u where u.userid <> :userid ")
     void delete(@Param("userid") int userid);
+
+
 }

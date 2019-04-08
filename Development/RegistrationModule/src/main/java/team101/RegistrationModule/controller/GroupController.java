@@ -183,5 +183,40 @@ public class GroupController {
         return modelAndView;
     }
 
+    @RequestMapping(value="/admin/home/removemember", method = RequestMethod.POST)
+    public ModelAndView removeFromGroup(@RequestParam("groupname") String groupname, @RequestParam("username") String username){
+        ModelAndView modelAndView = new ModelAndView();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Group group = groupService.findGroupByGroupName(groupname);
+        GroupAdmin gadmin = groupAdminService.getGroupAdminByGroup(group);
+        User user = userService.findUserByUsername(username);
+        User currentUser = userService.findUserByUsername(auth.getName());
+
+        if(((username.equals(currentUser.getUsername())) &&
+                (!gadmin.getUser().getUsername().equals(username) )) ||
+                ((gadmin.getUser().getUsername().equals(currentUser.getUsername())) &&
+                        (!username.equals(currentUser.getUsername()))))
+        {
+            groupMemberService.deleteMembersByUser(user, group);
+
+            modelAndView.addObject("successMessage", "Removed from group");
+            modelAndView.setViewName("removemember");
+            return modelAndView;
+        }
+        else{
+            modelAndView.addObject("successMessage", "Remove not allowed");
+            modelAndView.setViewName("removemember");
+            return modelAndView;
+        }
+
+    }
+
+    @RequestMapping(value="/admin/home/removemember", method = RequestMethod.GET)
+    public ModelAndView removeMemberDisplay(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("removemember");
+        return modelAndView;
+    }
+
 
 }

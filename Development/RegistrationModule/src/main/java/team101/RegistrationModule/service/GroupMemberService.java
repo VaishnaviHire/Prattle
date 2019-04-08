@@ -2,10 +2,12 @@ package team101.RegistrationModule.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import team101.RegistrationModule.model.Group;
 import team101.RegistrationModule.model.GroupMember;
 import team101.RegistrationModule.model.User;
 import team101.RegistrationModule.repository.GroupMemberRepo;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service("groupMemberService")
@@ -34,6 +36,11 @@ public class GroupMemberService {
      */
     public List<String> getMemberGroups(User u){
         return groupMemberRepo.findMemberGroups(u.getUserid());
+    }
+
+    @Transactional
+    public void deleteMembersByUser(User user, Group group){
+        groupMemberRepo.deleteMember(user.getUserid(), group.getGroupid());
     }
 
 }
