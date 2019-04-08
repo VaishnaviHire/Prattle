@@ -17,8 +17,7 @@ public class GroupDao {
         DataBaseOperations dataBaseOperation = new DataBaseOperations(this.output);
         Object l = dataBaseOperation.getSpecificGrp(grp.getName());
         if(l!=null){
-            Group1 g = (Group1)l;
-            return g;
+            return (Group1)l;
         }else{
             return null;
         }

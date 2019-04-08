@@ -1,6 +1,5 @@
 package edu.northeastern.ccs.im.message;
 
-import com.mysql.fabric.Server;
 import edu.northeastern.ccs.im.MessageType;
 import edu.northeastern.ccs.im.model.User;
 import edu.northeastern.ccs.im.server.ClientRunnable;
@@ -54,12 +53,12 @@ public abstract class Message {
   /**
    * The third argument used in the message.
    */
-  protected String body;
+  protected String messageBody;
 
   /**
    * The sender's username
    */
-  protected String username;
+  protected String senderUsername;
 
   /**
    * The sender's user object
@@ -78,7 +77,7 @@ public abstract class Message {
   public static Message makeMessage(String handle, JSONObject jsonMsg) {
 
     if (handle.compareTo(MessageType.QUIT.toString()) == 0) {
-      return new QuitMessage(jsonMsg);
+      return new QuitMessage();
     } else if (handle.compareTo(MessageType.HELLO.toString()) == 0) {
       return new SimpleLoginMessage(jsonMsg);
     } else if ((handle.compareTo(MessageType.PRIVATE.toString()) == 0)) {
@@ -122,7 +121,7 @@ public abstract class Message {
    * @return String specifying the name of the message originator.
    */
   public String getUsername() {
-    return this.username;
+    return this.senderUsername;
   }
 
   /**
@@ -131,7 +130,7 @@ public abstract class Message {
    * @return String equal to the text sent by this message.
    */
   public String getBody() {
-    return body;
+    return messageBody;
   }
 
   /**
@@ -200,8 +199,8 @@ public abstract class Message {
    * @param builder the builder that is being used to stringify the message
    */
   protected void appendBody(StringBuilder builder) {
-    if (this.body != null) {
-      builder.append(" ").append(this.body.length()).append(" ").append(this.body);
+    if (this.messageBody != null) {
+      builder.append(" ").append(this.messageBody.length()).append(" ").append(this.messageBody);
     } else {
       builder.append(" ").append(NULL_OUTPUT.length()).append(" ").append(NULL_OUTPUT);
     }
@@ -224,5 +223,5 @@ public abstract class Message {
 
   public abstract void send(ConcurrentMap<Integer, ClientRunnable> active);
 
-  public boolean login_succeeds(){ return false; }
+  public boolean loginSucceeds(){ return false; }
 }

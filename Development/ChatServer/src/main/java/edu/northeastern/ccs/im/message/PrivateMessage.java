@@ -16,17 +16,17 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class PrivateMessage extends Message {
 
-    private ArrayList<Integer> receivers = new ArrayList<>();
+    private ArrayList<Integer> receiversList = new ArrayList<>();
 
 
     protected PrivateMessage(JSONObject json) {
         this.msgType = MessageType.PRIVATE;
         if (json.has(BODY) && json.has(RECEIVERS) && json.has(USER_ID)) {
             this.userId = json.getInt(USER_ID);
-            this.body = json.getString(BODY);
+            this.messageBody = json.getString(BODY);
             JSONArray jsonUsers = json.getJSONArray(RECEIVERS);
             for (int i = 0; i < jsonUsers.length(); i++) {
-                this.receivers.add(jsonUsers.getInt(i));
+                this.receiversList.add(jsonUsers.getInt(i));
             }
         }
     }
@@ -34,7 +34,7 @@ public class PrivateMessage extends Message {
 
     @Override
     public void send(ConcurrentMap<Integer, ClientRunnable> active) {
-        for (int receiver : this.receivers) {
+        for (int receiver : this.receiversList) {
             if (active.containsKey(receiver)) {
                 active.get(receiver).enqueueMessage(this);
             }
@@ -63,7 +63,7 @@ public class PrivateMessage extends Message {
         StringBuilder result = new StringBuilder(this.msgType.toString());
 
         this.appendMessageType(result);
-        stringAppendReceivers(result, this.receivers);
+        stringAppendReceivers(result, this.receiversList);
         this.appendBody(result);
 
         return result.toString();

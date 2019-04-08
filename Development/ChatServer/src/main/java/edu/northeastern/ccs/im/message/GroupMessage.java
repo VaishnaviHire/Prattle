@@ -14,8 +14,7 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class GroupMessage extends Message {
 
-    private ArrayList<Integer> receivers = new ArrayList<>();
-//    private int groupId;
+    private ArrayList<Integer> receiversList = new ArrayList<>();
 
 
 
@@ -23,11 +22,10 @@ public class GroupMessage extends Message {
         this.msgType = MessageType.GROUP;
         if (json.has(BODY) && json.has(RECEIVERS) && json.has(USER_ID) && json.has(GROUP_ID)) {
             this.userId = json.getInt(USER_ID);
-            this.body = json.getString(BODY);
-//            this.groupId = json.getInt(GROUPID);
+            this.messageBody = json.getString(BODY);
             JSONArray jsonUsers = json.getJSONArray(RECEIVERS);
             for (int i=0; i<jsonUsers.length(); i++) {
-                this.receivers.add(jsonUsers.getInt(i));
+                this.receiversList.add(jsonUsers.getInt(i));
             }
         }
     }
@@ -42,7 +40,7 @@ public class GroupMessage extends Message {
         StringBuilder result = new StringBuilder(this.msgType.toString());
 
         this.appendMessageType(result);
-        PrivateMessage.stringAppendReceivers(result, this.receivers);
+        PrivateMessage.stringAppendReceivers(result, this.receiversList);
         this.appendBody(result);
 
         return result.toString();
@@ -50,7 +48,7 @@ public class GroupMessage extends Message {
 
     @Override
     public void send(ConcurrentMap<Integer, ClientRunnable> active) {
-        for (int receiver : this.receivers) {
+        for (int receiver : this.receiversList) {
             if (active.containsKey(receiver)) {
                 active.get(receiver).enqueueMessage(this);
             }
