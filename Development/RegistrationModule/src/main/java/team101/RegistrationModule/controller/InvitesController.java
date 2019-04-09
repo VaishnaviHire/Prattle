@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import team101.RegistrationModule.model.Group;
-import team101.RegistrationModule.model.Invites;
-import team101.RegistrationModule.model.JoinRequests;
-import team101.RegistrationModule.model.User;
+import team101.RegistrationModule.model.*;
 import team101.RegistrationModule.service.*;
 
 @Controller
@@ -70,5 +67,42 @@ public class InvitesController {
         modelAndView.addObject("successMessage", "Request successful");
         modelAndView.setViewName("sendinvites");
         return modelAndView;
+    }
+
+    @RequestMapping(value="/admin/home/search", method = RequestMethod.GET)
+    public ModelAndView searchDisplay(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("search");
+        return modelAndView;
+    }
+
+    @RequestMapping(value="/admin/home/search", method = RequestMethod.POST)
+    public ModelAndView search(@RequestParam("name") String name){
+        ModelAndView modelAndView = new ModelAndView();
+        if(userService.findUserByUsername(name) != null) {
+            User user = userService.findUserByUsername(name);
+            modelAndView.addObject("username", user.getUsername());
+            modelAndView.addObject("firstname",user.getFirstName());
+            modelAndView.addObject("lastname",user.getLastName());
+            modelAndView.addObject("dob",user.getDateOfBirth());
+            modelAndView.addObject("successMessage", "Request successful");
+            modelAndView.setViewName("userinfo");
+            return modelAndView;
+        }
+        else if(groupService.findGroupByGroupName(name) != null){
+            Group group = groupService.findGroupByGroupName(name);
+            GroupAdmin ga = groupAdminService.getGroupAdminByGroup(group);
+            modelAndView.addObject("groupname", group.getGroupName());
+            modelAndView.addObject("groupAdmin",ga.getUser().getUsername());
+            modelAndView.addObject("successMessage", "Request successful");
+            modelAndView.setViewName("groupinfo");
+            return modelAndView;
+        }
+        else{
+            modelAndView.addObject("successMessage", "No such entity");
+            modelAndView.setViewName("search");
+
+            return modelAndView;
+        }
     }
 }

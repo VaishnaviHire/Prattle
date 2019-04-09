@@ -1,15 +1,13 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-
 <head>
-    <title>Admin Page</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}"/>
+    <title>Registration Form</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/registration.css}"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
-
 <body>
 
 <div class="container">
@@ -32,49 +30,30 @@
             </div>
         </nav>
     </div>
-    <div class="panel-group" style="margin-top:40px">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <span th:utext="${userName}"></span>
-            </div>
-
-            <h3> My Groups</h3>
-            <p th:utext="${myGroups}"></p>
-
-            <h3> Member Groups</h3>
-            <p th:utext="${memberGroups}"></p>
-
-            <h3> Public Groups</h3>
-            <p th:utext="${publicGroups}"></p>
-
-            <h3> My Friends</h3>
-            <p th:utext="${myFriends}"></p>
-        </div>
-    </div>
-
-
     <div class="row">
-        <div class="col-md-6 col-md-offset-1">
-            <form autocomplete="off" action="#" th:action="@{/admin/home}"
-                  method="post" class="form-horizontal"
-                  role="form" >
-                <h4>Join Request</h4>
-
-                    <input type="text" id="groupname" name="groupname" th:placeholder="Groupname"
-                           class="form-control"/> <br/>
-
+        <div class="col-md-6 col-md-offset-3">
+            <div>
+                <h2>Group Profile</h2>
                 <div class="form-group">
                     <div class="col-sm-9">
-                        <button type="submit" class="btn btn-primary btn-block">Join Group</button>
+                        Group Name:  <p th:utext="${groupname}"></p>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        Group Admin :   <p th:utext="${groupAdmin}"></p>
+
                     </div>
                 </div>
 
-                <h2><span class="text-success" th:utext="${successMessage}"> </span></h2>
 
-            </form>
+                <div>
+                </div>
+            </div>
         </div>
     </div>
-
 </div>
+
 </body>
 </html>
