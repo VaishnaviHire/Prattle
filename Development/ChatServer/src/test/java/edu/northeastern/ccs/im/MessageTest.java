@@ -143,13 +143,13 @@ class MessageTest {
   }
 
   @Test
-  void privateMessageTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+  void privateMessageTest() {
     JSONArray arr = new JSONArray();
-    arr.put(new JSONObject().put("name", "yash"));
+    arr.put(123);
     JSONObject pvtMsg = new JSONObject();
     pvtMsg.put("body", Msg);
     pvtMsg.put("receivers", arr);
-    pvtMsg.put("grpName", "");
+    pvtMsg.put("userId", 999);
 
     Message pvt = Message.makeMessage(MessageType.PRIVATE.toString(), pvtMsg);
 

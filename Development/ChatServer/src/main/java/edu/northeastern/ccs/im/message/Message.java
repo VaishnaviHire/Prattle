@@ -6,6 +6,8 @@ import edu.northeastern.ccs.im.server.ClientRunnable;
 import edu.northeastern.ccs.im.server.ServerConstants;
 import org.json.JSONObject;
 
+import java.lang.reflect.Constructor;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -28,6 +30,12 @@ public abstract class Message {
   /** The length of the message handle. */
   public static final int HANDLE_LENGTH = 3;
 
+  /**
+   * The map of string message type to message class used to dynamically access message constructors based
+   * on message types.
+   */
+  private static HashMap<String, Class> MESSAGE_TYPE_MAP;
+
 
   public static final String BODY = "body";
   public static final String GROUP_ID = "groupId";
@@ -35,6 +43,15 @@ public abstract class Message {
   public static final String USERNAME = "username";
   public static final String PW = "password";
   public static final String USER_ID   = "userId";
+
+  static {
+    MESSAGE_TYPE_MAP = new HashMap<>();
+    MESSAGE_TYPE_MAP.put(MessageType.PRIVATE.toString(), PrivateMessage.class);
+    MESSAGE_TYPE_MAP.put(MessageType.GROUP.toString(), GroupMessage.class);
+    MESSAGE_TYPE_MAP.put(MessageType.HELLO.toString(), SimpleLoginMessage.class);
+    MESSAGE_TYPE_MAP.put(MessageType.QUIT.toString(), QuitMessage.class);
+    MESSAGE_TYPE_MAP.put(MessageType.BROADCAST.toString(), BroadcastMessage.class);
+  }
 
 
 
@@ -75,20 +92,17 @@ public abstract class Message {
    * @return Instance of message (or its subclasses) representing the handle, name, & text.
    */
   public static Message makeMessage(String handle, JSONObject jsonMsg) {
-
-    if (handle.compareTo(MessageType.QUIT.toString()) == 0) {
-      return new QuitMessage();
-    } else if (handle.compareTo(MessageType.HELLO.toString()) == 0) {
-      return new SimpleLoginMessage(jsonMsg);
-    } else if ((handle.compareTo(MessageType.PRIVATE.toString()) == 0)) {
-      return new PrivateMessage(jsonMsg);
-    } else if (handle.compareTo(MessageType.BROADCAST.toString()) == 0) {
-      return new BroadcastMessage(jsonMsg);
-    } else if (handle.compareTo(MessageType.GROUP.toString()) == 0) {
-      return new GroupMessage(jsonMsg);
-    } else {
-      return makeBroadcastMessage(ServerConstants.BOUNCER_ID, "Invalid Message Type.");
+    try {
+      if (MESSAGE_TYPE_MAP.containsKey(handle)) {
+        Constructor constructor = MESSAGE_TYPE_MAP.get(handle).getConstructor(new Class[]{JSONObject.class});
+        return (Message) constructor.newInstance(jsonMsg);
+      }
     }
+    catch (Exception ex) {
+      System.out.println(ex);
+    }
+    return Message.makeBroadcastMessage(ServerConstants.BOUNCER_ID,
+            "Invalid Message.");
   }
 
   /**
