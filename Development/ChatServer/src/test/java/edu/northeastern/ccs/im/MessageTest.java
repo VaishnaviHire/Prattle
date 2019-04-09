@@ -1,5 +1,6 @@
 package edu.northeastern.ccs.im;
 
+import edu.northeastern.ccs.im.message.BroadcastMessage;
 import edu.northeastern.ccs.im.server.ClientRunnable;
 import edu.northeastern.ccs.im.server.Prattle;
 import org.json.JSONArray;
@@ -22,7 +23,7 @@ class MessageTest {
 
   @Test
   void testToStringBCT() {
-    Message m = Message.makeBroadcastMessage(1234, Msg);
+    Message m = BroadcastMessage.makeBroadcastMessage(1234, Msg);
     assertEquals("BCT 4 1234 17 this is a message", m.toString());
   }
 
@@ -40,7 +41,7 @@ class MessageTest {
 
   @org.junit.jupiter.api.Test
   void testIsBCT() {
-    Message m = Message.makeBroadcastMessage(1234, Msg);
+    Message m = BroadcastMessage.makeBroadcastMessage(1234, Msg);
     assertTrue(m.isBroadcastMessage());
   }
 
@@ -58,7 +59,7 @@ class MessageTest {
 
   @org.junit.jupiter.api.Test
   void testIsNotQUIT() {
-    Message m = Message.makeBroadcastMessage(1234, Msg);
+    Message m = BroadcastMessage.makeBroadcastMessage(1234, Msg);
     assertFalse(m.terminate());
   }
 
@@ -76,13 +77,13 @@ class MessageTest {
 
   @org.junit.jupiter.api.Test
   void userGetter() {
-    Message m = Message.makeBroadcastMessage(1234, Msg);
+    Message m = BroadcastMessage.makeBroadcastMessage(1234, Msg);
     assertEquals(1234, m.getUserId());
   }
 
   @org.junit.jupiter.api.Test
   void messageBodyGetter() {
-    Message m = Message.makeBroadcastMessage(1234, Msg);
+    Message m = BroadcastMessage.makeBroadcastMessage(1234, Msg);
     assertEquals(Msg, m.getBody());
   }
 
@@ -94,7 +95,7 @@ class MessageTest {
 
   @org.junit.jupiter.api.Test
   void messageBodyGetterFail() {
-    Message m = Message.makeBroadcastMessage(name.hashCode(), null);
+    Message m = BroadcastMessage.makeBroadcastMessage(name.hashCode(), null);
     assertNull(m.getBody());
   }
 

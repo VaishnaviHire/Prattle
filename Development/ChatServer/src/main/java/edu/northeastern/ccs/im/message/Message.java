@@ -50,7 +50,7 @@ public abstract class Message {
     MESSAGE_TYPE_MAP.put(MessageType.GROUP.toString(), GroupMessage.class);
     MESSAGE_TYPE_MAP.put(MessageType.HELLO.toString(), SimpleLoginMessage.class);
     MESSAGE_TYPE_MAP.put(MessageType.QUIT.toString(), QuitMessage.class);
-    MESSAGE_TYPE_MAP.put(MessageType.BROADCAST.toString(), BroadcastMessage.class);
+    MESSAGE_TYPE_MAP.put(MessageType.BROADCAST.toString(), BroadcastMessage.class.getDeclaredMethod("makeBroadcastMessage", int.class, String.class));
   }
 
 
@@ -101,7 +101,7 @@ public abstract class Message {
     catch (Exception ex) {
       System.out.println(ex);
     }
-    return Message.makeBroadcastMessage(ServerConstants.BOUNCER_ID,
+    return BroadcastMessage.makeBroadcastMessage(ServerConstants.BOUNCER_ID,
             "Invalid Message.");
   }
 
@@ -113,10 +113,6 @@ public abstract class Message {
    */
   public static Message makeQuitMessage(int userId) {
     return new QuitMessage(userId);
-  }
-
-  public static Message makeBroadcastMessage(int senderId, String message) {
-    return new BroadcastMessage(senderId, message);
   }
 
   /**
