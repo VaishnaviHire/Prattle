@@ -1,6 +1,7 @@
 package edu.northeastern.ccs.im.model;
 
 import javax.persistence.*;
+
 import java.util.Date;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "user")
-public class User{
+public class User {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,18 +28,19 @@ public class User{
   private Date dob;
   @Column(name = "is_private")
   private boolean is_private;
-  public User(){
+
+  public User() {
 
   }
+
   public User(String username) {
     this.uName = username;
   }
-  public User(String username,String password){
-  this.uName = username;
-  this.password = password;
+
+  public User(String username, String password) {
+    this.uName = username;
+    this.password = password;
   }
-
-
 
 
   /**
@@ -48,6 +50,7 @@ public class User{
   public String getName() {
     return uName;
   }
+
   /**
    * @param name method to set given name to user
    */

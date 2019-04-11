@@ -179,7 +179,6 @@ public abstract class Message {
     return false;
   }
 
-
   /**
    * Appends the message's type to the string message.
    *

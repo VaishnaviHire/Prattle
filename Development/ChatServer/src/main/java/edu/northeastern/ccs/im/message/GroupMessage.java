@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentMap;
 public class GroupMessage extends Message {
 
     private ArrayList<Integer> receivers = new ArrayList<>();
-//    private int groupId;
+    private int groupId;
 
 
 
@@ -24,7 +24,7 @@ public class GroupMessage extends Message {
         if (json.has(BODY) && json.has(RECEIVERS) && json.has(USER_ID) && json.has(GROUP_ID)) {
             this.userId = json.getInt(USER_ID);
             this.body = json.getString(BODY);
-//            this.groupId = json.getInt(GROUPID);
+            this.groupId = json.getInt(GROUP_ID);
             JSONArray jsonUsers = json.getJSONArray(RECEIVERS);
             for (int i=0; i<jsonUsers.length(); i++) {
                 this.receivers.add(jsonUsers.getInt(i));
@@ -55,7 +55,6 @@ public class GroupMessage extends Message {
                 active.get(receiver).enqueueMessage(this);
             }
         }
-
     }
 
 }
