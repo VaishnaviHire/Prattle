@@ -18,7 +18,7 @@
         <property name="show_sql">true</property>
         <!-- Mapping With Model Class Containing Annotations -->
         <mapping class="edu.northeastern.ccs.im.model.User" />
-        <mapping class="edu.northeastern.ccs.im.model.Group" />
+        <!--<mapping class="edu.northeastern.ccs.im.model.Group" />-->
         <mapping class="edu.northeastern.ccs.im.model.Group1" />
     </session-factory>
 </hibernate-configuration>
