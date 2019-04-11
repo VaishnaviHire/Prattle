@@ -158,16 +158,15 @@ class MessageTest {
   }
 
   @Test
-  void testToString() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+  void testToString() {
     Prattle.resetId();
-    int USERID = 999;
     JSONArray receivers = new JSONArray();
     receivers.put(111);
     receivers.put(222);
     receivers.put(333);
 
     JSONObject pvtMsg = new JSONObject();
-    pvtMsg.put(Message.USER_ID, USERID);
+    pvtMsg.put(Message.USER_ID, 999);
     pvtMsg.put(Message.BODY, Msg);
     pvtMsg.put(Message.RECEIVERS, receivers);
 
@@ -175,23 +174,17 @@ class MessageTest {
     helloMsg.put(Message.USERNAME, name);
     helloMsg.put(Message.PW, "password");
 
-    JSONObject bctMsg = new JSONObject();
-    bctMsg.put(Message.USER_ID, USERID);
-    bctMsg.put(Message.BODY, Msg);
 
     JSONObject byeMsg = new JSONObject();
-    byeMsg.put(Message.USER_ID, USERID);
+    byeMsg.put(Message.USER_ID, 999);
     byeMsg.put(Message.BODY, Msg);
 
     Message pvt = Message.makeMessage(MessageType.PRIVATE.toString(), pvtMsg);
     Message bye = Message.makeQuitMessage(1234);
     Message hello = Message.makeMessage(MessageType.HELLO.toString(), helloMsg);
-    Message broadcast = Message.makeMessage(MessageType.BROADCAST.toString(), bctMsg);
-    // Initializating different types of messages
+
     assertEquals("PVT 3 999 3 111 3 222 3 333 17 this is a message",
             pvt.toString());
-    assertEquals("BCT 3 999 17 this is a message", broadcast.toString());
-    //HLO idLength id msgLength msg
     assertEquals("HLO 1 0 2 --", hello.toString());
     assertEquals("BYE 4 1234 2 --", bye.toString());
     assertTrue(pvt.isPrivateMessage());

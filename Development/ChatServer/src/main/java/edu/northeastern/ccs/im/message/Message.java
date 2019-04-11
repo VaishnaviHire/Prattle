@@ -30,11 +30,15 @@ public abstract class Message {
   /** The length of the message handle. */
   public static final int HANDLE_LENGTH = 3;
 
+  interface JSONLambda {
+    Message messageContructor(JSONObject json);
+  }
+
   /**
    * The map of string message type to message class used to dynamically access message constructors based
    * on message types.
    */
-  private static HashMap<String, Class> MESSAGE_TYPE_MAP;
+  private static HashMap<String, JSONLambda> MESSAGE_TYPE_MAP;
 
 
   public static final String BODY = "body";
@@ -46,11 +50,10 @@ public abstract class Message {
 
   static {
     MESSAGE_TYPE_MAP = new HashMap<>();
-    MESSAGE_TYPE_MAP.put(MessageType.PRIVATE.toString(), PrivateMessage.class);
-    MESSAGE_TYPE_MAP.put(MessageType.GROUP.toString(), GroupMessage.class);
-    MESSAGE_TYPE_MAP.put(MessageType.HELLO.toString(), SimpleLoginMessage.class);
-    MESSAGE_TYPE_MAP.put(MessageType.QUIT.toString(), QuitMessage.class);
-    MESSAGE_TYPE_MAP.put(MessageType.BROADCAST.toString(), BroadcastMessage.class.getDeclaredMethod("makeBroadcastMessage", int.class, String.class));
+    MESSAGE_TYPE_MAP.put(MessageType.PRIVATE.toString(), (json) -> new PrivateMessage(json));
+    MESSAGE_TYPE_MAP.put(MessageType.GROUP.toString(), (json) -> new GroupMessage(json));
+    MESSAGE_TYPE_MAP.put(MessageType.HELLO.toString(), (json) -> new SimpleLoginMessage(json));
+    MESSAGE_TYPE_MAP.put(MessageType.QUIT.toString(), (json) -> new QuitMessage(json));
   }
 
 
@@ -92,14 +95,9 @@ public abstract class Message {
    * @return Instance of message (or its subclasses) representing the handle, name, & text.
    */
   public static Message makeMessage(String handle, JSONObject jsonMsg) {
-    try {
-      if (MESSAGE_TYPE_MAP.containsKey(handle)) {
-        Constructor constructor = MESSAGE_TYPE_MAP.get(handle).getConstructor(new Class[]{JSONObject.class});
-        return (Message) constructor.newInstance(jsonMsg);
-      }
-    }
-    catch (Exception ex) {
-      System.out.println(ex);
+    if (MESSAGE_TYPE_MAP.containsKey(handle)) {
+      JSONLambda lambda = MESSAGE_TYPE_MAP.get(handle);
+      return lambda.messageContructor(jsonMsg);
     }
     return BroadcastMessage.makeBroadcastMessage(ServerConstants.BOUNCER_ID,
             "Invalid Message.");

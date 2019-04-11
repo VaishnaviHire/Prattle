@@ -59,7 +59,7 @@ public class PrattleTest {
   private String prattleLoc;
   private String clientRunnable;
   private static Thread mainThread;
-  private static final int SERVER_PORT = 4555;
+  private static final int SERVER_PORT = 4545;
 
 
   /**
@@ -235,15 +235,20 @@ public class PrattleTest {
       Field msgField = NetworkConnection.class.getDeclaredField("messages");
       msgField.setAccessible(true);
       ConcurrentLinkedQueue<Message> messages = (ConcurrentLinkedQueue<Message>) msgField.get(nc);
-      JSONObject bctMsgJSON = new JSONObject();
-      bctMsgJSON.put(Message.BODY, "Hello\n How are you?");
-      bctMsgJSON.put(Message.USER_ID, 1234);
-      Message testMsg = Message.makeMessage(MessageType.BROADCAST.toString(), bctMsgJSON);
+
+      JSONObject pvtMsgJSON = new JSONObject();
+      JSONArray receivers = new JSONArray();
+      receivers.put(1234);
+      pvtMsgJSON.put(Message.BODY, "Hello\n How are you?");
+      pvtMsgJSON.put(Message.USER_ID, 999);
+      pvtMsgJSON.put(Message.RECEIVERS, receivers);
+
+      Message testMsg = Message.makeMessage(MessageType.PRIVATE.toString(), pvtMsgJSON);
       messages.add(testMsg);
 
       // Tests for message Iterator
       assertTrue(nc.iterator().hasNext());
-      assertEquals(nc.iterator().next().toString(), "BCT 4 1234 19 Hello\n How are you?");
+      assertEquals("PVT 3 999 4 1234 19 Hello\n How are you?", nc.iterator().next().toString());
       assertFalse(nc.iterator().hasNext());
       assertThrows(NoSuchElementException.class, () -> {
         nc.iterator().next();
@@ -254,7 +259,7 @@ public class PrattleTest {
       nc.close();
 
     } catch (IOException io) {
-
+      fail(io);
     } finally {
       if (sc != null)
         sc.close();
@@ -335,7 +340,7 @@ public class PrattleTest {
       Prattle.stopServer();
 
     } catch (IOException ignored) {
-
+      fail();
     }
   }
 
@@ -448,7 +453,7 @@ public class PrattleTest {
               "Expected method to throw, but it didn't");
       RunnableTwo.run();
     } catch (IOException io) {
-
+      fail(io);
     } finally {
       if (sc != null)
         sc.close();
