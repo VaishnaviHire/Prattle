@@ -22,6 +22,8 @@ public class MessageModel {
   @Column(name = "userId")
   private int userId;
 
+  @Column(name = "is_deleted")
+
   /**
    * Return the message id.
    *

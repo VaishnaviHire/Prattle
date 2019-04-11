@@ -77,8 +77,27 @@ public class DataBaseOperations {
 
         return objectList;
     }
-//    public void createRecord(Message m){
-//
-//    }
+
+    public void createRecord(Object object)  {
+        Session sessionObject = SessionFactoryConfiguration.getSessionFactory().openSession();
+        sessionObject.beginTransaction();
+        try {
+            sessionObject.save(object);
+            this.app.append("Records Saved Successfully To The Database\n");
+            // Committing The Transactions To The Database
+            sessionObject.getTransaction().commit();
+        } catch (Exception sqlException) {
+            if (sessionObject.getTransaction() != null) {
+                sessionObject.getTransaction().rollback();
+                try {
+                    throw new SQLException("transaction exception" + sqlException.getMessage()+"\n");
+                } catch (SQLException e) {
+                    //Do nothing.
+                }
+            }
+        } finally {
+            sessionObject.close();
+        }
+    }
 
 }

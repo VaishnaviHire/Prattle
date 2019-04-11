@@ -19,6 +19,6 @@
         <!-- Mapping With Model Class Containing Annotations -->
         <mapping class="edu.northeastern.ccs.im.model.User" />
         <mapping class="edu.northeastern.ccs.im.model.Group" />
-        <mapping class="edu.northeastern.ccs.im.model.Group1" />
+        <mapping class="edu.northeastern.ccs.im.model.MessageModel" />
     </session-factory>
 </hibernate-configuration>
