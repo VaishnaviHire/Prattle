@@ -17,17 +17,6 @@ public class BroadcastMessage extends Message {
         this.messageBody = body;
     }
 
-    private BroadcastMessage(JSONObject json) {
-        this.msgType = MessageType.BROADCAST;
-        if (json.has(USER_ID) && json.has(BODY)) {
-            this.messageBody = json.getString(BODY);
-            this.userId = json.getInt(USER_ID);
-        }
-    }
-
-    public static Message makeBroadcastMessage(JSONObject json) {
-        return new BroadcastMessage(json);
-    }
 
     public static Message makeBroadcastMessage(int senderId, String message) {
         return new BroadcastMessage(senderId, message);
