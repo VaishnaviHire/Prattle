@@ -1,6 +1,10 @@
 package edu.northeastern.ccs.im.message;
 
 import edu.northeastern.ccs.im.MessageType;
+import edu.northeastern.ccs.im.model.BroadcastMessageModel;
+import edu.northeastern.ccs.im.model.MessageDAO;
+import edu.northeastern.ccs.im.model.MessageModel;
+import edu.northeastern.ccs.im.model.PrivateMessageModel;
 import edu.northeastern.ccs.im.server.ClientRunnable;
 import org.json.JSONObject;
 
@@ -30,6 +34,23 @@ public class BroadcastMessage extends Message {
                 tt.enqueueMessage(this);
             }
         }
+    }
+
+    @Override
+    public void persist() {
+        MessageDAO dao = new MessageDAO(new StringBuilder());
+        MessageModel m = new BroadcastMessageModel();
+        m.setSenderId(this.userId);
+        ((BroadcastMessageModel) m).setBody(this.messageBody);
+        m.setDeleted(false);
+        dao.createMessage(m);
+    }
+
+    @Override
+    public void deleteMessage(MessageModel x) {
+        MessageDAO dao = new MessageDAO(new StringBuilder());
+        x.setDeleted(true);
+        dao.deleteMessage(x);
     }
 
     @Override

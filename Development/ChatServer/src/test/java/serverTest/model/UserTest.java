@@ -16,12 +16,11 @@ import java.util.Calendar;
 public class UserTest {
 
     /**
-     * Create user and see if it is behaving as expected.
+     * User object checking nature of the object.
      */
     @Test
     public void createUserTest(){
         User firstuser = new User("firstUser");
-
         assertEquals("firstUser",firstuser.getUName());
         assertFalse(firstuser.isGroup());
         firstuser.setName("modifiedName");
@@ -31,6 +30,7 @@ public class UserTest {
 
     /**
      * Test user and see if it functioning as expected.
+
      */
     @Test
     public void testUser(){
@@ -43,13 +43,13 @@ public class UserTest {
         u.setLastName("Patel");
         u.setPassword("this");
         u.setUserId(1);
-        u.getUName();
-        u.getPassword();
-        u.getDob();
-        u.getFirstName();
-        u.getLastName();
-        u.isPrivate();
-        u.getUserId();
+        assertEquals("Shivam",u.getUName());
+        assertEquals("this",u.getPassword());
+        assertEquals("Shivam",u.getFirstName());
+        assertEquals(new Date(Calendar.getInstance().getTime().getTime()).toString(),u.getDob().toString());
+        assertEquals("Patel",u.getLastName());
+        assertEquals(false,u.isPrivate());
+        assertEquals(1,u.getUserId());
 
     }
 }

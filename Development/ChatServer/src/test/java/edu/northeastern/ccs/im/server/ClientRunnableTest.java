@@ -3,7 +3,6 @@ package edu.northeastern.ccs.im.server;
 import edu.northeastern.ccs.im.MessageType;
 import edu.northeastern.ccs.im.message.Message;
 import edu.northeastern.ccs.im.NetworkConnection;
-import edu.northeastern.ccs.im.message.SimpleLoginMessage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
@@ -11,18 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -294,6 +283,51 @@ public class ClientRunnableTest {
     newTerminateVar = Class.forName(Rnloc).getDeclaredField("terminate");
     newTerminateVar.setAccessible(true);
     assertEquals("true", newTerminateVar.get(newRunnable).toString());
+  }
+  @Test
+  void testBCTMessageSend() throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+    //Will need to be changed upon merge with persistence story
+    Prattle.resetId();
+    int USERID = 999;
+    JSONArray receivers = new JSONArray();
+    receivers.put(111);
+    receivers.put(222);
+    receivers.put(333);
+
+    ClientRunnable cr1 = new ClientRunnable(mockConnection);
+    ClientRunnable cr2 = new ClientRunnable(mockConnection);
+    ClientRunnable cr3 = new ClientRunnable(mockConnection);
+    ClientRunnable cr4 = new ClientRunnable(mockConnection);
+
+    ConcurrentHashMap<Integer, ClientRunnable> active = new ConcurrentHashMap<>();
+
+    active.put(111, cr1);
+    active.put(222, cr2);
+    active.put(333, cr3);
+    active.put(444, cr4);
+
+    JSONObject bctMessage = new JSONObject();
+    bctMessage.put(Message.USER_ID, 444);
+    bctMessage.put(Message.BODY, "this is a message");
+    final Field field = Class.forName("edu.northeastern.ccs.im.server.ClientRunnable").getDeclaredField("initialized");
+    field.setAccessible(true);
+    Message grpMsg = Message.makeMessage(MessageType.BROADCAST.toString(), bctMessage);
+    field.set(cr1,true);
+    field.set(cr2,true);
+    field.set(cr3,true);
+    field.set(cr4,true);
+    grpMsg.send(active);
+    final Field field1 = Class.forName("edu.northeastern.ccs.im.server.ClientRunnable").getDeclaredField("waitingList");
+    field1.setAccessible(true);
+    Queue x= (Queue)field1.get(cr1);
+    assertEquals(1,x.size());
+    x= (Queue) field1.get(cr2);
+    assertEquals(1,x.size());
+    x= (Queue) field1.get(cr3);
+    assertEquals(1,x.size());
+    x= (Queue) field1.get(cr4);
+    assertEquals(1,x.size());
+
   }
 
   @AfterEach

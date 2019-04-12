@@ -11,6 +11,9 @@ import org.hibernate.service.ServiceRegistry;
 public class SessionFactoryConfiguration {
     private static SessionFactory sessionFactoryObj;
 
+    /**
+     * Instantiates a new Session factory configuration.
+     */
     SessionFactoryConfiguration() {
     }
 

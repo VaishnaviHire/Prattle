@@ -4,7 +4,6 @@ import edu.northeastern.ccs.im.ChatLogger;
 import edu.northeastern.ccs.im.message.Message;
 import edu.northeastern.ccs.im.NetworkConnection;
 
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;

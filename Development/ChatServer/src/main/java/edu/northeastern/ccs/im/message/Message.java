@@ -1,6 +1,8 @@
 package edu.northeastern.ccs.im.message;
 
 import edu.northeastern.ccs.im.MessageType;
+import edu.northeastern.ccs.im.model.MessageDAO;
+import edu.northeastern.ccs.im.model.MessageModel;
 import edu.northeastern.ccs.im.model.User;
 import edu.northeastern.ccs.im.server.ClientRunnable;
 import edu.northeastern.ccs.im.server.ServerConstants;
@@ -186,7 +188,6 @@ public abstract class Message {
     return false;
   }
 
-
   /**
    * Appends the message's type to the string message.
    *
@@ -232,4 +233,13 @@ public abstract class Message {
   public abstract void send(ConcurrentMap<Integer, ClientRunnable> active);
 
   public boolean loginSucceeds(){ return false; }
+
+  public abstract void persist();
+
+  public void deleteMessage(MessageModel m){
+    MessageDAO dao = new MessageDAO(new StringBuilder());
+    m.setDeleted(true);
+    dao.deleteMessage(m);
+  }
+
 }

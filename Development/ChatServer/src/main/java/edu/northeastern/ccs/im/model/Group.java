@@ -7,11 +7,11 @@ import javax.persistence.*;
 import java.util.List;
 
 /**
- * The type Group 1.
+ * The type Group.
  */
 @Entity
 @Table(name = "`group`")
-public class Group1 {
+public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "groupid")
@@ -43,16 +43,16 @@ public class Group1 {
   private List<User> moderators;
 
     /**
-     * Instantiates a new Group 1.
+     * Instantiates a new Group.
      */
-    public Group1(){}
+    public Group(){}
 
     /**
-     * Instantiates a new Group 1.
+     * Instantiates a new Group.
      *
      * @param groupName the group name
      */
-    public Group1(String groupName){
+    public Group(String groupName){
         this.groupName = groupName;
     }
 

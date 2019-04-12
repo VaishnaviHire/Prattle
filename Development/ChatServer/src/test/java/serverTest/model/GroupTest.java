@@ -9,6 +9,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * The type Group test.
+ */
 public class GroupTest {
     /**
      * This test creates an admin. Then creates a group. Then creates 2 users and adds them to the group. Then removes 1
@@ -17,8 +20,9 @@ public class GroupTest {
     @Test
     public void createUserTest() {
         User plainUser = new User("adminUser");
-        Group1 firstgroup = new Group1("firstGroup");
-        assertEquals("firstGroup", firstgroup.getName());
+        Group firstgroup = new Group("firstGroup");
+        assertEquals("firstGroup",firstgroup.getName());
+
         assertNotNull(firstgroup);
         // Add users;
         User newUser = new User("newUser");
@@ -40,18 +44,18 @@ public class GroupTest {
      * checks if group object is functioning as expected.
      */
     @Test
-    public void groupTest() {
-        Group1 g = new Group1();
+    public void groupTest(){
+        Group g = new Group();
         g.setGroupName("this is the name");
-        assertEquals("this is the name", g.getGroupName());
+        assertEquals("this is the name",g.getName());
     }
 
     /**
      * checks if group objects are functioning as expected
      */
     @Test
-    public void groupTest1() {
-        Group1 g = new Group1();
+    public void groupTest1(){
+        Group g = new Group();
         g.setGroupName("this is the name");
         g.setGroupId(1);
         g.setPrivate(false);
