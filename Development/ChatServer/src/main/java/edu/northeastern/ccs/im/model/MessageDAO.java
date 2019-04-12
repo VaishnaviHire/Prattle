@@ -1,16 +1,6 @@
 package edu.northeastern.ccs.im.model;
 
-import edu.northeastern.ccs.im.model.MessageModel;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
-
 import java.util.List;
-
-import static edu.northeastern.ccs.im.model.SessionFactoryConfiguration.getSessionFactory;
 
 public class MessageDAO {
     private StringBuilder output;
@@ -21,6 +11,21 @@ public class MessageDAO {
     public void createMessage (MessageModel message) {
         DataBaseOperations dataBaseOperation = new DataBaseOperations(this.output);
         dataBaseOperation.createRecord(message);
+    }
+    public List<MessageModel> getUserMessages(User user){
+        DataBaseOperations dataBaseOperation = new DataBaseOperations(this.output);
+        Object l = dataBaseOperation.getSpecificUserMessages(user);
+        if(l!=null){
+            List<MessageModel> u = (List<MessageModel>) l;
+            return u;
+        }else{
+            return null;
+        }
+    }
+    public boolean deleteMessage(MessageModel m){
+        DataBaseOperations dataBaseOperation = new DataBaseOperations(this.output);
+        int i = dataBaseOperation.updateMessage(m);
+        return i>0;
     }
 }
 

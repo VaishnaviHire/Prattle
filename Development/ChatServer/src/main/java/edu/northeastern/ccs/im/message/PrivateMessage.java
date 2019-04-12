@@ -1,6 +1,9 @@
 package edu.northeastern.ccs.im.message;
 
 import edu.northeastern.ccs.im.MessageType;
+import edu.northeastern.ccs.im.model.MessageDAO;
+import edu.northeastern.ccs.im.model.MessageModel;
+import edu.northeastern.ccs.im.model.PrivateMessageModel;
 import edu.northeastern.ccs.im.server.ClientRunnable;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -39,6 +42,26 @@ public class PrivateMessage extends Message {
                 active.get(receiver).enqueueMessage(this);
             }
         }
+    }
+
+    @Override
+    public void persist() {
+        MessageDAO dao = new MessageDAO(new StringBuilder());
+        MessageModel m = new PrivateMessageModel();
+        m.setSenderId(this.userId);
+        ((PrivateMessageModel) m).setBody(this.body);
+        m.setDeleted(false);
+        for (int id:this.receivers) {
+            ((PrivateMessageModel) m).setReceiverId(id);
+            dao.createMessage(m);
+        }
+    }
+
+    @Override
+    public void deleteMessage(MessageModel m) {
+        MessageDAO dao = new MessageDAO(new StringBuilder());
+        m.setDeleted(true);
+        dao.deleteMessage(m);
     }
 
     @Override

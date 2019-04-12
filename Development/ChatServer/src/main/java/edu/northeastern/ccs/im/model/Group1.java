@@ -7,11 +7,11 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "group1")
+@Table(name = "`group`")
 public class Group1 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "group_id")
+    @Column(name = "groupid")
     private Integer groupId;
 
     @Column(name = "group_name")
@@ -24,7 +24,7 @@ public class Group1 {
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(targetEntity = User.class,cascade = CascadeType.ALL)
     @JoinTable(
-            name = "group1_members",
+            name = "group_member",
             joinColumns = @JoinColumn(name = "groupid"),
             inverseJoinColumns = @JoinColumn(name = "userid")
     )
@@ -33,7 +33,7 @@ public class Group1 {
     @LazyCollection(LazyCollectionOption.FALSE)
       @OneToMany(targetEntity = User.class, cascade = CascadeType.ALL,fetch = FetchType.LAZY)
      @JoinTable(
-              name = "group1_admin",
+              name = "group_admin",
              joinColumns = @JoinColumn(name = "groupid"),
              inverseJoinColumns = @JoinColumn(name = "userid")
      )

@@ -3,20 +3,20 @@ package edu.northeastern.ccs.im.model;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "group message")
 public class GroupMessageModel extends MessageModel {
 
-  @Column(name = "body")
+  @Column(name = "`body`")
   private String body;
 
-  @Column(name = "receiverIds")
-  private List<Integer> receiverIds;
+  @Column(name = "`to`")
+  private int receiverIds;
 
-  @Column(name = "groupId")
+  @Column(name = "`groupId`")
   private int groupId;
 
   /**
@@ -42,7 +42,7 @@ public class GroupMessageModel extends MessageModel {
    *
    * @return the ids of the receivers of this message.
    */
-  public List<Integer> getReceiverIds() {
+  public int getReceiverIds() {
     return this.receiverIds;
   }
 
@@ -51,7 +51,7 @@ public class GroupMessageModel extends MessageModel {
    *
    * @param receiverIds the ids of receivers of this message.
    */
-  public void setReceiverIds(List<Integer> receiverIds) {
+  public void setReceiverIds(int receiverIds) {
     this.receiverIds = receiverIds;
   }
 

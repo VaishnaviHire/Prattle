@@ -1,6 +1,10 @@
 package edu.northeastern.ccs.im.message;
 
 import edu.northeastern.ccs.im.MessageType;
+import edu.northeastern.ccs.im.model.GroupMessageModel;
+import edu.northeastern.ccs.im.model.MessageDAO;
+import edu.northeastern.ccs.im.model.MessageModel;
+import edu.northeastern.ccs.im.model.PrivateMessageModel;
 import edu.northeastern.ccs.im.server.ClientRunnable;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -55,6 +59,27 @@ public class GroupMessage extends Message {
                 active.get(receiver).enqueueMessage(this);
             }
         }
+    }
+
+    @Override
+    public void persist() {
+        MessageDAO dao = new MessageDAO(new StringBuilder());
+        MessageModel m = new GroupMessageModel();
+        m.setSenderId(this.userId);
+        ((GroupMessageModel) m).setBody(this.body);
+        ((GroupMessageModel) m).setGroupId(this.groupId);
+        m.setDeleted(false);
+        for (int id:this.receivers) {
+            ((GroupMessageModel) m).setReceiverIds(id);
+            dao.createMessage(m);
+        }
+    }
+
+    @Override
+    public void deleteMessage(MessageModel m) {
+        MessageDAO dao = new MessageDAO(new StringBuilder());
+        m.setDeleted(false);
+            dao.deleteMessage(m);
     }
 
 }

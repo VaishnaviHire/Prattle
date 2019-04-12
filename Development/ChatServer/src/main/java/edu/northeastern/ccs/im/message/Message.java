@@ -2,6 +2,7 @@ package edu.northeastern.ccs.im.message;
 
 import com.mysql.fabric.Server;
 import edu.northeastern.ccs.im.MessageType;
+import edu.northeastern.ccs.im.model.MessageModel;
 import edu.northeastern.ccs.im.model.User;
 import edu.northeastern.ccs.im.server.ClientRunnable;
 import edu.northeastern.ccs.im.server.ServerConstants;
@@ -224,4 +225,7 @@ public abstract class Message {
   public abstract void send(ConcurrentMap<Integer, ClientRunnable> active);
 
   public boolean login_succeeds(){ return false; }
+
+  public abstract void persist();
+  public abstract void deleteMessage(MessageModel m);
 }

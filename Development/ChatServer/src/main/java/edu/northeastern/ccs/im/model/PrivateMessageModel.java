@@ -1,17 +1,17 @@
 package edu.northeastern.ccs.im.model;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "private message")
 public class PrivateMessageModel extends MessageModel {
 
-  @Column(name = "body")
+  @Column(name = "`body`")
   private String body;
 
-  @Column(name = "receiverId")
+  @Column(name = "`to`")
   private int receiverId;
 
   /**

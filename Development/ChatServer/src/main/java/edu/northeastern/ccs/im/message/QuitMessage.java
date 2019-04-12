@@ -1,6 +1,7 @@
 package edu.northeastern.ccs.im.message;
 
 import edu.northeastern.ccs.im.MessageType;
+import edu.northeastern.ccs.im.model.MessageModel;
 import edu.northeastern.ccs.im.server.ClientRunnable;
 import org.json.JSONObject;
 
@@ -23,6 +24,16 @@ public class QuitMessage extends Message {
     @Override
     public void send(ConcurrentMap<Integer, ClientRunnable> active) {
 
+    }
+
+    @Override
+    public void persist() {
+        //we are currently not persisting logout messages.
+    }
+
+    @Override
+    public void deleteMessage(MessageModel m) {
+        //cannot delete logout messages
     }
 
     @Override

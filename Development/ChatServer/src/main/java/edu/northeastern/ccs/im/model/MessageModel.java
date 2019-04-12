@@ -1,28 +1,43 @@
 package edu.northeastern.ccs.im.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+/**
+ * The type Message model.
+ */
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Table(name = "Message")
+@Table(name = "`messages`")
 public class MessageModel {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  @Column(name = "messageId")
+  @Column(name = "`idmessages`")
   private int messageId;
 
-  @Column(name = "userId")
-  private int userId;
+  @Column(name = "`from`")
+  private int senderId;
 
-  @Column(name = "is_deleted")
+  @Column(name = "`is_deleted`")
+  private boolean deleted;
+
+  /**
+   * Is deleted boolean.
+   *
+   * @return the boolean
+   */
+  public boolean isDeleted() {
+    return deleted;
+  }
+
+  /**
+   * Sets deleted.
+   *
+   * @param deleted the deleted
+   */
+  public void setDeleted(boolean deleted) {
+    this.deleted = deleted;
+  }
 
   /**
    * Return the message id.
@@ -47,8 +62,8 @@ public class MessageModel {
    *
    * @return the id of the user who created the message.
    */
-  public int getUserId() {
-    return this.userId;
+  public int getSenderId() {
+    return this.senderId;
   }
 
   /**
@@ -56,8 +71,8 @@ public class MessageModel {
    *
    * @param id the id of the user who created this message.
    */
-  public void setUserId(int id) {
-    this.userId = id;
+  public void setSenderId(int id) {
+    this.senderId = id;
   }
 
 }

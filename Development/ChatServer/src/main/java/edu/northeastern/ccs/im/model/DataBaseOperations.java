@@ -11,15 +11,30 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Data base operations.
+ */
 public class DataBaseOperations {
     private Appendable app;
 
 
+    /**
+     * Instantiates a new Data base operations.
+     *
+     * @param output the output
+     */
     public DataBaseOperations(StringBuilder output) {
         this.app = output;
     }
 
 
+    /**
+     * Gets specific user.
+     *
+     * @param username the username
+     * @param password the password
+     * @return the specific user
+     */
     public Object getSpecificUser(String username, String password) {
         Session sessionObject = SessionFactoryConfiguration.getSessionFactory().openSession();
         sessionObject.beginTransaction();
@@ -34,6 +49,21 @@ public class DataBaseOperations {
 
     }
 
+    public Object getSpecificUserMessages(User u) {
+        Session sessionObject = SessionFactoryConfiguration.getSessionFactory().openSession();
+        sessionObject.beginTransaction();
+        Query q = sessionObject.createQuery("from MessageModel where senderId = :a ");
+        q.setParameter("a", u.getUserId());
+        Object a = q.list();
+        return a;
+    }
+
+    /**
+     * Gets specific grp.
+     *
+     * @param grpname the grpname
+     * @return the specific grp
+     */
     public Group1 getSpecificGrp(String grpname) {
         Session sessionObject = SessionFactoryConfiguration.getSessionFactory().openSession();
         Criteria criteria = sessionObject.createCriteria(Group1.class);
@@ -41,6 +71,12 @@ public class DataBaseOperations {
             return yourObject;
     }
 
+    /**
+     * Gets all records.
+     *
+     * @param objectType the object type
+     * @return the all records
+     */
     public List getAllRecords(String objectType) {
         Session sessionObj = SessionFactoryConfiguration.getSessionFactory().openSession();
         List objectList = null;
@@ -61,6 +97,12 @@ public class DataBaseOperations {
         return objectList;
     }
 
+    /**
+     * Gets all records non private.
+     *
+     * @param objectType the object type
+     * @return the all records non private
+     */
     public List getAllRecordsNonPrivate(String objectType) {
         Session sessionObj = SessionFactoryConfiguration.getSessionFactory().openSession();
         List objectList = null;
@@ -78,6 +120,11 @@ public class DataBaseOperations {
         return objectList;
     }
 
+    /**
+     * Create record.
+     *
+     * @param object the object
+     */
     public void createRecord(Object object)  {
         Session sessionObject = SessionFactoryConfiguration.getSessionFactory().openSession();
         sessionObject.beginTransaction();
@@ -87,14 +134,32 @@ public class DataBaseOperations {
             // Committing The Transactions To The Database
             sessionObject.getTransaction().commit();
         } catch (Exception sqlException) {
-            if (sessionObject.getTransaction() != null) {
-                sessionObject.getTransaction().rollback();
-                try {
-                    throw new SQLException("transaction exception" + sqlException.getMessage()+"\n");
-                } catch (SQLException e) {
-                    //Do nothing.
-                }
-            }
+
+            sessionObject.getTransaction().rollback();
+            throw new IllegalArgumentException();
+        } finally {
+            sessionObject.close();
+        }
+    }
+
+    /**
+     * Create record.
+     *
+     * @param object the object
+     */
+    public int updateMessage(MessageModel object)  {
+        Session sessionObject = SessionFactoryConfiguration.getSessionFactory().openSession();
+        sessionObject.beginTransaction();
+        try {
+            Query query = sessionObject.createQuery("update MessageModel set deleted = :d where messageId = :id");
+            query.setParameter("d", object.isDeleted());
+            query.setParameter("id",object.getMessageId());
+            int result = query.executeUpdate();
+            sessionObject.getTransaction().commit();
+            return result;
+        } catch (Exception sqlException) {
+            sessionObject.getTransaction().rollback();
+            throw new IllegalArgumentException();
         } finally {
             sessionObject.close();
         }

@@ -1,14 +1,14 @@
 package edu.northeastern.ccs.im.model;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "broadcast message")
 public class BroadcastMessageModel extends MessageModel {
 
-  @Column(name = "body")
+  @Column(name = "`body`")
   private String body;
 
   public String getBody() {

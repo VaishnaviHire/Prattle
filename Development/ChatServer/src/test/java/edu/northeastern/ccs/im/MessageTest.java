@@ -9,8 +9,10 @@ import org.junit.jupiter.api.Test;
 import edu.northeastern.ccs.im.message.Message;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -249,8 +251,7 @@ class MessageTest {
     pvtMsg.put(Message.USER_ID, USERID);
     pvtMsg.put(Message.BODY, Msg);
     pvtMsg.put(Message.RECEIVERS, receivers);
-
-    Message pvt = Message.makeMessage(MessageType.GROUP.toString(), pvtMsg);
+    Message pvt = Message.makeMessage(MessageType.PRIVATE.toString(), pvtMsg);
 
     pvt.send(active);
 
@@ -259,6 +260,42 @@ class MessageTest {
     verify(cr3, times(1)).enqueueMessage(pvt);
     verify(cr4, times(0)).enqueueMessage(pvt);
 
+  }
+  @Test
+  void testGroupMessageSend() {
+    //Will need to be changed upon merge with persistence story
+    Prattle.resetId();
+    int USERID = 999;
+    JSONArray receivers = new JSONArray();
+    receivers.put(111);
+    receivers.put(222);
+    receivers.put(333);
+
+    ClientRunnable cr1 = mock(ClientRunnable.class);
+    ClientRunnable cr2 = mock(ClientRunnable.class);
+    ClientRunnable cr3 = mock(ClientRunnable.class);
+    ClientRunnable cr4 = mock(ClientRunnable.class);
+
+    ConcurrentHashMap<Integer, ClientRunnable> active = new ConcurrentHashMap<>();
+
+    active.put(111, cr1);
+    active.put(222, cr2);
+    active.put(333, cr3);
+    active.put(444, cr4);
+
+    JSONObject pvtMsg = new JSONObject();
+    pvtMsg.put(Message.GROUP_ID, 999);
+    pvtMsg.put(Message.USER_ID, USERID);
+    pvtMsg.put(Message.BODY, Msg);
+    pvtMsg.put(Message.RECEIVERS, receivers);
+    Message pvt = Message.makeMessage(MessageType.GROUP.toString(), pvtMsg);
+
+    pvt.send(active);
+
+    verify(cr1, times(1)).enqueueMessage(pvt);
+    verify(cr2, times(1)).enqueueMessage(pvt);
+    verify(cr3, times(1)).enqueueMessage(pvt);
+    verify(cr4, times(0)).enqueueMessage(pvt);
 
   }
 }
