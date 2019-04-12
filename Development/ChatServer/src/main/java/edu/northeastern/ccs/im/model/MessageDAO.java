@@ -22,9 +22,9 @@ public class MessageDAO {
             return null;
         }
     }
-    public boolean deleteMessage(MessageModel m){
+    public boolean  deleteMessage(MessageModel m){
         DataBaseOperations dataBaseOperation = new DataBaseOperations(this.output);
-        int i = dataBaseOperation.updateMessage(m);
+        int i = dataBaseOperation.deleteMessage(m);
         return i>0;
     }
 }

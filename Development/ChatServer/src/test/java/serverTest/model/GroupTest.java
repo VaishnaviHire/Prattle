@@ -14,7 +14,7 @@ public class GroupTest {
     @Test
     public void createUserTest(){
         User plainUser = new User("adminUser");
-        Group1 firstgroup = new Group1("firstGroup");
+        Group firstgroup = new Group("firstGroup");
         assertEquals("firstGroup",firstgroup.getName());
         assertNotNull(firstgroup);
         // Add users;
@@ -35,12 +35,12 @@ public class GroupTest {
     @Test
     public void groupTest(){
         Group g = new Group();
-        g.setName("this is the name");
+        g.setGroupName("this is the name");
         assertEquals("this is the name",g.getName());
     }
     @Test
     public void groupTest1(){
-        Group1 g = new Group1();
+        Group g = new Group();
         g.setGroupName("this is the name");
         g.setGroupId(1);
         g.setPrivate(false);

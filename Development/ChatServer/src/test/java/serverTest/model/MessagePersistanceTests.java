@@ -23,7 +23,6 @@ public class MessagePersistanceTests {
         ((PrivateMessageModel) m).setReceiverId(44);
         m.setSenderId(45);
         ((PrivateMessageModel) m).setBody("this is the body of the message");
-
         m.setDeleted(false);
         dao.createMessage(m);
     }
@@ -145,4 +144,26 @@ public class MessagePersistanceTests {
         MessageDAO dao = new MessageDAO(new StringBuilder());
         dao.deleteMessage(m);
     }
+    @Test
+    public void updateMessage1() {
+        MessageModel m = new PrivateMessageModel();
+        m.setMessageId(2);
+        ((PrivateMessageModel) m).setBody("this is the body of the message");
+        m.setSenderId(45);
+        ((PrivateMessageModel) m).setReceiverId(44);
+        m.setDeleted(true);
+
+        JSONArray receivers = new JSONArray();
+        receivers.put(111);
+        receivers.put(222);
+        receivers.put(333);
+
+        JSONObject pvtMsg = new JSONObject();
+        pvtMsg.put(Message.USER_ID, 45);
+        pvtMsg.put(Message.BODY, "something");
+        pvtMsg.put(Message.RECEIVERS, receivers);
+        Message mx = Message.makeMessage(MessageType.PRIVATE.toString(),pvtMsg);
+        mx.deleteMessage(m);
+    }
+
 }

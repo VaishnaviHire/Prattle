@@ -2,6 +2,7 @@ package edu.northeastern.ccs.im.message;
 
 import com.mysql.fabric.Server;
 import edu.northeastern.ccs.im.MessageType;
+import edu.northeastern.ccs.im.model.MessageDAO;
 import edu.northeastern.ccs.im.model.MessageModel;
 import edu.northeastern.ccs.im.model.User;
 import edu.northeastern.ccs.im.server.ClientRunnable;
@@ -227,5 +228,10 @@ public abstract class Message {
   public boolean login_succeeds(){ return false; }
 
   public abstract void persist();
-  public abstract void deleteMessage(MessageModel m);
+
+  public void deleteMessage(MessageModel m){
+    MessageDAO dao = new MessageDAO(new StringBuilder());
+    m.setDeleted(true);
+    dao.deleteMessage(m);
+  }
 }

@@ -3,10 +3,6 @@ package edu.northeastern.ccs.im.server;
 import edu.northeastern.ccs.im.ChatLogger;
 import edu.northeastern.ccs.im.message.Message;
 import edu.northeastern.ccs.im.NetworkConnection;
-import edu.northeastern.ccs.im.model.Group;
-import edu.northeastern.ccs.im.model.Group1;
-import edu.northeastern.ccs.im.model.GroupDao;
-import edu.northeastern.ccs.im.model.User;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

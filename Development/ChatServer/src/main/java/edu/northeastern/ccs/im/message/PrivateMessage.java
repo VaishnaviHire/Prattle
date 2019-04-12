@@ -51,17 +51,10 @@ public class PrivateMessage extends Message {
         m.setSenderId(this.userId);
         ((PrivateMessageModel) m).setBody(this.body);
         m.setDeleted(false);
-        for (int id:this.receivers) {
+        for (int id : this.receivers) {
             ((PrivateMessageModel) m).setReceiverId(id);
             dao.createMessage(m);
         }
-    }
-
-    @Override
-    public void deleteMessage(MessageModel m) {
-        MessageDAO dao = new MessageDAO(new StringBuilder());
-        m.setDeleted(true);
-        dao.deleteMessage(m);
     }
 
     @Override

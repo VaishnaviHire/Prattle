@@ -1,14 +1,8 @@
 package edu.northeastern.ccs.im.model;
 
 import org.hibernate.*;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.service.ServiceRegistry;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -64,38 +58,13 @@ public class DataBaseOperations {
      * @param grpname the grpname
      * @return the specific grp
      */
-    public Group1 getSpecificGrp(String grpname) {
+    public Group getSpecificGrp(String grpname) {
         Session sessionObject = SessionFactoryConfiguration.getSessionFactory().openSession();
-        Criteria criteria = sessionObject.createCriteria(Group1.class);
-            Group1 yourObject = (Group1) criteria.add(Restrictions.eq("groupName", grpname)).uniqueResult();
+        Criteria criteria = sessionObject.createCriteria(Group.class);
+            Group yourObject = (Group) criteria.add(Restrictions.eq("groupName", grpname)).uniqueResult();
             return yourObject;
     }
 
-    /**
-     * Gets all records.
-     *
-     * @param objectType the object type
-     * @return the all records
-     */
-    public List getAllRecords(String objectType) {
-        Session sessionObj = SessionFactoryConfiguration.getSessionFactory().openSession();
-        List objectList = null;
-        if (objectType.matches("user")) {
-
-                objectList = sessionObj.createQuery("FROM User").list();
-
-        } else {
-                objectList = sessionObj.createQuery("From Group1").list();
-        }
-        sessionObj.close();
-        try {
-            this.app.append(String.valueOf(objectList.size()));
-            this.app.append("\n");
-        } catch (IOException e) {
-            //DO nothing
-        }
-        return objectList;
-    }
 
     /**
      * Gets all records non private.
@@ -110,7 +79,7 @@ public class DataBaseOperations {
             if (objectType.matches("user")) {
                 objectList = sessionObj.createQuery("FROM User where is_private = false").list();
             } else {
-                objectList = sessionObj.createQuery("From Group1 where is_private = false").list();
+                objectList = sessionObj.createQuery("From Group where is_private = false").list();
             }
 
 
@@ -147,7 +116,7 @@ public class DataBaseOperations {
      *
      * @param object the object
      */
-    public int updateMessage(MessageModel object)  {
+    public int deleteMessage(MessageModel object)  {
         Session sessionObject = SessionFactoryConfiguration.getSessionFactory().openSession();
         sessionObject.beginTransaction();
         try {

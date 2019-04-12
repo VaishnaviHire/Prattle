@@ -75,11 +75,4 @@ public class GroupMessage extends Message {
         }
     }
 
-    @Override
-    public void deleteMessage(MessageModel m) {
-        MessageDAO dao = new MessageDAO(new StringBuilder());
-        m.setDeleted(false);
-            dao.deleteMessage(m);
-    }
-
 }

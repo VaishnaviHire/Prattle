@@ -8,10 +8,7 @@ public class UserDAO {
     public UserDAO(StringBuilder output) {
         this.output = output;
     }
-    public List getAllUsers() {
-        DataBaseOperations dataBaseOperation = new DataBaseOperations(this.output);
-        return dataBaseOperation.getAllRecords("user");
-    }
+
     public User getUser(User user){
         DataBaseOperations dataBaseOperation = new DataBaseOperations(this.output);
         Object l = dataBaseOperation.getSpecificUser(user.getUName(),user.getPassword());
