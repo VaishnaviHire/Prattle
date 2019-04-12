@@ -48,15 +48,15 @@ public class GroupController {
     }
 
     /**
-     * endpoint to create a new group
-     * @param grp
-     * @param bindingResult
+     * endpoint to create new group
+     * @param groupname name of the group
+     * @param privateGroup
      * @return
      */
     @RequestMapping(value = "/admin/home/groups", method = RequestMethod.POST)
-    public ModelAndView createNewGroup(@RequestParam("groupName") String groupname,@RequestParam(value = "checkboxName", required = false) boolean checkboxValue) {
+    public ModelAndView createNewGroup(@RequestParam("groupName") String groupname,@RequestParam(value = "checkboxName", required = false) boolean privateGroup) {
         ModelAndView modelAndView = new ModelAndView();
-        int privateValue = (checkboxValue) ? 1: 0;
+        int privateValue = (privateGroup) ? 1: 0;
         Group grp = new Group(groupname,privateValue);
 
         Group grpExists = groupService.findGroupByGroupName(grp.getGroupName());
@@ -126,6 +126,11 @@ public class GroupController {
 
     }
 
+    /**
+     *  Endpoint to delete group
+     * @param groupname name of the group to be deleted
+     * @return
+     */
     @RequestMapping(value="/admin/home/deletegroup", method = RequestMethod.POST)
     public ModelAndView deleteGroupByName(@RequestParam("groupName") String groupname){
         ModelAndView modelAndView = new ModelAndView();
@@ -149,6 +154,10 @@ public class GroupController {
 
     }
 
+    /**
+     * Endpoint to delete group
+     * @return
+     */
     @RequestMapping(value="/admin/home/deletegroup", method = RequestMethod.GET)
     public ModelAndView dgroups(){
         ModelAndView modelAndView = new ModelAndView();
@@ -156,6 +165,11 @@ public class GroupController {
         return modelAndView;
     }
 
+
+    /**
+     * Endpoint to display profile info
+     * @return
+     */
     @RequestMapping(value="/admin/home/profile", method = RequestMethod.GET)
     public ModelAndView myprofile(){
         ModelAndView modelAndView = new ModelAndView();
@@ -169,6 +183,10 @@ public class GroupController {
         return modelAndView;
     }
 
+    /**
+     * function to delete current user
+     * @return
+     */
     @RequestMapping(value="/admin/home/profile", method = RequestMethod.POST)
     public ModelAndView deleteUser(){
         ModelAndView modelAndView = new ModelAndView();
@@ -184,6 +202,12 @@ public class GroupController {
         return modelAndView;
     }
 
+    /**
+     * Endpoint to remove member of the group
+     * @param groupname name of the group
+     * @param username name of the member to be removed
+     * @return
+     */
     @RequestMapping(value="/admin/home/removemember", method = RequestMethod.POST)
     public ModelAndView removeFromGroup(@RequestParam("groupname") String groupname, @RequestParam("username") String username){
         ModelAndView modelAndView = new ModelAndView();
@@ -212,6 +236,10 @@ public class GroupController {
 
     }
 
+    /**
+     * endpoint to display remove member form
+     * @return
+     */
     @RequestMapping(value="/admin/home/removemember", method = RequestMethod.GET)
     public ModelAndView removeMemberDisplay(){
         ModelAndView modelAndView = new ModelAndView();
@@ -220,6 +248,12 @@ public class GroupController {
     }
 
 
+    /**
+     * endpoint to assign any other member of the group as admin
+     * @param groupname name of the group
+     * @param username name of the member
+     * @return
+     */
     @RequestMapping(value = "/admin/home/assignadmin", method = RequestMethod.POST)
     public ModelAndView assignadmin(@RequestParam("groupname") String groupname, @RequestParam("username") String username) {
         ModelAndView modelAndView = new ModelAndView();
@@ -253,6 +287,10 @@ public class GroupController {
 
     }
 
+    /**
+     * Display assign admin form
+     * @return
+     */
     @RequestMapping(value="/admin/home/asignadmin", method = RequestMethod.GET)
     public ModelAndView assignAdminDisplay(){
         ModelAndView modelAndView = new ModelAndView();

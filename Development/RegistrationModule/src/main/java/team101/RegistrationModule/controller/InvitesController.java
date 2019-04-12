@@ -69,6 +69,10 @@ public class InvitesController {
         return modelAndView;
     }
 
+    /**
+     * Display search form
+     * @return
+     */
     @RequestMapping(value="/admin/home/search", method = RequestMethod.GET)
     public ModelAndView searchDisplay(){
         ModelAndView modelAndView = new ModelAndView();
@@ -76,6 +80,11 @@ public class InvitesController {
         return modelAndView;
     }
 
+    /**
+     * Search given user or group by name
+     * @param name
+     * @return
+     */
     @RequestMapping(value="/admin/home/search", method = RequestMethod.POST)
     public ModelAndView search(@RequestParam("name") String name){
         ModelAndView modelAndView = new ModelAndView();

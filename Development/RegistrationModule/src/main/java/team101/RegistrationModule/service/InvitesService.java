@@ -47,6 +47,11 @@ public class InvitesService {
     }
 
 
+    /**
+     * Function to delete invite request
+     * @param group
+     * @param receiver
+     */
     @Transactional
     public void removeInvite(Group group, User receiver){
         invitesRepo.removeByInviteid(group.getGroupid(), receiver.getUserid());

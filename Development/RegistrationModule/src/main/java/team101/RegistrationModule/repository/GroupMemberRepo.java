@@ -21,13 +21,29 @@ public interface GroupMemberRepo extends JpaRepository<GroupMember, Long> {
     @Query("SELECT g.groupName FROM Group g JOIN GroupMember gm ON g.groupid = gm.group.groupid WHERE gm.user.userid = (:userid) AND gm.adminStatus = 0")
      List<String> findMemberGroups(@Param("userid") int userid);
 
+    /**
+     * Function to delete group member
+     * @param userid
+     * @param groupid
+     */
     @Modifying
     @Query("DELETE from GroupMember gm WHERE gm.user.userid = (:userid) and gm.group.groupid = (:groupid)")
      void deleteMember(@Param("userid") int userid, @Param("groupid") int groupid);
 
+    /**
+     * Search group member by group and user
+     * @param userid
+     * @param groupid
+     * @return
+     */
     @Query("SELECT gm FROM GroupMember gm where gm.user.userid = (:userid) and gm.group.groupid = (:groupid)")
     GroupMember findGroupMemberByUserandAndGroup(@Param("userid") int userid, @Param("groupid") int groupid);
 
+    /**
+     * Update member object to change their admin status
+     * @param id
+     * @param status
+     */
     @Modifying
     @Query("Update GroupMember gm set gm.adminStatus=(:status) where gm.idgroup_member = (:id)")
     void updateMember(@Param("id") int id, @Param("status") int status);

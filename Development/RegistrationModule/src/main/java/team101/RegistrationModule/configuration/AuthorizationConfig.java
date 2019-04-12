@@ -28,7 +28,11 @@ public class AuthorizationConfig extends WebSecurityConfigurerAdapter {
     private String usersQuery;
 
 
-
+    /**
+     * configuratuon for jdbc
+     * @param auth
+     * @throws Exception on failure in authentication
+     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth)
             throws Exception {
@@ -40,6 +44,11 @@ public class AuthorizationConfig extends WebSecurityConfigurerAdapter {
                 .authoritiesByUsernameQuery("select username, 'ROLE_USER' from user where username=?");
     }
 
+    /**
+     * Configuration for login end ponts
+     * @param http
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -59,6 +68,11 @@ public class AuthorizationConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedPage("/access-denied");
     }
 
+    /**
+     * Configuration for web
+     * @param web
+     * @throws Exception
+     */
     @Override
     public void configure(WebSecurity web) throws Exception {
         web
