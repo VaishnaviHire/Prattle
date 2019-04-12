@@ -3,7 +3,6 @@ package team101.RegistrationModule.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,7 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 
-import javax.validation.Valid;
 @Controller
 public class GroupController {
 
@@ -56,21 +54,24 @@ public class GroupController {
      * @return
      */
     @RequestMapping(value = "/admin/home/groups", method = RequestMethod.POST)
-    public ModelAndView createNewGroup(@Valid Group grp, BindingResult bindingResult) {
+    public ModelAndView createNewGroup(@RequestParam("groupName") String groupname,@RequestParam(value = "checkboxName", required = false) boolean checkboxValue) {
         ModelAndView modelAndView = new ModelAndView();
+        int privateValue = (checkboxValue) ? 1: 0;
+        Group grp = new Group(groupname,privateValue);
+
         Group grpExists = groupService.findGroupByGroupName(grp.getGroupName());
 
 
         if (grpExists != null) {
-            bindingResult
-                    .rejectValue("group", "error.group",
-                            "There is already a user registered with the email provided");
-        }
-        if (bindingResult.hasErrors()) {
+            modelAndView.addObject("successMessage", "Group with this name already exists");
             modelAndView.setViewName("group");
-        } else {
+
+        }
+        else {
+
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             User user = userService.findUserByUsername(auth.getName());
+
             GroupAdmin groupAdmin = new GroupAdmin(user,grp);
             GroupMember groupMember = new GroupMember(user,grp,1);
             groupAdminService.saveGroupAdmin(groupAdmin);

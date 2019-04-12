@@ -28,8 +28,9 @@ public class Group {
      * Constructor for creating the group object
      * @param groupName name of the group
      */
-    public Group(String groupName) {
+    public Group(String groupName, int privateGroup) {
         this.groupName = groupName;
+        this.privateGroup = privateGroup;
     }
 
     public Group(){

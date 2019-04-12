@@ -35,16 +35,15 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <form autocomplete="off" action="#" th:action="@{/admin/home/groups}"
-                  th:object="${group}" method="post" class="form-horizontal"
+                 method="post" class="form-horizontal"
                   role="form">
                 <h2>Group Form</h2>
                 <div class="form-group">
-                    <div class="col-sm-9">
-                        <label th:if="${#fields.hasErrors('groupName')}" th:errors="*{groupName}"
-                               class="validation-message"></label>
-                        <input type="text" th:field="*{groupName}" placeholder="group Name"
-                               class="form-control"/>
-                    </div>
+                    <input type="text" id="groupName" name="groupName" th:placeholder="groupName"
+                           class="form-control"/> <br/>
+
+                    Private: <input  type="checkbox" id="checkboxName" name="checkboxName" />
+                    <br/>
                 </div>
 
 
