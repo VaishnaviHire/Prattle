@@ -15,7 +15,7 @@ public class GroupPersistenceTest {
         GroupDao udao = new GroupDao(b);
         List<Object> x = udao.getAllGroups();
         Group1 v = (Group1)x.get(0);
-        assertEquals("user3group111",v.getGroupName());
+        assertEquals("user1grp001",v.getGroupName());
     }
 
     /**
@@ -23,24 +23,14 @@ public class GroupPersistenceTest {
      */
     @Test
     public void getSpecificGroupTest(){
-        Group1 g = new Group1("name");
-        StringBuilder b = new StringBuilder();
-        GroupDao udao = new GroupDao(b);
-        Group1 x = udao.getGroup(g);
-        assertTrue(x==null);
-    }
-
-    /**
-     * Checks if name1 exists in database.
-     */
-    @Test
-    public void getSpecificGroupTest1(){
-        Group1 g = new Group1("name1");
+        Group1 g = new Group1("user1grp001");
         StringBuilder b = new StringBuilder();
         GroupDao udao = new GroupDao(b);
         Group1 x = udao.getGroup(g);
         assertFalse(x==null);
     }
+
+
 
     /**
      * checks if there are any non private groups in the database
