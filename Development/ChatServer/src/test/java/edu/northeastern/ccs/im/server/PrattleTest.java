@@ -59,7 +59,7 @@ public class PrattleTest {
   private String prattleLoc;
   private String clientRunnable;
   private static Thread mainThread;
-  private static final int SERVER_PORT = 4545;
+  private static final int SERVER_PORT = 4555;
 
 
   /**
