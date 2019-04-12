@@ -10,8 +10,14 @@ import org.junit.jupiter.api.*;
 import java.sql.Date;
 import java.util.Calendar;
 
+/**
+ * The type User test.
+ */
 public class UserTest {
 
+    /**
+     * Create user and see if it is behaving as expected.
+     */
     @Test
     public void createUserTest(){
         User firstuser = new User("firstUser");
@@ -22,6 +28,10 @@ public class UserTest {
         assertEquals("modifiedName", firstuser.getUName());
 
     }
+
+    /**
+     * Test user and see if it functioning as expected.
+     */
     @Test
     public void testUser(){
         User u = new User();
