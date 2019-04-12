@@ -6,6 +6,8 @@ import edu.northeastern.ccs.im.server.ClientRunnable;
 import edu.northeastern.ccs.im.server.ServerConstants;
 import org.json.JSONObject;
 
+import java.lang.reflect.Constructor;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -28,6 +30,16 @@ public abstract class Message {
   /** The length of the message handle. */
   public static final int HANDLE_LENGTH = 3;
 
+  interface JSONLambda {
+    Message messageContructor(JSONObject json);
+  }
+
+  /**
+   * The map of string message type to message class used to dynamically access message constructors based
+   * on message types.
+   */
+  private static HashMap<String, JSONLambda> MESSAGE_TYPE_MAP;
+
 
   public static final String BODY = "body";
   public static final String GROUP_ID = "groupId";
@@ -35,6 +47,14 @@ public abstract class Message {
   public static final String USERNAME = "username";
   public static final String PW = "password";
   public static final String USER_ID   = "userId";
+
+  static {
+    MESSAGE_TYPE_MAP = new HashMap<>();
+    MESSAGE_TYPE_MAP.put(MessageType.PRIVATE.toString(), (json) -> new PrivateMessage(json));
+    MESSAGE_TYPE_MAP.put(MessageType.GROUP.toString(), (json) -> new GroupMessage(json));
+    MESSAGE_TYPE_MAP.put(MessageType.HELLO.toString(), (json) -> new SimpleLoginMessage(json));
+    MESSAGE_TYPE_MAP.put(MessageType.QUIT.toString(), (json) -> new QuitMessage(json));
+  }
 
 
 
@@ -75,20 +95,12 @@ public abstract class Message {
    * @return Instance of message (or its subclasses) representing the handle, name, & text.
    */
   public static Message makeMessage(String handle, JSONObject jsonMsg) {
-
-    if (handle.compareTo(MessageType.QUIT.toString()) == 0) {
-      return new QuitMessage();
-    } else if (handle.compareTo(MessageType.HELLO.toString()) == 0) {
-      return new SimpleLoginMessage(jsonMsg);
-    } else if ((handle.compareTo(MessageType.PRIVATE.toString()) == 0)) {
-      return new PrivateMessage(jsonMsg);
-    } else if (handle.compareTo(MessageType.BROADCAST.toString()) == 0) {
-      return new BroadcastMessage(jsonMsg);
-    } else if (handle.compareTo(MessageType.GROUP.toString()) == 0) {
-      return new GroupMessage(jsonMsg);
-    } else {
-      return makeBroadcastMessage(ServerConstants.BOUNCER_ID, "Invalid Message Type.");
+    if (MESSAGE_TYPE_MAP.containsKey(handle)) {
+      JSONLambda lambda = MESSAGE_TYPE_MAP.get(handle);
+      return lambda.messageContructor(jsonMsg);
     }
+    return BroadcastMessage.makeBroadcastMessage(ServerConstants.BOUNCER_ID,
+            "Invalid Message.");
   }
 
   /**
@@ -99,10 +111,6 @@ public abstract class Message {
    */
   public static Message makeQuitMessage(int userId) {
     return new QuitMessage(userId);
-  }
-
-  public static Message makeBroadcastMessage(int senderId, String message) {
-    return new BroadcastMessage(senderId, message);
   }
 
   /**
