@@ -27,6 +27,7 @@
                     <li><a href="/admin/home/deletegroup">Delete Groups</a></li>
                     <li><a href="/admin/home/removemember">Remove Members</a></li>
                     <li><a href="/admin/home/search">Search</a></li>
+                    <li><a href="/admin/home/asignadmin">Assign Admin</a></li>
                     <li><a href="/logout">Logout</a></li>
                 </ul>
             </div>
@@ -38,17 +39,39 @@
                 <span th:utext="${userName}"></span>
             </div>
 
-            <h3> My Groups</h3>
-            <p th:utext="${myGroups}"></p>
+            <h4 class=> <b>My Groups</b> </h4>
+            <div>
+            <ul th:each="grp : ${myGroups}">
+                <li th:utext="${grp}">
+                </li>
+            </ul>
+            </div>
+            <div>
 
-            <h3> Member Groups</h3>
-            <p th:utext="${memberGroups}"></p>
+            <h4><b> Member Groups</b></h4>
+            <ul th:each="grp : ${memberGroups}">
+                <li th:utext="${grp}">
+                </li>
+            </ul>
+            </div>
 
-            <h3> Public Groups</h3>
-            <p th:utext="${publicGroups}"></p>
 
-            <h3> My Friends</h3>
-            <p th:utext="${myFriends}"></p>
+            <div>
+                <h4> <b>Public Groups</b></h4>
+            <ul th:each="grp : ${publicGroups}">
+                <li th:utext="${grp}">
+                </li>
+            </ul>
+            </div>
+
+            <div>
+
+                <h4><b> My Friends</b></h4>
+            <ul th:each="grp : ${myFriends}">
+                <li th:utext="${grp}">
+                </li>
+            </ul>
+            </div>
         </div>
     </div>
 

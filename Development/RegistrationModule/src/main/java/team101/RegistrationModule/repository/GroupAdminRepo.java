@@ -1,6 +1,7 @@
 package team101.RegistrationModule.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.query.*;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -26,6 +27,10 @@ public interface GroupAdminRepo extends JpaRepository<GroupAdmin, Long> {
      */
     @Query("SELECT DISTINCT g.groupName FROM Group g , GroupAdmin ga, GroupMember gm  WHERE g.groupid = ga.group.groupid  AND g.groupid = gm.group.groupid AND ga.user.userid <> (:userid) AND g.privateGroup = 0 AND gm.user.userid <> (:userid) ")
     public List<String> findPublicGroups(@Param("userid") int userid);
+
+    @Modifying
+    @Query("DELETE FROM GroupAdmin g  WHERE g.group.groupid = (:groupid) and g.user.userid = (:userid)")
+    public void deleteGroupAdmin(@Param("userid") int userid,@Param("groupid") int groupid );
 
 
 

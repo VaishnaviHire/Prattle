@@ -179,7 +179,7 @@ public class GroupController {
         modelAndView.addObject("dob",user.getDateOfBirth());
         modelAndView.addObject("successMessage", "user deleted");
         userService.deleteUser(user);
-        modelAndView.setViewName("profile");
+        modelAndView.setViewName("login");
         return modelAndView;
     }
 
@@ -217,6 +217,49 @@ public class GroupController {
         modelAndView.setViewName("removemember");
         return modelAndView;
     }
+
+
+    @RequestMapping(value = "/admin/home/assignadmin", method = RequestMethod.POST)
+    public ModelAndView assignadmin(@RequestParam("groupname") String groupname, @RequestParam("username") String username) {
+        ModelAndView modelAndView = new ModelAndView();
+        Group group = groupService.findGroupByGroupName(groupname);
+        GroupAdmin groupAdmin = groupAdminService.getGroupAdminByGroup(group);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUsername(auth.getName());
+        User otheruser = userService.findUserByUsername(username);
+
+
+        if(user.getUsername().equals(groupAdmin.getUser().getUsername()) && ((joinRequestsService.getJoinRequests(user)).isEmpty())){
+            groupAdminService.deleteGroupAdminById(user,group);
+            groupAdminService.saveGroupAdmin(new GroupAdmin(otheruser,group));
+
+            GroupMember oldadmin = groupMemberService.findGroupMember(user,group);
+            GroupMember newadmin = groupMemberService.findGroupMember(otheruser,group);
+
+            groupMemberService.updateMemberStatus(oldadmin,0);
+            groupMemberService.updateMemberStatus(newadmin,1);
+            modelAndView.addObject("successMessage", " assigned admin for this group");
+            modelAndView.setViewName("assignadmin");
+            return modelAndView;
+
+
+        }
+        else{
+            modelAndView.addObject("successMessage", "Cannot assign admin for this group");
+            modelAndView.setViewName("assignadmin");
+            return modelAndView;
+        }
+
+    }
+
+    @RequestMapping(value="/admin/home/asignadmin", method = RequestMethod.GET)
+    public ModelAndView assignAdminDisplay(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("assignadmin");
+        return modelAndView;
+    }
+
+
 
 
 }

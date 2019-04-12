@@ -33,31 +33,24 @@
             </div>
         </nav>
     </div>
-    <div class="panel-group" style="margin-top:40px">
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <span> Requests </span>
-            </div>
 
-            <p th:utext="${joinRequests}"></p>
-
-
-        </div>
-    </div>
 
     <div class="row">
         <div class="col-md-6 col-md-offset-1">
-            <form autocomplete="off" action="#" th:action="@{/admin/home/requests}"
+            <form autocomplete="off" action="#" th:action="@{/admin/home/assignadmin}"
                   method="post" class="form-horizontal"
                   role="form" >
-                <h2>Accept Requests</h2>
+                <h2>Assign Member as Admin</h2>
 
-                <input type="text" id="requestID" name="requestID" th:placeholder="requestID"
+                <input type="text" id="groupname" name="groupname" th:placeholder="groupName"
+                       class="form-control"/> <br/>
+
+                <input type="text" id="username" name="username" th:placeholder="userName"
                        class="form-control"/> <br/>
 
                 <div class="form-group">
                     <div class="col-sm-9">
-                        <button type="submit" class="btn btn-primary btn-block">Accept</button>
+                        <button type="submit" class="btn btn-primary btn-block">Remove</button>
                     </div>
                 </div>
 

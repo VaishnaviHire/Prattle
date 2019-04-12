@@ -6,6 +6,8 @@ import team101.RegistrationModule.model.Group;
 import team101.RegistrationModule.model.GroupAdmin;
 import team101.RegistrationModule.repository.GroupAdminRepo;
 import team101.RegistrationModule.model.User;
+
+import javax.transaction.Transactional;
 import java.util.*;
 
 
@@ -47,6 +49,11 @@ public class GroupAdminService {
 
     public GroupAdmin getGroupAdminByGroup(Group group){
        return groupAdminRepo.findByGroup(group);
+    }
+
+    @Transactional
+    public void deleteGroupAdminById(User user, Group group){
+        groupAdminRepo.deleteGroupAdmin(user.getUserid(),group.getGroupid());
     }
 
 }

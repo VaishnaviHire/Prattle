@@ -43,4 +43,12 @@ public class GroupMemberService {
         groupMemberRepo.deleteMember(user.getUserid(), group.getGroupid());
     }
 
+    public GroupMember findGroupMember(User user, Group group){
+       return groupMemberRepo.findGroupMemberByUserandAndGroup(user.getUserid(),group.getGroupid());
+    }
+
+    @Transactional
+    public void updateMemberStatus(GroupMember groupMember, int status){
+        groupMemberRepo.updateMember(groupMember.getIdgroup_member(), status);
+    }
 }
