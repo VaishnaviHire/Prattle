@@ -1,9 +1,7 @@
 package edu.northeastern.ccs.im.server;
 
 import edu.northeastern.ccs.im.*;
-import edu.northeastern.ccs.im.model.User;
-import edu.northeastern.ccs.im.model.UserDAO;
-
+import edu.northeastern.ccs.im.message.Message;
 import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -32,13 +30,11 @@ public class ClientRunnable implements Runnable {
 	private NetworkConnection connection;
 
 	/** Id for the user for whom we use this ClientRunnable to communicate. */
-	private int userId;
+	private int userId = -1;
 
 	/** Name that the client used when connecting to the server. */
-	private String name;
+	private String username;
 
-
-	private User user;
 
 	/**
 	 * Whether this client has been initialized, set its user name, and is ready to
@@ -92,18 +88,14 @@ public class ClientRunnable implements Runnable {
 		if (messageIter.hasNext()) {
 			// If a message exists, try to use it to initialize the connection
 			Message msg = messageIter.next();
-//			UserDAO u = new UserDAO(new StringBuilder());
-//			String username = msg.getName();
-//			User new1 = new User();
-//			new1.setUName(username);
-//			User n = u.getUser(new1);
-//			if (n==null){
-//				return;
-//			}
-			if (setUserName(msg.getName())) {
+
+			if (msg.loginSucceeds()) {
 				// Update the time until we terminate this client due to inactivity.
+				this.userId = msg.getUserId();
+				this.setUsername(msg.getUsername());
 				timer.updateAfterInitialization();
 				// Set that the client is initialized.
+				Prattle.activate(this);
 				initialized = true;
 			} else {
 				initialized = false;
@@ -115,19 +107,20 @@ public class ClientRunnable implements Runnable {
 	 * Check if the message is properly formed. At the moment, this means checking
 	 * that the identifier is set properly.
 	 * 
-	 * @param msg Message to be checked
+	 * @param msg message to be checked
 	 * @return True if message is correct; false otherwise
 	 */
 	private boolean messageChecks(Message msg) {
 		// Check that the message name matches.
-		return (msg.getName() != null) && (msg.getName().compareToIgnoreCase(getName()) == 0);
+		//msg.getName().compareToIgnoreCase(getName()) == 0
+		return (msg.getUserId() != -1) && (msg.getUserId() == getUserId());
 	}
 
 	/**
 	 * Immediately send this message to the client. This returns if we were
 	 * successful or not in our attempt to send the message.
 	 * 
-	 * @param message Message to be sent immediately.
+	 * @param message message to be sent immediately.
 	 * @return True if we sent the message successfully; false otherwise.
 	 */
 	private boolean sendMessage(Message message) {
@@ -135,26 +128,6 @@ public class ClientRunnable implements Runnable {
 		return connection.sendMessage(message);
 	}
 
-	/**
-	 * Try allowing this user to set his/her user name to the given username.
-	 * 
-	 * @param userName The new value to which we will try to set userName.
-	 * @return True if the username is deemed acceptable; false otherwise
-	 */
-	private boolean setUserName(String userName) {
-		boolean result = false;
-		// Now make sure this name is legal.
-		if (userName != null) {
-			// Optimistically set this users ID number.
-			setName(userName);
-			userId = hashCode();
-			result = true;
-		} else {
-			// Clear this name; we cannot use it. *sigh*
-			userId = -1;
-		}
-		return result;
-	}
 
 	/**
 	 * Add the given message to this client to the queue of message to be sent to
@@ -175,17 +148,17 @@ public class ClientRunnable implements Runnable {
 	 * 
 	 * @return Returns the name of this client.
 	 */
-	public String getName() {
-		return name;
+	public String getUsername() {
+		return this.username;
 	}
 
 	/**
 	 * Set the name of the user for which this ClientRunnable was created.
 	 * 
-	 * @param name The name for which this ClientRunnable.
+	 * @param username The name for which this ClientRunnable.
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	/**
@@ -223,7 +196,7 @@ public class ClientRunnable implements Runnable {
 		// Finally, check if this client have been inactive for too long and,
 		// when they have, terminate the client.
 		if (timer.isBehind()) {
-			ChatLogger.LOGGER.error("Timing out or forcing off a user " + name);
+			ChatLogger.LOGGER.error("Timing out or forcing off a user " + username);
 			terminate = true;
 		}
 		if (terminate) {
@@ -248,23 +221,13 @@ public class ClientRunnable implements Runnable {
 				// Stop sending the poor client message.
 				terminate = true;
 				// Reply with a quit message.
-				enqueueMessage(Message.makeQuitMessage(name));
+				enqueueMessage(Message.makeQuitMessage(userId));
 			} else {
 				// Check if the message is legal formatted
 				if (messageChecks(msg)) {
-					// Check for our "special messages"
-					if(msg.isPrivateMessage()){
-						Prattle.privateMessage(msg);
-					} else if (msg.isGroupMessage()) {
-						Prattle.groupMessage(msg);
-					}
-					else if (msg.isBroadcastMessage()) {
-						// Check for our "special messages"
-						Prattle.broadcastMessage(msg);
-					}
+					Prattle.sendMessage(msg);
 				} else {
-					Message sendMsg;
-					sendMsg = Message.makeBroadcastMessage(ServerConstants.BOUNCER_ID,
+					Message sendMsg = Message.makeBroadcastMessage(ServerConstants.BOUNCER_ID,
 							"Last message was rejected because it specified an incorrect user name.");
 					enqueueMessage(sendMsg);
 				}

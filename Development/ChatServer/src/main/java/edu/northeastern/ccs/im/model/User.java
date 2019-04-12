@@ -2,7 +2,6 @@ package edu.northeastern.ccs.im.model;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Class defining user model
@@ -20,35 +19,45 @@ public class User{
   @Column(name = "password")
   private String password;
   @Column(name = "first_name")
-  private String first_name;
+  private String firstName;
   @Column(name = "last_name")
-  private String last_name;
+  private String lastName;
   @Column(name = "date_of_birth")
   private Date dob;
   @Column(name = "is_private")
-  private boolean is_private;
+  private boolean isPrivate;
+
+  /**
+   * Instantiates a new User.
+   */
   public User(){
 
   }
+
+  /**
+   * Instantiates a new User.
+   *
+   * @param username the username
+   */
   public User(String username) {
     this.uName = username;
   }
+
+  /**
+   * Instantiates a new User.
+   *
+   * @param username the username
+   * @param password the password
+   */
   public User(String username,String password){
   this.uName = username;
   this.password = password;
   }
 
 
-
-
   /**
-   * @return method to get username
-   */
-
-  public String getName() {
-    return uName;
-  }
-  /**
+   * Sets name.
+   *
    * @param name method to set given name to user
    */
   public void setName(String name) {
@@ -57,65 +66,138 @@ public class User{
   }
 
   /**
+   * Is group boolean.
+   *
    * @return the type of unifier
    */
   public boolean isGroup() {
     return false;
   }
 
+  /**
+   * Gets user id.
+   *
+   * @return the user id
+   */
   public int getUserId() {
     return userId;
   }
 
+  /**
+   * Sets user id.
+   *
+   * @param userId the user id
+   */
   public void setUserId(int userId) {
     this.userId = userId;
   }
 
+  /**
+   * Gets u name.
+   *
+   * @return the u name
+   */
   public String getUName() {
     return uName;
   }
 
+  /**
+   * Sets u name.
+   *
+   * @param username the username
+   */
   public void setUName(String username) {
     this.uName = username;
   }
 
+  /**
+   * Gets password.
+   *
+   * @return the password
+   */
   public String getPassword() {
     return password;
   }
 
+  /**
+   * Sets password.
+   *
+   * @param password the password
+   */
   public void setPassword(String password) {
     this.password = password;
   }
 
-  public String getFirst_name() {
-    return first_name;
+  /**
+   * Gets first name.
+   *
+   * @return the first name
+   */
+  public String getFirstName() {
+    return firstName;
   }
 
-  public void setFirst_name(String first_name) {
-    this.first_name = first_name;
+  /**
+   * Sets first name.
+   *
+   * @param firstName the first name
+   */
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
   }
 
-  public String getLast_name() {
-    return last_name;
+  /**
+   * Gets last name.
+   *
+   * @return the last name
+   */
+  public String getLastName() {
+    return lastName;
   }
 
-  public void setLast_name(String last_name) {
-    this.last_name = last_name;
+  /**
+   * Sets last name.
+   *
+   * @param lastName the last name
+   */
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
   }
 
+  /**
+   * Gets dob.
+   *
+   * @return the dob
+   */
   public Date getDob() {
     return dob;
   }
 
+  /**
+   * Sets dob.
+   *
+   * @param dob the dob
+   */
   public void setDob(Date dob) {
     this.dob = dob;
   }
 
-  public boolean isIs_private() {
-    return is_private;
+  /**
+   * Is private boolean.
+   *
+   * @return the boolean
+   */
+  public boolean isPrivate() {
+    return isPrivate;
   }
 
-  public void setIs_private(boolean is_private) {
-    this.is_private = is_private;
+  /**
+   * Sets private.
+   *
+   * @param aPrivate the a private
+   */
+  public void setPrivate(boolean aPrivate) {
+    this.isPrivate = aPrivate;
   }
+
 }

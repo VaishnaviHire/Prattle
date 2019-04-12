@@ -7,24 +7,24 @@ package edu.northeastern.ccs.im;
  */
 public enum MessageType {
   /**
-   * Message sent by the user attempting to login using a specified username.
+   * message sent by the user attempting to login using a specified username.
    */
   HELLO("HLO"),
   /**
-   * Message sent by the user to start the logging out process and sent by the server once the
+   * message sent by the user to start the logging out process and sent by the server once the
    * logout process completes.
    */
   QUIT("BYE"),
   /**
-   * Message whose contents is broadcast to all connected users.
+   * message whose contents is broadcast to all connected users.
    */
   BROADCAST("BCT"),
   /**
-   * Message whose contents is sent to a specific user.
+   * message whose contents is sent to a specific user.
    */
   PRIVATE("PVT"),
   /**
-   * Message whose contents is sent to a specific group.
+   * message whose contents is sent to a specific group.
    */
   GROUP("GRP");
 
@@ -43,7 +43,7 @@ public enum MessageType {
   }
 
   /**
-   * Return a representation of this Message as a String.
+   * Return a representation of this message as a String.
    *
    * @return Three letter abbreviation for this type of message.
    */
