@@ -1,10 +1,8 @@
 package edu.northeastern.ccs.im.server;
 
 import edu.northeastern.ccs.im.*;
-import edu.northeastern.ccs.im.model.User;
-import edu.northeastern.ccs.im.model.UserDAO;
+import edu.northeastern.ccs.im.message.BroadcastMessage;
 import edu.northeastern.ccs.im.message.Message;
-
 import java.util.Iterator;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -38,8 +36,6 @@ public class ClientRunnable implements Runnable {
 	/** Name that the client used when connecting to the server. */
 	private String username;
 
-
-	private User user;
 
 	/**
 	 * Whether this client has been initialized, set its user name, and is ready to
@@ -94,7 +90,7 @@ public class ClientRunnable implements Runnable {
 			// If a message exists, try to use it to initialize the connection
 			Message msg = messageIter.next();
 
-			if (msg.login_succeeds()) {
+			if (msg.loginSucceeds()) {
 				// Update the time until we terminate this client due to inactivity.
 				this.userId = msg.getUserId();
 				this.setUsername(msg.getUsername());
@@ -232,7 +228,7 @@ public class ClientRunnable implements Runnable {
 				if (messageChecks(msg)) {
 					Prattle.sendMessage(msg);
 				} else {
-					Message sendMsg = Message.makeBroadcastMessage(ServerConstants.BOUNCER_ID,
+					Message sendMsg = BroadcastMessage.makeBroadcastMessage(ServerConstants.BOUNCER_ID,
 							"Last message was rejected because it specified an incorrect user name.");
 					enqueueMessage(sendMsg);
 				}

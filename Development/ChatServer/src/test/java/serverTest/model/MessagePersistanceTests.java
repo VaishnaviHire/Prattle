@@ -1,6 +1,7 @@
 package serverTest.model;
 
 import edu.northeastern.ccs.im.MessageType;
+import edu.northeastern.ccs.im.message.BroadcastMessage;
 import edu.northeastern.ccs.im.message.Message;
 import edu.northeastern.ccs.im.model.*;
 import org.json.JSONArray;
@@ -65,11 +66,7 @@ public class MessagePersistanceTests {
      */
     @Test
     public void testBroadcastPersistence() {
-        final String Msg = "this is a message";
-        JSONObject bctMsg = new JSONObject();
-        bctMsg.put(Message.USER_ID, 45);
-        bctMsg.put(Message.BODY, Msg);
-        Message broadcast = Message.makeMessage(MessageType.BROADCAST.toString(), bctMsg);
+        Message broadcast = BroadcastMessage.makeBroadcastMessage(45,"this is a message");
         broadcast.persist();
     }
 

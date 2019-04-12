@@ -9,3 +9,7 @@ ChatLogger.log.1.*
 
 .attach_pid*
 
+log4j.*
+
+
+

@@ -1,8 +1,8 @@
 package edu.northeastern.ccs.im.model;
 
+import edu.northeastern.ccs.im.ChatLogger;
 import org.hibernate.*;
 import org.hibernate.criterion.Restrictions;
-
 import java.util.List;
 
 /**
@@ -36,9 +36,9 @@ public class DataBaseOperations {
             Query q = sessionObject.createQuery("from User where uName = :a and password = :b");
             q.setParameter("a", username);
             q.setParameter("b", password);
-            System.out.println(q.toString());
-                Object a = q.uniqueResult();
-                return a;
+            ChatLogger.LOGGER.info(q.toString());
+
+                return q.uniqueResult();
 
 
     }

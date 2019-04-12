@@ -1,6 +1,5 @@
 package edu.northeastern.ccs.im.message;
 
-import com.mysql.fabric.Server;
 import edu.northeastern.ccs.im.MessageType;
 import edu.northeastern.ccs.im.model.MessageDAO;
 import edu.northeastern.ccs.im.model.MessageModel;
@@ -9,6 +8,8 @@ import edu.northeastern.ccs.im.server.ClientRunnable;
 import edu.northeastern.ccs.im.server.ServerConstants;
 import org.json.JSONObject;
 
+import java.lang.reflect.Constructor;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -31,6 +32,16 @@ public abstract class Message {
   /** The length of the message handle. */
   public static final int HANDLE_LENGTH = 3;
 
+  interface JSONLambda {
+    Message messageContructor(JSONObject json);
+  }
+
+  /**
+   * The map of string message type to message class used to dynamically access message constructors based
+   * on message types.
+   */
+  private static HashMap<String, JSONLambda> MESSAGE_TYPE_MAP;
+
 
   public static final String BODY = "body";
   public static final String GROUP_ID = "groupId";
@@ -38,6 +49,14 @@ public abstract class Message {
   public static final String USERNAME = "username";
   public static final String PW = "password";
   public static final String USER_ID   = "userId";
+
+  static {
+    MESSAGE_TYPE_MAP = new HashMap<>();
+    MESSAGE_TYPE_MAP.put(MessageType.PRIVATE.toString(), (json) -> new PrivateMessage(json));
+    MESSAGE_TYPE_MAP.put(MessageType.GROUP.toString(), (json) -> new GroupMessage(json));
+    MESSAGE_TYPE_MAP.put(MessageType.HELLO.toString(), (json) -> new SimpleLoginMessage(json));
+    MESSAGE_TYPE_MAP.put(MessageType.QUIT.toString(), (json) -> new QuitMessage(json));
+  }
 
 
 
@@ -56,12 +75,12 @@ public abstract class Message {
   /**
    * The third argument used in the message.
    */
-  protected String body;
+  protected String messageBody;
 
   /**
    * The sender's username
    */
-  protected String username;
+  protected String senderUsername;
 
   /**
    * The sender's user object
@@ -78,20 +97,12 @@ public abstract class Message {
    * @return Instance of message (or its subclasses) representing the handle, name, & text.
    */
   public static Message makeMessage(String handle, JSONObject jsonMsg) {
-
-    if (handle.compareTo(MessageType.QUIT.toString()) == 0) {
-      return new QuitMessage(jsonMsg);
-    } else if (handle.compareTo(MessageType.HELLO.toString()) == 0) {
-      return new SimpleLoginMessage(jsonMsg);
-    } else if ((handle.compareTo(MessageType.PRIVATE.toString()) == 0)) {
-      return new PrivateMessage(jsonMsg);
-    } else if (handle.compareTo(MessageType.BROADCAST.toString()) == 0) {
-      return new BroadcastMessage(jsonMsg);
-    } else if (handle.compareTo(MessageType.GROUP.toString()) == 0) {
-      return new GroupMessage(jsonMsg);
-    } else {
-      return makeBroadcastMessage(ServerConstants.BOUNCER_ID, "Invalid Message Type.");
+    if (MESSAGE_TYPE_MAP.containsKey(handle)) {
+      JSONLambda lambda = MESSAGE_TYPE_MAP.get(handle);
+      return lambda.messageContructor(jsonMsg);
     }
+    return BroadcastMessage.makeBroadcastMessage(ServerConstants.BOUNCER_ID,
+            "Invalid Message.");
   }
 
   /**
@@ -102,10 +113,6 @@ public abstract class Message {
    */
   public static Message makeQuitMessage(int userId) {
     return new QuitMessage(userId);
-  }
-
-  public static Message makeBroadcastMessage(int senderId, String message) {
-    return new BroadcastMessage(senderId, message);
   }
 
   /**
@@ -124,7 +131,7 @@ public abstract class Message {
    * @return String specifying the name of the message originator.
    */
   public String getUsername() {
-    return this.username;
+    return this.senderUsername;
   }
 
   /**
@@ -133,7 +140,7 @@ public abstract class Message {
    * @return String equal to the text sent by this message.
    */
   public String getBody() {
-    return body;
+    return messageBody;
   }
 
   /**
@@ -201,8 +208,8 @@ public abstract class Message {
    * @param builder the builder that is being used to stringify the message
    */
   protected void appendBody(StringBuilder builder) {
-    if (this.body != null) {
-      builder.append(" ").append(this.body.length()).append(" ").append(this.body);
+    if (this.messageBody != null) {
+      builder.append(" ").append(this.messageBody.length()).append(" ").append(this.messageBody);
     } else {
       builder.append(" ").append(NULL_OUTPUT.length()).append(" ").append(NULL_OUTPUT);
     }
@@ -225,7 +232,7 @@ public abstract class Message {
 
   public abstract void send(ConcurrentMap<Integer, ClientRunnable> active);
 
-  public boolean login_succeeds(){ return false; }
+  public boolean loginSucceeds(){ return false; }
 
   public abstract void persist();
 
@@ -234,4 +241,5 @@ public abstract class Message {
     m.setDeleted(true);
     dao.deleteMessage(m);
   }
+
 }

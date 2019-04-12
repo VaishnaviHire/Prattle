@@ -12,18 +12,21 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class QuitMessage extends Message {
 
-    public QuitMessage(JSONObject json) {
-        this.msgType = MessageType.QUIT;
-    }
-
     public QuitMessage(int userId) {
         this.msgType = MessageType.QUIT;
         this.userId = userId;
     }
 
+    public QuitMessage(JSONObject json) {
+        this.msgType = MessageType.QUIT;
+        if (json.has(USER_ID)) {
+            this.userId = json.getInt(USER_ID);
+        }
+    }
+
     @Override
     public void send(ConcurrentMap<Integer, ClientRunnable> active) {
-
+        //send message
     }
 
     @Override

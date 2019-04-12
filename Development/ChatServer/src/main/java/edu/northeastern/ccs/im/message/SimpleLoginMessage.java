@@ -1,9 +1,9 @@
 package edu.northeastern.ccs.im.message;
 
 import edu.northeastern.ccs.im.MessageType;
+
 import edu.northeastern.ccs.im.model.MessageModel;
-import edu.northeastern.ccs.im.model.User;
-import edu.northeastern.ccs.im.model.UserDAO;
+
 import edu.northeastern.ccs.im.server.ClientRunnable;
 import edu.northeastern.ccs.im.server.Prattle;
 import org.json.JSONObject;
@@ -20,7 +20,7 @@ public class SimpleLoginMessage extends Message {
     protected SimpleLoginMessage(JSONObject json) {
         this.msgType = MessageType.HELLO;
         if (json.has(USERNAME) && json.has(PW)) {
-            this.username = json.getString(USERNAME);
+            this.senderUsername = json.getString(USERNAME);
             this.password = json.getString(PW);
             this.userId = Prattle.getNextUserId();
         }
@@ -29,22 +29,14 @@ public class SimpleLoginMessage extends Message {
     @Override
     public void send(ConcurrentMap<Integer, ClientRunnable> active) {
 
+        //send message
     }
 
     @Override
-    public boolean login_succeeds() {
-        //User user = UserModel.fetch(this.username, this.password);
-//        UserDAO u = new UserDAO(new StringBuilder());
-//        User new1 = new User();
-//        new1.setUName(this.getUsername());
-//        User n = u.getUser(new1);
-//        if (n==null){
-//            return;
-//        }
-        if (this.username != null && this.password != null) {
-            return true;
-        }
-        return false;
+    public boolean loginSucceeds() {
+
+        return (this.senderUsername != null && this.password != null);
+
     }
 
     @Override

@@ -10,6 +10,7 @@ public class GroupPersistenceTest {
     @Test
     public void getSpecificGroupTest(){
         Group g = new Group("name");
+
         StringBuilder b = new StringBuilder();
         GroupDao udao = new GroupDao(b);
         Group x = udao.getGroup(g);
@@ -23,6 +24,7 @@ public class GroupPersistenceTest {
         Group x = udao.getGroup(g);
         assertTrue(x==null);
     }
+
     @Test
     public void getAllNonPrivateGroupTest(){
         StringBuilder b = new StringBuilder();
@@ -30,6 +32,10 @@ public class GroupPersistenceTest {
         List<Object> x = udao.getGroupNonPrivate();
         assertFalse(x==null);
     }
+
+    /**
+     * checks if there is a group called SELECT * in the table
+     */
     @Test
     public void getSpecificGroupTest2(){
         Group g = new Group("SELECT *");

@@ -66,7 +66,7 @@ public abstract class Prattle {
     userId = 0;
   }
 
-//TODO: add is initialized to send message methods
+// add is initialized to send message methods
 
 
   public static void sendMessage(Message message) {

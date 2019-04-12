@@ -5,8 +5,14 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
+/**
+ * The type Session factory configuration.
+ */
 public class SessionFactoryConfiguration {
     private static SessionFactory sessionFactoryObj;
+
+    SessionFactoryConfiguration() {
+    }
 
     private static SessionFactory buildSessionFactory() {
 
@@ -24,6 +30,11 @@ public class SessionFactoryConfiguration {
     }
 
 
+    /**
+     * Get session factory session factory.
+     *
+     * @return the session factory
+     */
     public static SessionFactory getSessionFactory(){
         if(sessionFactoryObj == null)
             sessionFactoryObj = buildSessionFactory();

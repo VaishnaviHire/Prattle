@@ -10,6 +10,9 @@ import org.junit.jupiter.api.*;
 import java.sql.Date;
 import java.util.Calendar;
 
+/**
+ * The type User test.
+ */
 public class UserTest {
 
     /**
@@ -18,15 +21,16 @@ public class UserTest {
     @Test
     public void createUserTest(){
         User firstuser = new User("firstUser");
-        assertEquals("firstUser",firstuser.getName());
+        assertEquals("firstUser",firstuser.getUName());
         assertFalse(firstuser.isGroup());
         firstuser.setName("modifiedName");
-        assertEquals("modifiedName", firstuser.getName());
+        assertEquals("modifiedName", firstuser.getUName());
 
     }
 
     /**
-     * User object tests
+     * Test user and see if it functioning as expected.
+
      */
     @Test
     public void testUser(){
@@ -34,18 +38,18 @@ public class UserTest {
         u.setUName("Shivam");
         u.setName("Shivam");
         u.setDob(new Date(Calendar.getInstance().getTime().getTime()));
-        u.setIs_private(false);
-        u.setFirst_name("Shivam");
-        u.setLast_name("Patel");
+        u.setPrivate(false);
+        u.setFirstName("Shivam");
+        u.setLastName("Patel");
         u.setPassword("this");
         u.setUserId(1);
         assertEquals("Shivam",u.getUName());
         assertEquals("this",u.getPassword());
-        assertEquals("Shivam",u.getName());
+        assertEquals("Shivam",u.getFirstName());
         assertEquals(new Date(Calendar.getInstance().getTime().getTime()).toString(),u.getDob().toString());
-        assertEquals("Shivam",u.getFirst_name());
-        assertEquals("Patel",u.getLast_name());
-        assertEquals(false,u.isIs_private());
+        assertEquals("Patel",u.getLastName());
+        assertEquals(false,u.isPrivate());
         assertEquals(1,u.getUserId());
+
     }
 }
