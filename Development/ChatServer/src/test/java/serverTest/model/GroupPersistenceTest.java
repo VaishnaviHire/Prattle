@@ -5,8 +5,14 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 
+/**
+ * The type Group persistence test.
+ */
 public class GroupPersistenceTest {
 
+    /**
+     * Get specific group test.
+     */
     @Test
     public void getSpecificGroupTest(){
         Group g = new Group("name");
@@ -16,6 +22,10 @@ public class GroupPersistenceTest {
         Group x = udao.getGroup(g);
         assertFalse(x==null);
     }
+
+    /**
+     * Get specific group test 1.
+     */
     @Test
     public void getSpecificGroupTest1(){
         Group g = new Group("name1");
@@ -25,6 +35,9 @@ public class GroupPersistenceTest {
         assertTrue(x==null);
     }
 
+    /**
+     * Get all non private group test.
+     */
     @Test
     public void getAllNonPrivateGroupTest(){
         StringBuilder b = new StringBuilder();

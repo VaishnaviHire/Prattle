@@ -55,6 +55,7 @@ public class User {
   this.uName = username;
   this.password = password;
   }
+
   /**
    * Sets name.
    *

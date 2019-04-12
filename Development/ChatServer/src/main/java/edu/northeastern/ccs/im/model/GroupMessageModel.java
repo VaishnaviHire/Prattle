@@ -7,6 +7,9 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * The type Group message model.
+ */
 @Entity
 public class GroupMessageModel extends MessageModel {
 

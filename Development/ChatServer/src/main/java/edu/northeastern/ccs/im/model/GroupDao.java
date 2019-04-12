@@ -17,6 +17,12 @@ public class GroupDao {
         this.output = output;
     }
 
+    /**
+     * Get group group.
+     *
+     * @param grp the grp
+     * @return the group
+     */
     public Group getGroup(Group grp){
 
 

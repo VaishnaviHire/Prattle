@@ -5,6 +5,9 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * The type Private message model.
+ */
 @Entity
 public class PrivateMessageModel extends MessageModel {
 
@@ -33,17 +36,18 @@ public class PrivateMessageModel extends MessageModel {
   }
 
   /**
+   * Gets receiver id.
    *
-   *
-   * @return
+   * @return receiver id
    */
   public int getReceiverId() {
     return this.receiverId;
   }
 
   /**
+   * Sets receiver id.
    *
-   * @param receiverId
+   * @param receiverId the receiver id
    */
   public void setReceiverId(int receiverId) {
     this.receiverId = receiverId;

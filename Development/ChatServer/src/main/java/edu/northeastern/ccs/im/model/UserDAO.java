@@ -18,6 +18,12 @@ public class UserDAO {
         this.output = output;
     }
 
+    /**
+     * Get user user.
+     *
+     * @param user the user
+     * @return the user
+     */
     public User getUser(User user){
         DataBaseOperations dataBaseOperation = new DataBaseOperations(this.output);
         Object l = dataBaseOperation.getSpecificUser(user.getUName(),user.getPassword());

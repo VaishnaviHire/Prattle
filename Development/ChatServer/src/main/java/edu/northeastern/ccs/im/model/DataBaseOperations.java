@@ -43,6 +43,12 @@ public class DataBaseOperations {
 
     }
 
+    /**
+     * Gets specific user messages.
+     *
+     * @param u the u
+     * @return the specific user messages
+     */
     public Object getSpecificUserMessages(User u) {
         Session sessionObject = SessionFactoryConfiguration.getSessionFactory().openSession();
         sessionObject.beginTransaction();
@@ -115,6 +121,7 @@ public class DataBaseOperations {
      * Create record.
      *
      * @param object the object
+     * @return the int
      */
     public int deleteMessage(MessageModel object)  {
         Session sessionObject = SessionFactoryConfiguration.getSessionFactory().openSession();

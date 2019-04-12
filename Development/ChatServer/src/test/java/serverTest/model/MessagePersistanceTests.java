@@ -12,6 +12,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+/**
+ * The type Message persistance tests.
+ */
 public class MessagePersistanceTests {
 
     /**
@@ -130,6 +133,9 @@ public class MessagePersistanceTests {
         System.out.println(x.size());
     }
 
+    /**
+     * Update message.
+     */
     @Test
     public void updateMessage() {
         MessageModel m = new PrivateMessageModel();
@@ -141,6 +147,10 @@ public class MessagePersistanceTests {
         MessageDAO dao = new MessageDAO(new StringBuilder());
         dao.deleteMessage(m);
     }
+
+    /**
+     * Update message 1.
+     */
     @Test
     public void updateMessage1() {
         MessageModel m = new PrivateMessageModel();

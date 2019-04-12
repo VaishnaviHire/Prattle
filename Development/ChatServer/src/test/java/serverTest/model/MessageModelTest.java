@@ -12,12 +12,18 @@ import edu.northeastern.ccs.im.model.BroadcastMessageModel;
 import edu.northeastern.ccs.im.model.GroupMessageModel;
 import edu.northeastern.ccs.im.model.PrivateMessageModel;
 
+/**
+ * The type Message model test.
+ */
 public class MessageModelTest {
 
   private GroupMessageModel grpMessage;
   private PrivateMessageModel pvtMessage;
   private BroadcastMessageModel broadcastMessage;
 
+  /**
+   * Sets .
+   */
   @BeforeEach
   void setup() {
     pvtMessage = new PrivateMessageModel();
@@ -25,6 +31,9 @@ public class MessageModelTest {
     broadcastMessage = new BroadcastMessageModel();
   }
 
+  /**
+   * Test private message.
+   */
   @Test
   void testPrivateMessage() {
     pvtMessage.setBody("hello");
@@ -35,6 +44,9 @@ public class MessageModelTest {
     assertEquals(2, pvtMessage.getSenderId());
   }
 
+  /**
+   * Test group message.
+   */
   @Test
   void testGroupMessage() {
     grpMessage.setBody("hello");
@@ -50,6 +62,9 @@ public class MessageModelTest {
     assertEquals(2, grpMessage.getGroupId());
   }
 
+  /**
+   * Test broadcast message.
+   */
   @Test
   void testBroadcastMessage() {
     broadcastMessage.setBody("hello");
