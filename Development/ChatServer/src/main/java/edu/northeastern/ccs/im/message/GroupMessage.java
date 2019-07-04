@@ -4,7 +4,6 @@ import edu.northeastern.ccs.im.MessageType;
 import edu.northeastern.ccs.im.model.GroupMessageModel;
 import edu.northeastern.ccs.im.model.MessageDAO;
 import edu.northeastern.ccs.im.model.MessageModel;
-import edu.northeastern.ccs.im.model.PrivateMessageModel;
 import edu.northeastern.ccs.im.server.ClientRunnable;
 import org.json.JSONArray;
 import org.json.JSONObject;
