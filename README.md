@@ -1,8 +1,14 @@
 # team-101-SP19
-team repo for team-101-SP19 (yashbhavsar, vaishnavi5, alexgome, shivampatel18 )
+
+<b>Group Members</b>
+- Yash Bhavsar
+- Vaishnavi Hire
+- Alex Gomez
+- Shivam Patel
 
 <h3>Prattle Server</h3>
 
+- Deployed at `ec2-3-18-163-104.us-east-2.compute.amazonaws.com`
 - Download repository `Developement/ChatServer`.
 - Go to ChatServer
 - Run `mvn clean package`
@@ -17,3 +23,10 @@ for feature details
 
 
  
+- To run web server locally : 
+- Go to repo RegistrationModule on branch `registrationModule`
+- Run `mvn clean package`
+- Run `java - jar /target/jarname.jar` to start the server
+
+
+ <h3>Links to Videos</h3>

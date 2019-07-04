@@ -9,6 +9,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * The type Group test.
+ */
 public class GroupTest {
     /**
      * This test creates an admin. Then creates a group. Then creates 2 users and adds them to the group. Then removes 1

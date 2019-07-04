@@ -21,7 +21,6 @@ public class UserTest {
     @Test
     public void createUserTest(){
         User firstuser = new User("firstUser");
-
         assertEquals("firstUser",firstuser.getUName());
         assertFalse(firstuser.isGroup());
         firstuser.setName("modifiedName");
@@ -50,6 +49,13 @@ public class UserTest {
         u.getLastName();
         u.isPrivate();
         u.getUserId();
+        assertEquals("Shivam",u.getUName());
+        assertEquals("this",u.getPassword());
+        assertEquals("Shivam",u.getFirstName());
+        assertEquals(new Date(Calendar.getInstance().getTime().getTime()).toString(),u.getDob().toString());
+        assertEquals("Patel",u.getLastName());
+        assertEquals(false,u.isPrivate());
+        assertEquals(1,u.getUserId());
 
     }
 }

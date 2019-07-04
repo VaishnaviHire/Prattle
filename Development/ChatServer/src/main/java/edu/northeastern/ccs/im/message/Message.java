@@ -1,11 +1,14 @@
 package edu.northeastern.ccs.im.message;
 
 import edu.northeastern.ccs.im.MessageType;
+import edu.northeastern.ccs.im.model.MessageDAO;
+import edu.northeastern.ccs.im.model.MessageModel;
 import edu.northeastern.ccs.im.model.User;
 import edu.northeastern.ccs.im.server.ClientRunnable;
 import edu.northeastern.ccs.im.server.ServerConstants;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -28,6 +31,15 @@ public abstract class Message {
   /** The length of the message handle. */
   public static final int HANDLE_LENGTH = 3;
 
+  interface JSONLambda {
+    Message messageContructor(JSONObject json);
+  }
+
+  /**
+   * The map of string message type to message class used to dynamically access message constructors based
+   * on message types.
+   */
+  private static HashMap<String, JSONLambda> messageTypeMap;
 
   public static final String BODY = "body";
   public static final String GROUP_ID = "groupId";
@@ -35,6 +47,14 @@ public abstract class Message {
   public static final String USERNAME = "username";
   public static final String PW = "password";
   public static final String USER_ID   = "userId";
+
+  static {
+    messageTypeMap = new HashMap<>();
+    messageTypeMap.put(MessageType.PRIVATE.toString(), (json) -> new PrivateMessage(json));
+    messageTypeMap.put(MessageType.GROUP.toString(), (json) -> new GroupMessage(json));
+    messageTypeMap.put(MessageType.HELLO.toString(), (json) -> new SimpleLoginMessage(json));
+    messageTypeMap.put(MessageType.QUIT.toString(), (json) -> new QuitMessage(json));
+  }
 
 
 
@@ -89,6 +109,13 @@ public abstract class Message {
     } else {
       return makeBroadcastMessage(ServerConstants.BOUNCER_ID, "Invalid Message Type.");
     }
+    if (messageTypeMap.containsKey(handle)) {
+      JSONLambda lambda = messageTypeMap.get(handle);
+      return lambda.messageContructor(jsonMsg);
+    }
+    return BroadcastMessage.makeBroadcastMessage(ServerConstants.BOUNCER_ID,
+            "Invalid Message.");
+
   }
 
   /**
@@ -101,9 +128,11 @@ public abstract class Message {
     return new QuitMessage(userId);
   }
 
+
   public static Message makeBroadcastMessage(int senderId, String message) {
     return new BroadcastMessage(senderId, message);
   }
+
 
   /**
    * Return the id of the sender of this message.
@@ -224,4 +253,13 @@ public abstract class Message {
   public abstract void send(ConcurrentMap<Integer, ClientRunnable> active);
 
   public boolean loginSucceeds(){ return false; }
+
+  public abstract void persist();
+
+  public void deleteMessage(MessageModel m){
+    MessageDAO dao = new MessageDAO(new StringBuilder());
+    m.setDeleted(true);
+    dao.deleteMessage(m);
+  }
+
 }

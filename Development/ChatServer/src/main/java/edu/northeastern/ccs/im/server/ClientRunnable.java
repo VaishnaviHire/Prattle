@@ -1,6 +1,7 @@
 package edu.northeastern.ccs.im.server;
 
 import edu.northeastern.ccs.im.*;
+import edu.northeastern.ccs.im.message.BroadcastMessage;
 import edu.northeastern.ccs.im.message.Message;
 import java.util.Iterator;
 import java.util.Queue;

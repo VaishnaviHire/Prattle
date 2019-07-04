@@ -23,6 +23,9 @@ public class BroadcastMessage extends Message {
             this.messageBody = json.getString(BODY);
             this.userId = json.getInt(USER_ID);
         }
+
+    public static Message makeBroadcastMessage(int senderId, String message) {
+        return new BroadcastMessage(senderId, message);
     }
 
     @Override
@@ -33,6 +36,23 @@ public class BroadcastMessage extends Message {
                 tt.enqueueMessage(this);
             }
         }
+    }
+
+    @Override
+    public void persist() {
+        MessageDAO dao = new MessageDAO(new StringBuilder());
+        MessageModel m = new BroadcastMessageModel();
+        m.setSenderId(this.userId);
+        ((BroadcastMessageModel) m).setBody(this.messageBody);
+        m.setDeleted(false);
+        dao.createMessage(m);
+    }
+
+    @Override
+    public void deleteMessage(MessageModel x) {
+        MessageDAO dao = new MessageDAO(new StringBuilder());
+        x.setDeleted(true);
+        dao.deleteMessage(x);
     }
 
     @Override

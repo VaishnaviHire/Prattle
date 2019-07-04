@@ -25,6 +25,7 @@ public class User{
   @Column(name = "date_of_birth")
   private Date dob;
   @Column(name = "is_private")
+
   private boolean isPrivate;
 
   /**

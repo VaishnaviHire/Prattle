@@ -1,5 +1,5 @@
 package edu.northeastern.ccs.im;
-
+import edu.northeastern.ccs.im.message.BroadcastMessage;
 import edu.northeastern.ccs.im.server.ClientRunnable;
 import edu.northeastern.ccs.im.server.Prattle;
 import org.json.JSONArray;
@@ -11,6 +11,10 @@ import edu.northeastern.ccs.im.message.Message;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,7 +26,7 @@ class MessageTest {
 
   @Test
   void testToStringBCT() {
-    Message m = Message.makeBroadcastMessage(1234, Msg);
+    Message m = BroadcastMessage.makeBroadcastMessage(1234, Msg);
     assertEquals("BCT 4 1234 17 this is a message", m.toString());
   }
 
@@ -40,7 +44,7 @@ class MessageTest {
 
   @org.junit.jupiter.api.Test
   void testIsBCT() {
-    Message m = Message.makeBroadcastMessage(1234, Msg);
+    Message m = BroadcastMessage.makeBroadcastMessage(1234, Msg);
     assertTrue(m.isBroadcastMessage());
   }
 
@@ -58,7 +62,7 @@ class MessageTest {
 
   @org.junit.jupiter.api.Test
   void testIsNotQUIT() {
-    Message m = Message.makeBroadcastMessage(1234, Msg);
+    Message m = BroadcastMessage.makeBroadcastMessage(1234, Msg);
     assertFalse(m.terminate());
   }
 
@@ -76,13 +80,13 @@ class MessageTest {
 
   @org.junit.jupiter.api.Test
   void userGetter() {
-    Message m = Message.makeBroadcastMessage(1234, Msg);
+    Message m = BroadcastMessage.makeBroadcastMessage(1234, Msg);
     assertEquals(1234, m.getUserId());
   }
 
   @org.junit.jupiter.api.Test
   void messageBodyGetter() {
-    Message m = Message.makeBroadcastMessage(1234, Msg);
+    Message m = BroadcastMessage.makeBroadcastMessage(1234, Msg);
     assertEquals(Msg, m.getBody());
   }
 
@@ -94,7 +98,7 @@ class MessageTest {
 
   @org.junit.jupiter.api.Test
   void messageBodyGetterFail() {
-    Message m = Message.makeBroadcastMessage(name.hashCode(), null);
+    Message m = BroadcastMessage.makeBroadcastMessage(name.hashCode(), null);
     assertNull(m.getBody());
   }
 
@@ -143,13 +147,13 @@ class MessageTest {
   }
 
   @Test
-  void privateMessageTest() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+  void privateMessageTest() {
     JSONArray arr = new JSONArray();
-    arr.put(new JSONObject().put("name", "yash"));
+    arr.put(123);
     JSONObject pvtMsg = new JSONObject();
     pvtMsg.put("body", Msg);
     pvtMsg.put("receivers", arr);
-    pvtMsg.put("grpName", "");
+    pvtMsg.put("userId", 999);
 
     Message pvt = Message.makeMessage(MessageType.PRIVATE.toString(), pvtMsg);
 
@@ -250,7 +254,7 @@ class MessageTest {
     pvtMsg.put(Message.BODY, Msg);
     pvtMsg.put(Message.RECEIVERS, receivers);
 
-    Message pvt = Message.makeMessage(MessageType.GROUP.toString(), pvtMsg);
+    Message pvt = Message.makeMessage(MessageType.PRIVATE.toString(), pvtMsg);
 
     pvt.send(active);
 
@@ -259,6 +263,42 @@ class MessageTest {
     verify(cr3, times(1)).enqueueMessage(pvt);
     verify(cr4, times(0)).enqueueMessage(pvt);
 
+  }
+  @Test
+  void testGroupMessageSend() {
+    //Will need to be changed upon merge with persistence story
+    Prattle.resetId();
+    int USERID = 999;
+    JSONArray receivers = new JSONArray();
+    receivers.put(111);
+    receivers.put(222);
+    receivers.put(333);
+
+    ClientRunnable cr1 = mock(ClientRunnable.class);
+    ClientRunnable cr2 = mock(ClientRunnable.class);
+    ClientRunnable cr3 = mock(ClientRunnable.class);
+    ClientRunnable cr4 = mock(ClientRunnable.class);
+
+    ConcurrentHashMap<Integer, ClientRunnable> active = new ConcurrentHashMap<>();
+
+    active.put(111, cr1);
+    active.put(222, cr2);
+    active.put(333, cr3);
+    active.put(444, cr4);
+
+    JSONObject pvtMsg = new JSONObject();
+    pvtMsg.put(Message.GROUP_ID, 999);
+    pvtMsg.put(Message.USER_ID, USERID);
+    pvtMsg.put(Message.BODY, Msg);
+    pvtMsg.put(Message.RECEIVERS, receivers);
+    Message pvt = Message.makeMessage(MessageType.GROUP.toString(), pvtMsg);
+
+    pvt.send(active);
+
+    verify(cr1, times(1)).enqueueMessage(pvt);
+    verify(cr2, times(1)).enqueueMessage(pvt);
+    verify(cr3, times(1)).enqueueMessage(pvt);
+    verify(cr4, times(0)).enqueueMessage(pvt);
 
   }
 }

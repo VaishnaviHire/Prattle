@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 
+
 public class UserPersistanceTest {
     @Test
     public void testGetSpecificUser(){
@@ -17,6 +18,7 @@ public class UserPersistanceTest {
             System.out.println(u1.getUName());
         }
     }
+
     @Test
     public void testGetSpecificUser1(){
         StringBuilder b = new StringBuilder();
@@ -26,6 +28,10 @@ public class UserPersistanceTest {
         System.out.println("2I am printing this shit here to checking if something is printing"+((User)x.get(2)).getUName());
         System.out.println("3I am printing this shit here to checking if something is printing"+((User)x.get(3)).getUName());
     }
+
+    /**
+     * Test get non private user.
+     */
     @Test
     public void testGetNonPrivateUser(){
         StringBuilder b = new StringBuilder();
@@ -35,6 +41,9 @@ public class UserPersistanceTest {
         System.out.println("2I am printing this shit here to checking if something is printing"+((User)x.get(2)).getUName());
         System.out.println("3I am printing this shit here to checking if something is printing"+((User)x.get(3)).getUName());
     }
+    /**
+     * Test get specific user 2.
+     */
     @Test
     public void testGetSpecificUser2(){
         StringBuilder b = new StringBuilder();

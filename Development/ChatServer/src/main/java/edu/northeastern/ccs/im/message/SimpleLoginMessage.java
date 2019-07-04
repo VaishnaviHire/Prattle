@@ -1,6 +1,7 @@
 package edu.northeastern.ccs.im.message;
 
 import edu.northeastern.ccs.im.MessageType;
+import edu.northeastern.ccs.im.model.MessageModel;
 import edu.northeastern.ccs.im.server.ClientRunnable;
 import edu.northeastern.ccs.im.server.Prattle;
 import org.json.JSONObject;
@@ -34,6 +35,16 @@ public class SimpleLoginMessage extends Message {
 
         return (this.senderUsername != null && this.password != null);
 
+    }
+
+    @Override
+    public void persist() {
+        //We are currently not persisting login messages.
+    }
+
+    @Override
+    public void deleteMessage(MessageModel m) {
+        //cannot delete login messages
     }
 
     @Override
