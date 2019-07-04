@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Admin Page</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+    <div>
+        <nav class="navbar navbar-primary">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/admin/home/profile">Prattle</a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/admin/home">Home</a></li>
+                    <li><a href="/admin/home/groups">Create Group</a></li>
+                    <li><a href="/admin/home/requests">Join Requests</a></li>
+                    <li><a href="/admin/home/sendinvites">Invites</a></li>
+                    <li><a href="/admin/home/deletegroup">Delete Groups</a></li>
+                    <li><a href="/admin/home/removemember">Remove Members</a></li>
+                    <li><a href="/admin/home/search">Search</a></li>
+                    <li><a href="/admin/home/asignadmin">Assign Admin</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <div class="panel-group" style="margin-top:40px">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <span th:utext="${userName}"></span>
+            </div>
+
+            <h4 class=> <b>My Groups</b> </h4>
+            <div>
+            <ul th:each="grp : ${myGroups}">
+                <li th:utext="${grp}">
+                </li>
+            </ul>
+            </div>
+            <div>
+
+            <h4><b> Member Groups</b></h4>
+            <ul th:each="grp : ${memberGroups}">
+                <li th:utext="${grp}">
+                </li>
+            </ul>
+            </div>
+
+
+            <div>
+                <h4> <b>Public Groups</b></h4>
+            <ul th:each="grp : ${publicGroups}">
+                <li th:utext="${grp}">
+                </li>
+            </ul>
+            </div>
+
+            <div>
+
+                <h4><b> My Friends</b></h4>
+            <ul th:each="grp : ${myFriends}">
+                <li th:utext="${grp}">
+                </li>
+            </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-1">
+            <form autocomplete="off" action="#" th:action="@{/admin/home}"
+                  method="post" class="form-horizontal"
+                  role="form" >
+                <h4>Join Request</h4>
+
+                    <input type="text" id="groupname" name="groupname" th:placeholder="Groupname"
+                           class="form-control"/> <br/>
+
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        <button type="submit" class="btn btn-primary btn-block">Join Group</button>
+                    </div>
+                </div>
+
+                <h2><span class="text-success" th:utext="${successMessage}"> </span></h2>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

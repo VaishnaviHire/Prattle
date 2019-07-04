@@ -1,7 +1,6 @@
 package edu.northeastern.ccs.im.model;
 
 import javax.persistence.*;
-
 import java.util.Date;
 
 /**
@@ -9,7 +8,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "user")
-public class User {
+public class User{
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -55,6 +54,7 @@ public class User {
   this.uName = username;
   this.password = password;
   }
+
 
   /**
    * Sets name.

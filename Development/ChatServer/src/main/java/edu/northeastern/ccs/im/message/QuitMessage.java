@@ -1,6 +1,7 @@
 package edu.northeastern.ccs.im.message;
 
 import edu.northeastern.ccs.im.MessageType;
+import edu.northeastern.ccs.im.server.ClientRunnable;
 import edu.northeastern.ccs.im.model.MessageModel;
 import edu.northeastern.ccs.im.server.ClientRunnable;
 import org.json.JSONObject;
@@ -12,6 +13,13 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class QuitMessage extends Message {
 
+    public QuitMessage() {
+        this.msgType = MessageType.QUIT;
+    }
+
+    public QuitMessage(int userId) {
+        this.msgType = MessageType.QUIT;
+        this.userId = userId;
     public QuitMessage(int userId) {
         this.msgType = MessageType.QUIT;
         this.userId = userId;

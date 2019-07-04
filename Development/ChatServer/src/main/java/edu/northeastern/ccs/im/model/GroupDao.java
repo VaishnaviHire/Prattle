@@ -18,19 +18,27 @@ public class GroupDao {
     }
 
     /**
-     * Get group group.
+     * Gets all groups.
+     *
+     * @return the all groups
+     */
+    public List getAllGroups() {
+        DataBaseOperations dataBaseOperation = new DataBaseOperations(this.output);
+        return dataBaseOperation.getAllRecords("group");
+    }
+
+    /**
+     * Get group group 1.
      *
      * @param grp the grp
-     * @return the group
+     * @return the group 1
      */
-    public Group getGroup(Group grp){
-
+    public Group1 getGroup(Group1 grp){
 
         DataBaseOperations dataBaseOperation = new DataBaseOperations(this.output);
         Object l = dataBaseOperation.getSpecificGrp(grp.getName());
         if(l!=null){
-            Group g = (Group)l;
-            return g;
+            return (Group1)l;
         }else{
             return null;
         }

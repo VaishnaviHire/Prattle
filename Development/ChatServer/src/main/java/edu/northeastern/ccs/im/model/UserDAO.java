@@ -19,6 +19,16 @@ public class UserDAO {
     }
 
     /**
+     * Gets all users.
+     *
+     * @return the all users
+     */
+    public List getAllUsers() {
+        DataBaseOperations dataBaseOperation = new DataBaseOperations(this.output);
+        return dataBaseOperation.getAllRecords("user");
+    }
+
+    /**
      * Get user user.
      *
      * @param user the user

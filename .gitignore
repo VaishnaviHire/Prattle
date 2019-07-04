@@ -8,6 +8,3 @@ ChatLogger.log.1.*
 .DS_Store
 
 .attach_pid*
-
-log4j.*
-

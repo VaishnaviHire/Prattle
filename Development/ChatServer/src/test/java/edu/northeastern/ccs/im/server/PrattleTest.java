@@ -59,7 +59,7 @@ public class PrattleTest {
   private String prattleLoc;
   private String clientRunnable;
   private static Thread mainThread;
-  private static final int SERVER_PORT = 4545;
+  private static final int SERVER_PORT = 4555;
 
 
   /**
@@ -248,7 +248,7 @@ public class PrattleTest {
 
       // Tests for message Iterator
       assertTrue(nc.iterator().hasNext());
-      assertEquals("PVT 3 999 4 1234 19 Hello\n How are you?", nc.iterator().next().toString());
+      assertEquals(nc.iterator().next().toString(), "BCT 4 1234 19 Hello\n How are you?");
       assertFalse(nc.iterator().hasNext());
       assertThrows(NoSuchElementException.class, () -> {
         nc.iterator().next();

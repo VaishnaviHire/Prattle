@@ -18,6 +18,11 @@
 
 - go to (http://team101registrationmodule-env.piyktw7ce2.us-east-2.elasticbeanstalk.com)
 - Register or login to access user management features
+- Refer https://github.ccs.neu.edu/cs5500/team-101-SP19/blob/master/Documents/RegistrationModule.pdf 
+for feature details
+
+
+ 
 - To run web server locally : 
 - Go to repo RegistrationModule on branch `registrationModule`
 - Run `mvn clean package`

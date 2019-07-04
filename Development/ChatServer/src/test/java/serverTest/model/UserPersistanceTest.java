@@ -6,13 +6,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 
-/**
- * The type User persistance test.
- */
+
 public class UserPersistanceTest {
-    /**
-     * Test get specific user.
-     */
     @Test
     public void testGetSpecificUser(){
         StringBuilder b = new StringBuilder();
@@ -22,6 +17,16 @@ public class UserPersistanceTest {
         if(u1!=null){
             System.out.println(u1.getUName());
         }
+    }
+
+    @Test
+    public void testGetSpecificUser1(){
+        StringBuilder b = new StringBuilder();
+        UserDAO udao = new UserDAO(b);
+        List<Object> x = udao.getAllUsers();
+        System.out.println("1I am printing this shit here to checking if something is printing"+((User)x.get(1)).getUName());
+        System.out.println("2I am printing this shit here to checking if something is printing"+((User)x.get(2)).getUName());
+        System.out.println("3I am printing this shit here to checking if something is printing"+((User)x.get(3)).getUName());
     }
 
     /**
@@ -36,7 +41,6 @@ public class UserPersistanceTest {
         System.out.println("2I am printing this shit here to checking if something is printing"+((User)x.get(2)).getUName());
         System.out.println("3I am printing this shit here to checking if something is printing"+((User)x.get(3)).getUName());
     }
-
     /**
      * Test get specific user 2.
      */

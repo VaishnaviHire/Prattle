@@ -41,7 +41,6 @@ public abstract class Message {
    */
   private static HashMap<String, JSONLambda> messageTypeMap;
 
-
   public static final String BODY = "body";
   public static final String GROUP_ID = "groupId";
   public static final String RECEIVERS = "receivers";
@@ -96,12 +95,27 @@ public abstract class Message {
    * @return Instance of message (or its subclasses) representing the handle, name, & text.
    */
   public static Message makeMessage(String handle, JSONObject jsonMsg) {
+
+    if (handle.compareTo(MessageType.QUIT.toString()) == 0) {
+      return new QuitMessage();
+    } else if (handle.compareTo(MessageType.HELLO.toString()) == 0) {
+      return new SimpleLoginMessage(jsonMsg);
+    } else if ((handle.compareTo(MessageType.PRIVATE.toString()) == 0)) {
+      return new PrivateMessage(jsonMsg);
+    } else if (handle.compareTo(MessageType.BROADCAST.toString()) == 0) {
+      return new BroadcastMessage(jsonMsg);
+    } else if (handle.compareTo(MessageType.GROUP.toString()) == 0) {
+      return new GroupMessage(jsonMsg);
+    } else {
+      return makeBroadcastMessage(ServerConstants.BOUNCER_ID, "Invalid Message Type.");
+    }
     if (messageTypeMap.containsKey(handle)) {
       JSONLambda lambda = messageTypeMap.get(handle);
       return lambda.messageContructor(jsonMsg);
     }
     return BroadcastMessage.makeBroadcastMessage(ServerConstants.BOUNCER_ID,
             "Invalid Message.");
+
   }
 
   /**
@@ -113,6 +127,12 @@ public abstract class Message {
   public static Message makeQuitMessage(int userId) {
     return new QuitMessage(userId);
   }
+
+
+  public static Message makeBroadcastMessage(int senderId, String message) {
+    return new BroadcastMessage(senderId, message);
+  }
+
 
   /**
    * Return the id of the sender of this message.
@@ -186,6 +206,7 @@ public abstract class Message {
   public boolean terminate() {
     return false;
   }
+
 
   /**
    * Appends the message's type to the string message.

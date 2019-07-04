@@ -5,38 +5,35 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
 
-/**
- * The type Group persistence test.
- */
 public class GroupPersistenceTest {
+    /**
+     * Checks if the GroupDao is returning all groups in the table or not.
+     */
+    @Test
+    public void getAllGroupTest(){
+        StringBuilder b = new StringBuilder();
+        GroupDao udao = new GroupDao(b);
+        List<Object> x = udao.getAllGroups();
+        Group1 v = (Group1)x.get(0);
+        assertEquals("user1grp001",v.getGroupName());
+    }
 
     /**
-     * Get specific group test.
+     * Checks if the GroupDao is returning a specific Group if it exists or not.
      */
     @Test
     public void getSpecificGroupTest(){
-        Group g = new Group("name");
-
+        Group1 g = new Group1("user1grp001");
         StringBuilder b = new StringBuilder();
         GroupDao udao = new GroupDao(b);
-        Group x = udao.getGroup(g);
+        Group1 x = udao.getGroup(g);
         assertFalse(x==null);
     }
 
-    /**
-     * Get specific group test 1.
-     */
-    @Test
-    public void getSpecificGroupTest1(){
-        Group g = new Group("name1");
-        StringBuilder b = new StringBuilder();
-        GroupDao udao = new GroupDao(b);
-        Group x = udao.getGroup(g);
-        assertTrue(x==null);
-    }
+
 
     /**
-     * Get all non private group test.
+     * checks if there are any non private groups in the database
      */
     @Test
     public void getAllNonPrivateGroupTest(){
@@ -51,10 +48,10 @@ public class GroupPersistenceTest {
      */
     @Test
     public void getSpecificGroupTest2(){
-        Group g = new Group("SELECT *");
+        Group1 g = new Group1("SELECT *");
         StringBuilder b = new StringBuilder();
         GroupDao udao = new GroupDao(b);
-        Group x = udao.getGroup(g);
+        Group1 x = udao.getGroup(g);
         assertTrue(x==null);
     }
 }

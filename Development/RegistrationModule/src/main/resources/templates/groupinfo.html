@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registration Form</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/registration.css}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div>
+        <nav class="navbar navbar-primary">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/admin/home/profile">Prattle</a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/admin/home">Home</a></li>
+                    <li><a href="/admin/home/groups">Create Group</a></li>
+                    <li><a href="/admin/home/requests">Join Requests</a></li>
+                    <li><a href="/admin/home/sendinvites">Invites</a></li>
+                    <li><a href="/admin/home/deletegroup">Delete Groups</a></li>
+                    <li><a href="/admin/home/removemember">Remove Members</a></li>
+                    <li><a href="/admin/home/search">Search</a></li>
+                    <li><a href="/admin/home/asignadmin">Assign Admin</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div>
+                <h2>Group Profile</h2>
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        Group Name:  <p th:utext="${groupname}"></p>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-9">
+                        Group Admin :   <p th:utext="${groupAdmin}"></p>
+
+                    </div>
+                </div>
+
+
+                <div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

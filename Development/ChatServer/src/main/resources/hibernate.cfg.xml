@@ -23,6 +23,5 @@
         <mapping class="edu.northeastern.ccs.im.model.PrivateMessageModel" />
         <mapping class="edu.northeastern.ccs.im.model.GroupMessageModel" />
         <mapping class="edu.northeastern.ccs.im.model.BroadcastMessageModel" />
-
     </session-factory>
 </hibernate-configuration>
