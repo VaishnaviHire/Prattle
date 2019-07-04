@@ -8,7 +8,6 @@ import edu.northeastern.ccs.im.server.ClientRunnable;
 import edu.northeastern.ccs.im.server.ServerConstants;
 import org.json.JSONObject;
 
-import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -40,7 +39,7 @@ public abstract class Message {
    * The map of string message type to message class used to dynamically access message constructors based
    * on message types.
    */
-  private static HashMap<String, JSONLambda> MESSAGE_TYPE_MAP;
+  private static HashMap<String, JSONLambda> messageTypeMap;
 
 
   public static final String BODY = "body";
@@ -51,11 +50,11 @@ public abstract class Message {
   public static final String USER_ID   = "userId";
 
   static {
-    MESSAGE_TYPE_MAP = new HashMap<>();
-    MESSAGE_TYPE_MAP.put(MessageType.PRIVATE.toString(), (json) -> new PrivateMessage(json));
-    MESSAGE_TYPE_MAP.put(MessageType.GROUP.toString(), (json) -> new GroupMessage(json));
-    MESSAGE_TYPE_MAP.put(MessageType.HELLO.toString(), (json) -> new SimpleLoginMessage(json));
-    MESSAGE_TYPE_MAP.put(MessageType.QUIT.toString(), (json) -> new QuitMessage(json));
+    messageTypeMap = new HashMap<>();
+    messageTypeMap.put(MessageType.PRIVATE.toString(), (json) -> new PrivateMessage(json));
+    messageTypeMap.put(MessageType.GROUP.toString(), (json) -> new GroupMessage(json));
+    messageTypeMap.put(MessageType.HELLO.toString(), (json) -> new SimpleLoginMessage(json));
+    messageTypeMap.put(MessageType.QUIT.toString(), (json) -> new QuitMessage(json));
   }
 
 
@@ -97,8 +96,8 @@ public abstract class Message {
    * @return Instance of message (or its subclasses) representing the handle, name, & text.
    */
   public static Message makeMessage(String handle, JSONObject jsonMsg) {
-    if (MESSAGE_TYPE_MAP.containsKey(handle)) {
-      JSONLambda lambda = MESSAGE_TYPE_MAP.get(handle);
+    if (messageTypeMap.containsKey(handle)) {
+      JSONLambda lambda = messageTypeMap.get(handle);
       return lambda.messageContructor(jsonMsg);
     }
     return BroadcastMessage.makeBroadcastMessage(ServerConstants.BOUNCER_ID,
