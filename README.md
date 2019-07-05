@@ -1,6 +1,6 @@
-# team-101-SP19
+# Prattle 
 
-<b>Group Members</b>
+<b>Team</b>
 - Yash Bhavsar
 - Vaishnavi Hire
 - Alex Gomez
@@ -29,4 +29,5 @@ for feature details
 - Run `java - jar /target/jarname.jar` to start the server
 
 
- <h3>Links to Videos</h3>
+References:
+Starter code for server given in course CS5500
